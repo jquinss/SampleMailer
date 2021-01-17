@@ -1,4 +1,4 @@
-package controllers;
+package managers;
 
 import util.OSChecker;
 import util.ObjectSerializer;
