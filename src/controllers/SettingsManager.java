@@ -24,6 +24,14 @@ public class SettingsManager {
 		return instance;
 	}
 	
+	public Properties getSettings() {
+		return settings;
+	}
+	
+	public void setSettings(Properties settings) {
+		this.settings = settings;
+	}
+	
 	public void loadSettings(Properties defaultSettings) {
 		if (!objectSerializer.fileExists()) {
 			settings = defaultSettings;
@@ -61,9 +69,5 @@ public class SettingsManager {
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	public Properties getSettings() {
-		return settings;
 	}
 }
