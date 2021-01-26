@@ -17,11 +17,14 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+
+<?import control.DateTimePicker?>
 
 <VBox prefHeight="894.0" prefWidth="1138.0" spacing="10.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.SampleMailerController">
   <children>
@@ -64,11 +67,11 @@
                <children>
                   <Label text="Server:" />
                   <TextField fx:id="serverNameField" GridPane.columnIndex="1" />
-                  <Label text="From:" GridPane.rowIndex="1" />
-                  <TextField fx:id="fromField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <TextField fx:id="mailFromField" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <Label text="Mail From:" GridPane.rowIndex="2" />
-                  <CheckBox fx:id="toggleMailFromField" mnemonicParsing="false" onAction="#toggleMailFrom" prefHeight="21.0" prefWidth="19.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <Label text="Mail From:" GridPane.rowIndex="1" />
+                  <TextField fx:id="mailFromField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextField fx:id="fromField" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label text="From:" GridPane.rowIndex="2" />
+                  <CheckBox fx:id="toggleFromField" mnemonicParsing="false" prefHeight="21.0" prefWidth="19.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                   <Label text="To:" GridPane.columnIndex="3" />
                   <Label text="CC:" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                   <Label text="BCC:" GridPane.columnIndex="3" GridPane.rowIndex="2" />
@@ -80,7 +83,7 @@
             <HBox prefHeight="100.0" prefWidth="310.0" spacing="5.0" HBox.hgrow="ALWAYS">
                <children>
                   <Label text="Attachments:" />
-                  <ListView fx:id="attachmentList" prefHeight="100.0" prefWidth="199.0" />
+                  <ListView fx:id="attachmentListView" prefHeight="100.0" prefWidth="199.0" />
                   <VBox alignment="CENTER" prefHeight="100.0" prefWidth="106.0" spacing="5.0">
                      <children>
                         <Button fx:id="addAttachmentBtn" mnemonicParsing="false" onAction="#addAttachment" text="Add" />
@@ -109,8 +112,14 @@
                                  <children>
                                     <TableView fx:id="headerTableView" prefHeight="200.0" prefWidth="200.0">
                                       <columns>
-                                        <TableColumn prefWidth="284.0" text="Name" />
-                                        <TableColumn minWidth="0.0" prefWidth="268.0" text="Value" />
+                                        <TableColumn prefWidth="284.0" text="Name">
+                                          <cellValueFactory><PropertyValueFactory property="name" />
+        								  </cellValueFactory>
+                                        </TableColumn>
+                                        <TableColumn minWidth="0.0" prefWidth="268.0" text="Value">
+                                          <cellValueFactory><PropertyValueFactory property="value" />
+        								  </cellValueFactory>
+                                        </TableColumn>
                                       </columns>
                                     </TableView>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
@@ -161,7 +170,7 @@
                       <TableColumn prefWidth="294.0" text="Date/Time" />
                     </columns>
                   </TableView>
-                  <DatePicker fx:id="datePicker" prefHeight="27.0" prefWidth="262.0" promptText="Pick a date" />
+                  <DateTimePicker fx:id="dateTimePicker" prefHeight="27.0" prefWidth="262.0" promptText="Pick a date" />
                   <HBox alignment="CENTER" prefHeight="53.0" prefWidth="572.0" spacing="20.0">
                      <children>
                         <Button fx:id="scheduleEmailBtn" mnemonicParsing="false" onAction="#scheduleEmail" text="Schedule" />
@@ -188,9 +197,9 @@
               </rowConstraints>
                <children>
                   <Label text="Subject: " />
-                  <TextField fx:id="subjectTextField" prefHeight="31.0" prefWidth="871.0" GridPane.columnIndex="1" />
+                  <TextField fx:id="subjectField" prefHeight="31.0" prefWidth="871.0" GridPane.columnIndex="1" />
                   <Label text="Body:" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-                  <TextArea fx:id="bodyTextField" prefHeight="200.0" prefWidth="897.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <TextArea fx:id="bodyField" prefHeight="200.0" prefWidth="897.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
             </GridPane>
             <HBox alignment="CENTER" prefHeight="75.0" prefWidth="968.0" spacing="20.0">
@@ -198,16 +207,16 @@
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                      <children>
                         <Label text="Number of emails: " />
-                        <TextField fx:id="numberEmailsTextField" prefHeight="31.0" prefWidth="42.0" text="1" />
+                        <TextField fx:id="numEmailsField" prefHeight="31.0" prefWidth="50.0" text="1" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                      <children>
                         <Label text="Delay (seconds):" />
-                        <TextField fx:id="delayTextField" prefHeight="31.0" prefWidth="70.0" text="0" />
+                        <TextField fx:id="delayField" prefHeight="31.0" prefWidth="70.0" text="0" />
                      </children>
                   </HBox>
-                  <ToggleButton fx:id="toggleTLSBtn" mnemonicParsing="false" onAction="#toggleTLS" text="Use TLS" />
+                  <ToggleButton fx:id="toggleTLSBtn" mnemonicParsing="false" text="Use TLS" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="90.0" prefWidth="968.0" spacing="20.0">
