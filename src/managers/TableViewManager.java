@@ -11,8 +11,8 @@ public class TableViewManager<T> {
 	protected final TableView<T> tableView;
 	protected final ObservableList<T> obsList = FXCollections.observableArrayList();
 	
-	public TableViewManager(TableView<T> listView) {
-		this.tableView = listView;
+	public TableViewManager(TableView<T> tableView) {
+		this.tableView = tableView;
 		this.tableView.setItems(obsList);
 	}
 	
