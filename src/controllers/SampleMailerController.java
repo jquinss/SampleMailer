@@ -229,7 +229,6 @@ public class SampleMailerController {
 			headerManager.setItems(template.getHeaderList());
 			numEmailsField.setText(Integer.toString(template.getNumEmails()));
 			delayField.setText(Integer.toString(template.getDelay()));
-			
 		}
 	}
 
@@ -357,6 +356,11 @@ public class SampleMailerController {
 		defaultSettings.setProperty("mail.smtp.port", "25");
 		defaultSettings.setProperty("mail.smtp.connectiontimeout", "-1");
 		defaultSettings.setProperty("mail.smtp.ssl.protocols", "TLSv1.1 TLSv1.2");
+		
+		defaultSettings.setProperty("mail.content.contenttype", "text/html");
+		defaultSettings.setProperty("mail.content.charset", "UTF-8");
+		
+		defaultSettings.setProperty("mail.session.debugenabled", "false");
 
 		return defaultSettings;
 	}
