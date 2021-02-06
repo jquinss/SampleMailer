@@ -162,23 +162,28 @@
                   <Insets />
                </HBox.margin>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="210.0" prefWidth="599.0" spacing="5.0">
+            <HBox prefHeight="270.0" prefWidth="535.0" spacing="10.0">
                <children>
-                  <TableView fx:id="schedulerTableView" prefHeight="200.0" prefWidth="200.0">
-                    <columns>
-                      <TableColumn prefWidth="277.0" text="Name" />
-                      <TableColumn prefWidth="294.0" text="Date/Time" />
-                    </columns>
-                  </TableView>
-                  <DateTimePicker fx:id="dateTimePicker" prefHeight="27.0" prefWidth="262.0" promptText="Pick a date" />
-                  <HBox alignment="CENTER" prefHeight="53.0" prefWidth="572.0" spacing="20.0">
+                  <Label prefHeight="21.0" prefWidth="94.0" text="Scheduler:" />
+                  <VBox alignment="CENTER" prefHeight="270.0" prefWidth="458.0" spacing="5.0">
                      <children>
-                        <Button fx:id="scheduleEmailBtn" mnemonicParsing="false" onAction="#scheduleEmail" text="Schedule" />
-                        <Button fx:id="cancelScheduledEmailBtn" mnemonicParsing="false" onAction="#cancelScheduledEmail" text="Cancel" />
+                        <TableView fx:id="schedulerTableView" prefHeight="200.0" prefWidth="200.0">
+                          <columns>
+                            <TableColumn prefWidth="202.0" text="Name" />
+                            <TableColumn prefWidth="369.0" text="Date/Time" />
+                          </columns>
+                        </TableView>
+                        <DateTimePicker fx:id="dateTimePicker" prefHeight="27.0" prefWidth="262.0" promptText="Pick a date" />
+                        <HBox alignment="CENTER" prefHeight="53.0" prefWidth="572.0" spacing="20.0">
+                           <children>
+                              <Button fx:id="scheduleEmailBtn" mnemonicParsing="false" onAction="#scheduleEmail" text="Schedule" />
+                              <Button fx:id="cancelScheduledEmailBtn" mnemonicParsing="false" onAction="#cancelScheduledEmail" text="Cancel" />
+                           </children>
+                        </HBox>
                      </children>
-                  </HBox>
+                  </VBox>
                </children>
-            </VBox>
+            </HBox>
          </children>
          <VBox.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
