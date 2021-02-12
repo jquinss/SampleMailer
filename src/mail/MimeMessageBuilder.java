@@ -1,6 +1,5 @@
 package mail;
 
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
@@ -25,7 +24,7 @@ public class MimeMessageBuilder {
 		message = new MimeMessage(session);
 	}
 	
-	public void setFrom(String from) throws AddressException, MessagingException {
+	public void setFrom(String from) throws MessagingException {
 		message.setFrom(new InternetAddress(from));
 	}
 	
