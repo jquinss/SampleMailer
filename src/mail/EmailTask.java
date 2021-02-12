@@ -3,9 +3,10 @@ package mail;
 import java.util.concurrent.Callable;
 
 import javax.mail.internet.MimeMessage;
-
 import javax.mail.MessagingException;
 import javax.mail.Transport;
+
+
 
 public class EmailTask implements Callable<Void> {
 	private final MimeMessage message;
@@ -27,10 +28,12 @@ public class EmailTask implements Callable<Void> {
 			for(; counter <= numEmails; ++counter) {
 				try {
 					Transport.send(message);
+					System.out.println("Email sent");
+					
 					totalEmailsSent += 1;
 				}
 				catch (MessagingException e) {
-					
+					e.printStackTrace();
 				}
 				finally {
 					Thread.sleep(delayInSeconds * 1000);
@@ -38,7 +41,7 @@ public class EmailTask implements Callable<Void> {
 			}
 		}
 		catch (InterruptedException e) {
-			
+			e.printStackTrace();
 		}
 		return null;
 	}
