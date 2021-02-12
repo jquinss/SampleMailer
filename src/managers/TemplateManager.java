@@ -13,10 +13,21 @@ import javafx.scene.control.ListView;
 public class TemplateManager extends ListViewManager<EmailTemplate> {
 	private static final String TEMPLATES_PATH = OSChecker.getOSDataDirectory() + File.separator + "Templates.dat";
 	private final ObjectSerializer objectSerializer;
+	private boolean templateListModified = false;
 	
 	public TemplateManager(ListView<EmailTemplate> templateListView) {
 		super(templateListView);
 		objectSerializer = new ObjectSerializer(TEMPLATES_PATH);
+	}
+	
+	public void addItem(EmailTemplate emailTemplate) {
+		super.addItem(emailTemplate);
+		templateListModified = true;
+	}
+	
+	public void removeItem(EmailTemplate emailTemplate) {
+		super.removeItem(emailTemplate);
+		templateListModified = true;
 	}
 	
 	public void loadItems() {
@@ -55,5 +66,10 @@ public class TemplateManager extends ListViewManager<EmailTemplate> {
 				e.printStackTrace();
 			}
 		}
+		templateListModified = false;
+	}
+	
+	public boolean isTemplateListModified() {
+		return templateListModified;
 	}
 }
