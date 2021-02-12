@@ -13,7 +13,7 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("..\\view\\SampleMailer.fxml"));
-			//VBox root = (VBox)FXMLLoader.load(getClass().getResource("..\\view\\SampleMailer.fxml"));
+			primaryStage.setResizable(false);
 			VBox root = (VBox)fxmlLoader.load();
 			final SampleMailerController controller = fxmlLoader.getController();
 			controller.setStage(primaryStage);
