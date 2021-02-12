@@ -2,6 +2,8 @@ package managers;
 
 import mail.EmailTask;
 import mail.ScheduledEmailTask;
+import util.Observable;
+import util.Observer;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.Executors;
@@ -10,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import javafx.scene.control.TableView;
 
-public class EmailScheduler extends TableViewManager<ScheduledEmailTask> {
+public class EmailScheduler extends TableViewManager<ScheduledEmailTask> implements Observer {
 	private final ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(3);
 	private final String TASK_ID_PREFIX = "TASK";
 	private int taskNumber = 1;
@@ -20,14 +22,19 @@ public class EmailScheduler extends TableViewManager<ScheduledEmailTask> {
 	}
 	
 	public void cancelScheduledEmailTask(ScheduledEmailTask scheduledEmailTask) {
+		scheduledEmailTask.cancel(true);
+		
+		/*
 		if (scheduledEmailTask.cancel(true) || scheduledEmailTask.isDone()) {
 			removeItem(scheduledEmailTask);
 		}
+		*/
 	}
 	
-	public void scheduleEmailTask(EmailTask emailTask, LocalDateTime scheduledDateTime) {
-		ScheduledEmailTask scheduledEmailTask = new ScheduledEmailTask(emailTask, generateTaskId(), scheduledDateTime);
+	public void scheduleEmailTask(ScheduledEmailTask scheduledEmailTask) {
+		scheduledEmailTask.setTaskId(generateTaskId());
 		scheduledExecutor.schedule(scheduledEmailTask, scheduledEmailTask.getScheduledDateTimeFromNowInSeconds(), TimeUnit.SECONDS);
+		scheduledEmailTask.setObserver(this);
 		addItem(scheduledEmailTask);
 	}
 	
@@ -36,5 +43,14 @@ public class EmailScheduler extends TableViewManager<ScheduledEmailTask> {
 		++taskNumber;
 		
 		return taskId;
+	}
+	
+	public void update(Observable observable) {
+		ScheduledEmailTask scheduledEmailTask = (ScheduledEmailTask) observable;
+		removeItem(scheduledEmailTask);
+	}
+	
+	public ScheduledExecutorService getScheduledExecutorService() {
+		return scheduledExecutor;
 	}
 }
