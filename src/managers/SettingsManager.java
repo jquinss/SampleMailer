@@ -2,6 +2,7 @@ package managers;
 
 import util.OSChecker;
 import util.ObjectSerializer;
+
 import java.util.Properties;
 import java.io.File;
 import java.io.IOException;
@@ -10,6 +11,7 @@ public class SettingsManager {
 	private static SettingsManager instance;
 	private static final String SETTINGS_PATH = OSChecker.getOSDataDirectory() + File.separator + "Settings.dat";
 	private Properties settings;
+	private Properties defaultSettings;
 	private ObjectSerializer objectSerializer;
 	
 	private SettingsManager() {
@@ -28,13 +30,19 @@ public class SettingsManager {
 		return settings;
 	}
 	
+	public Properties getDefaultSettings() {
+		return defaultSettings;
+	}
+	
 	public void setSettings(Properties settings) {
 		this.settings = settings;
 	}
 	
 	public void loadSettings(Properties defaultSettings) {
+		this.defaultSettings = defaultSettings;
+		
 		if (!objectSerializer.fileExists()) {
-			settings = defaultSettings;
+			settings = this.defaultSettings;
 		}
 		else {
 			try {
