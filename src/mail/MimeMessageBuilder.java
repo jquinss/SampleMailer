@@ -7,7 +7,6 @@ import javax.mail.internet.MimeMultipart;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
-import javax.mail.Header;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Session;
@@ -32,8 +31,8 @@ public class MimeMessageBuilder {
 		message.setRecipients(type, recipients);
 	}
 	
-	public void setHeaders(List<Header> headers) throws MessagingException {
-		for (Header header : headers) {
+	public void setHeaders(List<EmailHeader> headers) throws MessagingException {
+		for (EmailHeader header : headers) {
 			message.setHeader(header.getName(), header.getValue());
 		}
 	}
