@@ -10,6 +10,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -19,6 +21,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import managers.SettingsManager;
+import util.DialogBuilder;
+import util.Validator;
 
 public class SettingsPaneController {
 
@@ -66,15 +70,22 @@ public class SettingsPaneController {
     
     private Stage stage;
     
-    private Properties settings;
-    
     private final ObservableList<Charset> charsetObsList = FXCollections.observableArrayList();
     
     private final ObservableList<ContentType> contentTypeObsList = FXCollections.observableArrayList();
 
     @FXML
     void applySettings(ActionEvent event) {
+    	String validationResult = validateInput();
     	
+    	if (!validationResult.isEmpty()) {
+    		Alert alert = DialogBuilder.getAlertDialog("Error", "Invalid Input", validationResult, AlertType.ERROR);
+    		alert.showAndWait();
+    	}
+    	else {
+    		saveSettings();
+    		stage.close();
+    	}
     }
 
     @FXML
@@ -84,7 +95,8 @@ public class SettingsPaneController {
 
     @FXML
     void resetSettings(ActionEvent event) {
-
+    	Properties defaultSettings = SettingsManager.getInstance().getDefaultSettings();
+    	loadSettings(defaultSettings);
     }
     
     public void setStage(Stage stage) {
@@ -93,44 +105,51 @@ public class SettingsPaneController {
     
     @FXML
     public void initialize() {
-    	settings = SettingsManager.getInstance().getSettings();
-    	initializeSMTPSettings();
-    	initializeEmailSettings();
-    	initializeLogSettings();
+    	Properties settings = SettingsManager.getInstance().getSettings();
+    	initializeSettingsTabs();
+    	loadSettings(settings);
     }
     
-    private void initializeSMTPSettings() {
+    private void initializeSettingsTabs() {
+    	initializeCharsetComboBox();
+    	initializeContentTypeComboBox();
+    }
+    
+    private void loadSettings(Properties settings) {
+    	loadSMTPSettings(settings);
+    	loadEmailSettings(settings);
+    	loadLogSettings(settings);
+    }
+    
+    private void loadSMTPSettings(Properties settings) {
     	heloHostnameTextField.setText(settings.getProperty("mail.smtp.localhost"));
-        smtpPortTextField.setText(settings.getProperty("mail.smtp.port"));
-        connTimeoutTextField.setText(settings.getProperty("mail.smtp.connectiontimeout"));
-    	initializeTLSCheckBoxes();
+    	smtpPortTextField.setText(settings.getProperty("mail.smtp.port"));
+    	connTimeoutTextField.setText(settings.getProperty("mail.smtp.connectiontimeout"));
+    	loadTLSSettings(settings);
     }
     
-    private void initializeEmailSettings() {
-    	intializeCharsetComboBox();
-    	
+    private void loadEmailSettings(Properties settings) {
     	for (Charset charset : Charset.values()) {
     		if (charset.toString().equals(settings.getProperty("mail.content.charset"))) {
     			charEncodingComboBox.getSelectionModel().select(charset);
     		}
-
     	}
-    	initializeContentTypeComboBox();
     	
     	for (ContentType contentType : ContentType.values()) {
     		if (contentType.toString().equals(settings.getProperty("mail.content.contenttype"))) {
     			contentTypeComboBox.getSelectionModel().select(contentType);
     		}
-
     	}
     }
     
-    private void initializeLogSettings() {
+    private void loadLogSettings(Properties settings) {
+    	
+    	System.out.println("Loading property: " + Boolean.getBoolean(settings.getProperty("mail.debug")));
     	enableDebugCheckBox.setSelected(Boolean.getBoolean(settings.getProperty("mail.debug")));
     	debugLogDirTextField.setText(settings.getProperty("mail.debugurl"));
     }
     
-    private void initializeTLSCheckBoxes() {
+    private void loadTLSSettings(Properties settings) {
     	HashSet<String> enumValues = new HashSet<String>();
     	
     	for (SSLProtocol sslEnumProtocol : SSLProtocol.values()) {
@@ -159,7 +178,7 @@ public class SettingsPaneController {
     	}
     }
     
-    private void intializeCharsetComboBox() {
+    private void initializeCharsetComboBox() {
     	initializeCharsetComboBoxCell();
     	
     	for (Charset charset : Charset.values()) {
@@ -211,5 +230,68 @@ public class SettingsPaneController {
     	}
     	
     	contentTypeComboBox.setItems(contentTypeObsList);
+    }
+    
+    private String validateInput() {
+    	StringBuilder validationText = new StringBuilder();
+    	
+    	if (!Validator.validatePattern(heloHostnameTextField.getText().trim(), "[\\p{ASCII}]{1,255}")) {
+    		validationText.append("- Invalid hostname. It must contain from 1 to 255 ASCII characters.\n");
+    	}
+    	
+    	if (!Validator.validateIntRange(0, 65535, smtpPortTextField.getText().trim())) {
+    		validationText.append("- Invalid port number. Valid port numbers range from 0 to 65535.\n");
+    	}
+    	
+    	if (!Validator.validateIntRange(-1, 2147483647, connTimeoutTextField.getText().trim())) {
+    		validationText.append("- Invalid time out value. Valid time out value range from -1 (no timeout) to 2147483647.\n");
+    	}
+    	
+       if (!sslv3CheckBox.isSelected() && !tlsv1CheckBox.isSelected() 
+    		   && !tlsv1_1CheckBox.isSelected() && !tlsv1_2CheckBox.isSelected()) {
+    	   validationText.append("- At least one TLS option must be selected.");
+       }
+    	
+    	return validationText.toString();
+    }
+    
+    private void saveSettings() {
+    	Properties settings = new Properties();
+    	settings.setProperty("mail.smtp.localhost", heloHostnameTextField.getText().trim());
+    	settings.setProperty("mail.smtp.port", smtpPortTextField.getText().trim());
+    	settings.setProperty("mail.smtp.connectiontimeout", connTimeoutTextField.getText().trim());
+    	settings.setProperty("mail.smtp.ssl.protocols", getSelectedTLSProtocols());
+    	settings.setProperty("mail.content.charset",charEncodingComboBox.getSelectionModel().getSelectedItem().toString());
+    	settings.setProperty("mail.content.contenttype", contentTypeComboBox.getSelectionModel().getSelectedItem().toString());
+    	settings.setProperty("mail.debug", Boolean.toString(enableDebugCheckBox.isSelected()));
+    	System.out.println("Saving property: " + Boolean.toString(enableDebugCheckBox.isSelected()));
+    	settings.setProperty("mail.debugurl", debugLogDirTextField.getText().trim());
+    	
+    	SettingsManager.getInstance().setSettings(settings);
+    	
+    	SettingsManager.getInstance().saveSettings();
+    }
+    
+    private String getSelectedTLSProtocols() {
+    	StringBuilder protocols = new StringBuilder();
+    	
+    	if (sslv3CheckBox.isSelected()) {
+    		protocols.append(SSLProtocol.SSLv3.toString() + " ");
+    	}
+    	
+    	if (tlsv1CheckBox.isSelected()) {
+    		protocols.append(SSLProtocol.TLSv1.toString() + " ");
+    	}
+    	
+    	if (tlsv1_1CheckBox.isSelected()) {
+    		protocols.append(SSLProtocol.TLSv1_1.toString() + " ");
+    	}
+    	
+    	if (tlsv1_2CheckBox.isSelected()) {
+    		protocols.append(SSLProtocol.TLSv1_2.toString());
+    	}
+    	 
+    	
+    	return protocols.toString().trim();
     }
 }
