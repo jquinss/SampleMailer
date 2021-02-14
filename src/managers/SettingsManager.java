@@ -6,16 +6,21 @@ import util.ObjectSerializer;
 import java.util.Properties;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class SettingsManager {
 	private static SettingsManager instance;
-	private static final String SETTINGS_PATH = OSChecker.getOSDataDirectory() + File.separator + "Settings.dat";
+	private static final String SETTINGS_FILE_NAME = "Settings.dat";
+	private static final String SETTINGS_DIR_NAME = "SampleMailer";
+	private static final String SETTINGS_ROOT_DIR = OSChecker.getOSDataDirectory() + File.separator + SETTINGS_DIR_NAME;
+	private static final String SETTINGS_PATH = SETTINGS_ROOT_DIR + File.separator + SETTINGS_FILE_NAME;
+	
 	private Properties settings;
 	private Properties defaultSettings;
 	private ObjectSerializer objectSerializer;
 	
 	private SettingsManager() {
-		objectSerializer = new ObjectSerializer(SETTINGS_PATH);
 	}
 	
 	public static synchronized SettingsManager getInstance() {
@@ -39,6 +44,8 @@ public class SettingsManager {
 	}
 	
 	public void loadSettings(Properties defaultSettings) {
+		objectSerializer = new ObjectSerializer(SETTINGS_PATH);
+		
 		this.defaultSettings = defaultSettings;
 		
 		if (!objectSerializer.fileExists()) {
@@ -63,7 +70,10 @@ public class SettingsManager {
 	}
 	
 	public void saveSettings() {
+		objectSerializer = new ObjectSerializer(SETTINGS_PATH);
+		
 		try {
+			Files.createDirectories(Paths.get(SETTINGS_ROOT_DIR));
 			objectSerializer.openFileForWrite();
 			objectSerializer.writeObject(settings);
 		}
