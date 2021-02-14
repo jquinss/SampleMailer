@@ -3,7 +3,6 @@ package mail;
 import java.io.File;
 import java.io.Serializable;
 import java.util.List;
-import javax.mail.Header;
 
 /**
  * 
@@ -15,7 +14,7 @@ public class EmailTemplate implements Serializable {
 	private static final long serialVersionUID = -45732833667801312L;
 	private String name, server, mailFrom, from, subject, body, to, cc, bcc;
 	private List<File> attachmentList;
-	private List<Header> headerList;
+	private List<EmailHeader> headerList;
 	private boolean customFrom, tlsEnabled;
 	
 	private int numEmails = 1;
@@ -50,7 +49,7 @@ public class EmailTemplate implements Serializable {
 	
 	public void setAttachmentList(List<File> attachmentList) { this.attachmentList = attachmentList; }
 	
-	public void setHeaderList(List<Header> headerList) { this.headerList = headerList; }
+	public void setHeaderList(List<EmailHeader> headerList) { this.headerList = headerList; }
 	
 	public void setNumEmails(int numEmails) { this.numEmails = numEmails; }
 	
@@ -81,7 +80,7 @@ public class EmailTemplate implements Serializable {
 	
 	public List<File> getAttachmentList() { return attachmentList; }
 	
-	public List<Header> getHeaderList() { return headerList; }
+	public List<EmailHeader> getHeaderList() { return headerList; }
 	
 	public int getNumEmails() { return numEmails; }
 	
