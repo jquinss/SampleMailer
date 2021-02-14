@@ -27,6 +27,7 @@ import managers.TableViewManager;
 import managers.TemplateManager;
 import managers.ListViewManager;
 import managers.EmailScheduler;
+import mail.EmailHeader;
 import mail.EmailTask;
 import mail.EmailTemplate;
 import mail.MimeMessageBuilder;
@@ -48,7 +49,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import javax.mail.Header;
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -102,7 +102,7 @@ public class SampleMailerController {
 	private Button removeAttachmentBtn;
 
 	@FXML
-	private TableView<Header> headerTableView;
+	private TableView<EmailHeader> headerTableView;
 
 	@FXML
 	private TextField headerNameField;
@@ -176,7 +176,7 @@ public class SampleMailerController {
 	
 	private ListViewManager<File> attachmentManager;
 	
-	private TableViewManager<Header> headerManager;
+	private TableViewManager<EmailHeader> headerManager;
 	
 	private EmailScheduler emailScheduler;
 	
@@ -201,7 +201,7 @@ public class SampleMailerController {
 		
 		
 		if (!headerName.isEmpty() && !headerValue.isEmpty()) {
-			headerManager.addItem(new Header(headerName, headerValue));
+			headerManager.addItem(new EmailHeader(headerName, headerValue));
 		}
 		
 	}
@@ -306,14 +306,14 @@ public class SampleMailerController {
 
 	@FXML
 	void modifyHeader(ActionEvent event) {
-		Header header = headerManager.getSelectedItem();
+		EmailHeader header = headerManager.getSelectedItem();
 		
 		if (header != null) {
 			String headerName = headerNameField.getText().trim();
 			String headerValue = headerValueField.getText().trim();
 			
 			if (!headerName.isEmpty() && !headerValue.isEmpty()) {
-				headerManager.replaceItem(header, new Header(headerName, headerValue));
+				headerManager.replaceItem(header, new EmailHeader(headerName, headerValue));
 			}
 		}
 	}
@@ -352,7 +352,7 @@ public class SampleMailerController {
 
 	@FXML
 	void removeHeader(ActionEvent event) {
-		Header header = headerManager.getSelectedItem();
+		EmailHeader header = headerManager.getSelectedItem();
 		
 		if (header != null) {
 			headerManager.removeItem(header);
@@ -453,7 +453,7 @@ public class SampleMailerController {
 	private void initializeManagers() {
 		templateManager = new TemplateManager(templateListView);
 		attachmentManager = new ListViewManager<File>(attachmentListView);
-		headerManager = new TableViewManager<Header>(headerTableView);
+		headerManager = new TableViewManager<EmailHeader>(headerTableView);
 		emailScheduler = new EmailScheduler(schedulerTableView);
 	}
 
