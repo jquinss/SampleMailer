@@ -1,11 +1,9 @@
 package managers;
 
-import mail.EmailTask;
 import mail.ScheduledEmailTask;
 import util.Observable;
 import util.Observer;
 
-import java.time.LocalDateTime;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -23,12 +21,6 @@ public class EmailScheduler extends TableViewManager<ScheduledEmailTask> impleme
 	
 	public void cancelScheduledEmailTask(ScheduledEmailTask scheduledEmailTask) {
 		scheduledEmailTask.cancel(true);
-		
-		/*
-		if (scheduledEmailTask.cancel(true) || scheduledEmailTask.isDone()) {
-			removeItem(scheduledEmailTask);
-		}
-		*/
 	}
 	
 	public void scheduleEmailTask(ScheduledEmailTask scheduledEmailTask) {
