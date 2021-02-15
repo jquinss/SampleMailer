@@ -95,6 +95,7 @@ public class SettingsPaneController {
 
     @FXML
     void resetSettings(ActionEvent event) {
+    	clearTLSSetting();
     	Properties defaultSettings = SettingsManager.getInstance().getDefaultSettings();
     	loadSettings(defaultSettings);
     }
@@ -143,10 +144,15 @@ public class SettingsPaneController {
     }
     
     private void loadLogSettings(Properties settings) {
-    	
-    	System.out.println("Loading property: " + Boolean.getBoolean(settings.getProperty("mail.debug")));
-    	enableDebugCheckBox.setSelected(Boolean.getBoolean(settings.getProperty("mail.debug")));
+    	enableDebugCheckBox.setSelected(Boolean.parseBoolean(settings.getProperty("mail.debug")));
     	debugLogDirTextField.setText(settings.getProperty("mail.debugurl"));
+    }
+    
+    private void clearTLSSetting() {
+    	sslv3CheckBox.setSelected(false);
+		tlsv1CheckBox.setSelected(false);
+		tlsv1_1CheckBox.setSelected(false);
+		tlsv1_2CheckBox.setSelected(false);
     }
     
     private void loadTLSSettings(Properties settings) {
@@ -257,6 +263,7 @@ public class SettingsPaneController {
     
     private void saveSettings() {
     	Properties settings = new Properties();
+    	
     	settings.setProperty("mail.smtp.localhost", heloHostnameTextField.getText().trim());
     	settings.setProperty("mail.smtp.port", smtpPortTextField.getText().trim());
     	settings.setProperty("mail.smtp.connectiontimeout", connTimeoutTextField.getText().trim());
@@ -264,7 +271,11 @@ public class SettingsPaneController {
     	settings.setProperty("mail.content.charset",charEncodingComboBox.getSelectionModel().getSelectedItem().toString());
     	settings.setProperty("mail.content.contenttype", contentTypeComboBox.getSelectionModel().getSelectedItem().toString());
     	settings.setProperty("mail.debug", Boolean.toString(enableDebugCheckBox.isSelected()));
-    	System.out.println("Saving property: " + Boolean.toString(enableDebugCheckBox.isSelected()));
+    	if (enableDebugCheckBox.isSelected()) {
+    		System.out.println("Debug is selected");
+    		settings.setProperty("mail.debug", "true");
+    	}
+    	//System.out.println("Saving property: " + Boolean.toString(enableDebugCheckBox.isSelected()));
     	settings.setProperty("mail.debugurl", debugLogDirTextField.getText().trim());
     	
     	SettingsManager.getInstance().setSettings(settings);
