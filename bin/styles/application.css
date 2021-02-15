@@ -1,1 +1,138 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+/* Styles for the root node */
+
+.root {
+    -fx-font-family: "Arial";
+    -fx-background-color: linear-gradient(to top, #cccccc, #d9d9d9);
+    -fx-accent: #999999;
+    -fx-focus-color: #999999;
+}
+
+.label {
+	-fx-font-size: 10pt;
+}
+
+/* Styles for the table */
+
+.table-view .column-header {
+	-fx-background-color: 
+        #090a0c,
+        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+        linear-gradient(#20262b, #191d22),
+        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    /*-fx-font-family: "Arial";
+     -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 12px;
+    -fx-padding: 10 20 10 20;
+    * 
+    */
+}
+
+.table-view .column-header .label {
+    -fx-alignment: center;
+    -fx-text-fill: white;
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1 );
+}
+
+.table-row-cell:selected {
+	-fx-background-color:  #fff0e6;
+	-fx-text-fill: black;
+}
+
+.table-row-cell:selected .text {
+	-fx-fill: black;
+	-fx-font-weight: bold;
+}
+
+.list-cell:filled:selected:focused, .list-cell:filled:selected {
+	-fx-background-color:  #fff0e6;
+	-fx-text-fill: black;
+}
+
+.list-cell:filled:selected .text {
+	-fx-font-weight: bold;
+}
+
+
+/* Styles for the top menu bar */
+
+.menu-bar {
+        -fx-background-color: 
+        #090a0c,
+        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+        linear-gradient(#20262b, #191d22),
+        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+}
+
+.menu .label {
+	-fx-text-fill: white;
+}
+
+.menu .context-menu {
+	-fx-background-color: 
+        #090a0c,
+        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+        linear-gradient(#20262b, #191d22),
+        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+}
+
+.context-menu {
+	-fx-background-color: linear-gradient(to top, #cccccc, #d9d9d9);
+}
+
+.context-menu .label {
+	-fx-font-size: 11px;
+}
+
+.toggle-button {    
+    -fx-background-color: 
+        #cccccc,
+        linear-gradient(#bfbfbf 0%, #b3b3b3 20%, #a6a6a6 100%),
+        linear-gradient(#737373, #666666),
+        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(99, 115, 131,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-text-fill: linear-gradient(#cccccc, #d9d9d9);
+    -fx-font-size: 12px;
+    -fx-padding: 10 20 10 20;
+}
+
+.toggle-button:selected {
+	-fx-background-color: 
+        #090a0c,
+        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+        linear-gradient(#20262b, #191d22),
+        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 12px;
+    -fx-padding: 10 20 10 20;
+}
+
+.button {
+    -fx-background-color: 
+        #090a0c,
+        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+        linear-gradient(#20262b, #191d22),
+        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+    -fx-background-radius: 5,4,3,5;
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 12px;
+    -fx-padding: 10 20 10 20;
+}
+.button Text {
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1 );
+}
