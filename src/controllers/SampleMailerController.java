@@ -331,6 +331,7 @@ public class SampleMailerController {
 		SettingsPaneController settingsPaneController = fxmlLoader.getController();
 		
 		Scene scene = new Scene(parent, 800, 350);
+		scene.getStylesheets().add(getClass().getResource("..\\styles\\application.css").toExternalForm());
         Stage stage = new Stage();
         stage.setResizable(false);
         
