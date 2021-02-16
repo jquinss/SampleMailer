@@ -70,7 +70,7 @@
                      <children>
                         <Label text="Character Encoding:" />
                         <Label text="Content Type:" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="charEncodingComboBox" prefWidth="150.0" GridPane.columnIndex="1" />
+                        <ComboBox fx:id="charEncodingComboBox" prefWidth="250.0" GridPane.columnIndex="1" />
                         <ComboBox fx:id="contentTypeComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
                      <padding>
