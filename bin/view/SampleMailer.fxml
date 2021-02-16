@@ -112,6 +112,9 @@
                               <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                                  <children>
                                     <TableView fx:id="headerTableView" prefHeight="200.0" prefWidth="200.0">
+                                       <placeholder>
+        							      <Label text="No headers have been added"/>
+    								   </placeholder>
                                       <columns>
                                         <TableColumn prefWidth="284.0" text="Name">
                                           <cellValueFactory><PropertyValueFactory property="name" />
@@ -169,8 +172,11 @@
                   <VBox alignment="CENTER" prefHeight="270.0" prefWidth="458.0" spacing="5.0">
                      <children>
                         <TableView fx:id="schedulerTableView" prefHeight="200.0" prefWidth="200.0">
+                            <placeholder>
+        					   <Label text="No tasks have been scheduled"/>
+    						</placeholder>
                           <columns>
-                            <TableColumn prefWidth="202.0" text="Id">
+                            <TableColumn prefWidth="202.0" text="Task Id">
                               <cellValueFactory>
                            	    <PropertyValueFactory property="taskId" />
         					  </cellValueFactory>
