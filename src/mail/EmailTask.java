@@ -6,8 +6,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.MessagingException;
 import javax.mail.Transport;
 
-
-
 public class EmailTask implements Callable<Void> {
 	private final MimeMessage message;
 	private final int numEmails;
