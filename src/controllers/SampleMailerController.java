@@ -443,10 +443,6 @@ public class SampleMailerController {
 		return defaultSettings;
 	}
 
-	private void saveSettings() {
-		SettingsManager.getInstance().saveSettings();
-	}
-
 	private void loadTemplates() {
 		templateManager.loadItems();
 	}
