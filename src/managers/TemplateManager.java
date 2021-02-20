@@ -41,6 +41,7 @@ public class TemplateManager extends ListViewManager<EmailTemplate> {
 		if (objectSerializer.fileExists()) {
 			try {
 				objectSerializer.openFileForRead();
+				@SuppressWarnings("unchecked")
 				List<EmailTemplate> templateList = (List<EmailTemplate>) objectSerializer.readObject();
 				setItems(templateList);
 			}
