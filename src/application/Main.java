@@ -14,6 +14,7 @@ public class Main extends Application {
 		try {
 			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("..\\view\\SampleMailer.fxml"));
 			primaryStage.setResizable(false);
+			primaryStage.setTitle("SampleMailer");
 			VBox root = (VBox)fxmlLoader.load();
 			final SampleMailerController controller = fxmlLoader.getController();
 			controller.setStage(primaryStage);
