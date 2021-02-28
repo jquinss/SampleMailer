@@ -243,13 +243,14 @@
                <children>
                   <Button fx:id="sendEmailBtn" mnemonicParsing="false" onAction="#sendEmail" text="Send" />
                   <Button fx:id="cancelEmailBtn" mnemonicParsing="false" onAction="#cancelEmail" text="Cancel" />
-                  <Button fx:id="clearEmailBtn" mnemonicParsing="false" onAction="#clearEmail" text="Clear" />
+                  <Button fx:id="clearEmailBtn" mnemonicParsing="false" onAction="#clearEmail" text="Clear email" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
                <children>
                   <Label text="Status:" />
-                  <TextArea fx:id="logArea" prefHeight="46.0" prefWidth="899.0" />
+                  <TextArea fx:id="logArea" prefHeight="46.0" prefWidth="800.0" editable="false"/>
+                  <Button fx:id="clearLogsBtn" mnemonicParsing="false" onAction="#clearLogs" text="Clear logs" />
                </children>
             </HBox>
          </children>
