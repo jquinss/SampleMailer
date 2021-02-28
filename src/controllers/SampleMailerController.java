@@ -33,6 +33,7 @@ import mail.EmailTemplate;
 import mail.MimeMessageBuilder;
 import mail.ScheduledEmailTask;
 import util.DialogBuilder;
+import util.Logger;
 import util.OSChecker;
 import control.DateTimePicker;
 
@@ -170,6 +171,9 @@ public class SampleMailerController {
 	@FXML
 	private TextArea logArea;
 	
+	@FXML
+	private Button clearLogsBtn;
+	
 	private Stage stage;
 
 	private TemplateManager templateManager;
@@ -181,6 +185,8 @@ public class SampleMailerController {
 	private EmailScheduler emailScheduler;
 	
 	private final ExecutorService emailTaskExecutor = Executors.newSingleThreadExecutor();
+	
+	private Logger logger;
 	
 	private Future<Void> futureSubmittedTask;
 
@@ -203,7 +209,9 @@ public class SampleMailerController {
 		if (!headerName.isEmpty() && !headerValue.isEmpty()) {
 			headerManager.addItem(new EmailHeader(headerName, headerValue));
 		}
-		
+		else {
+			DialogBuilder.getAlertDialog("Error", "Error creating header", "You must enter a name and value for the header", AlertType.WARNING).show();
+		}
 	}
 
 	@FXML
@@ -217,24 +225,30 @@ public class SampleMailerController {
 		Optional<String> templateName = textInputDialog.showAndWait();
 
 		if (templateName.isPresent()) {
-			EmailTemplate template = new EmailTemplate(templateName.get());
-			template.setServer(serverNameField.getText());
-			template.setMailFrom(mailFromField.getText());
-			template.setFrom(fromField.getText());
-			template.setCustomFrom(toggleFromField.isSelected());
-			template.setTo(toField.getText());
-			template.setCC(ccField.getText());
-			template.setBCC(bccField.getText());
-			template.setSubject(subjectField.getText());
-			template.setBody(bodyField.getText());
-			template.setTLSEnabled(toggleTLSBtn.isSelected());
-			template.setAttachmentList(attachmentManager.getItems());
-			template.setHeaderList(headerManager.getItems());
-			template.setNumEmails(Integer.parseInt(numEmailsField.getText()));
-			template.setDelay(Integer.parseInt(delayField.getText()));
-			
+			EmailTemplate template = createEmailTemplate(templateName.get());
 			templateManager.addItem(template);
 		}
+	}
+	
+	private EmailTemplate createEmailTemplate(String name) {
+		EmailTemplate template = new EmailTemplate(name);
+		
+		template.setServer(serverNameField.getText());
+		template.setMailFrom(mailFromField.getText());
+		template.setFrom(fromField.getText());
+		template.setCustomFrom(toggleFromField.isSelected());
+		template.setTo(toField.getText());
+		template.setCC(ccField.getText());
+		template.setBCC(bccField.getText());
+		template.setSubject(subjectField.getText());
+		template.setBody(bodyField.getText());
+		template.setTLSEnabled(toggleTLSBtn.isSelected());
+		template.setAttachmentList(attachmentManager.getItems());
+		template.setHeaderList(headerManager.getItems());
+		template.setNumEmails(Integer.parseInt(numEmailsField.getText()));
+		template.setDelay(Integer.parseInt(delayField.getText()));
+		
+		return template;
 	}
 
 	@FXML
@@ -260,6 +274,9 @@ public class SampleMailerController {
 			headerManager.setItems(template.getHeaderList());
 			numEmailsField.setText(Integer.toString(template.getNumEmails()));
 			delayField.setText(Integer.toString(template.getDelay()));
+		}
+		else {
+			DialogBuilder.getAlertDialog("Error", "Error applying template", "No templates have been selected", AlertType.WARNING).show();
 		}
 	}
 
@@ -315,12 +332,18 @@ public class SampleMailerController {
 			if (!headerName.isEmpty() && !headerValue.isEmpty()) {
 				headerManager.replaceItem(header, new EmailHeader(headerName, headerValue));
 			}
+			else {
+				DialogBuilder.getAlertDialog("Error", "Error modifying header", "You must enter a name and value for the header", AlertType.WARNING).show();
+			}
+		}
+		else {
+			DialogBuilder.getAlertDialog("Error", "Error modifying header", "No headers have been selected", AlertType.WARNING).show();
 		}
 	}
 
 	@FXML
 	void openAboutInfo(ActionEvent event) {
-
+		DialogBuilder.getAlertDialog("About", "", "Designed by Joaquin Sampedro", AlertType.INFORMATION).show();
 	}
 
 	@FXML
@@ -334,6 +357,7 @@ public class SampleMailerController {
 		scene.getStylesheets().add(getClass().getResource("..\\styles\\application.css").toExternalForm());
         Stage stage = new Stage();
         stage.setResizable(false);
+        stage.setTitle("Settings");
         
         settingsPaneController.setStage(stage);
         
@@ -349,6 +373,9 @@ public class SampleMailerController {
 		if (attachment != null) {
 			attachmentManager.removeItem(attachment);
 		}
+		else {
+			DialogBuilder.getAlertDialog("Error", "Error removing attachment", "No attachments have been selected", AlertType.WARNING).show();	
+		}
 	}
 
 	@FXML
@@ -358,6 +385,9 @@ public class SampleMailerController {
 		if (header != null) {
 			headerManager.removeItem(header);
 		}
+		else {
+			DialogBuilder.getAlertDialog("Error", "Error removing header", "No headers have been selected", AlertType.WARNING).show();
+		}
 	}
 
 	@FXML
@@ -366,6 +396,9 @@ public class SampleMailerController {
 
 		if (template != null) {
 			templateManager.removeItem(template);
+		}
+		else {
+			DialogBuilder.getAlertDialog("Error", "Error removing template", "No templates have been selected", AlertType.WARNING).show();
 		}
 	}
 
@@ -391,6 +424,7 @@ public class SampleMailerController {
 	void scheduleEmail(ActionEvent event) {
 		if (dateTimePicker.getDateTimeValue().isAfter(LocalDateTime.now())) {
 			EmailTask emailTask = createEmailTask();
+			emailTask.setLogger(logger);
 			ScheduledEmailTask scheduledEmailTask = new ScheduledEmailTask(emailTask, dateTimePicker.getDateTimeValue());
 			emailScheduler.scheduleEmailTask(scheduledEmailTask);
 		}	
@@ -399,7 +433,13 @@ public class SampleMailerController {
 	@FXML
 	void sendEmail(ActionEvent event) {
 		EmailTask emailTask = createEmailTask();
+		emailTask.setLogger(logger);
 		futureSubmittedTask = emailTaskExecutor.submit(emailTask);
+	}
+	
+	@FXML
+	void clearLogs(ActionEvent event) {
+		logArea.clear();
 	}
 
 	@FXML
@@ -408,6 +448,7 @@ public class SampleMailerController {
 		initializeManagers();
 		loadSettings();
 		loadTemplates();
+		logger = new Logger(logArea);
 	}
 	
     public void setStage(Stage stage) {
@@ -482,7 +523,6 @@ public class SampleMailerController {
 	}
 
 	private UnaryOperator<TextFormatter.Change> createInputFilter(String validInputRegEx, String defaultText) {
-
 		UnaryOperator<TextFormatter.Change> filter = change -> {
 			String newText = change.getControlNewText();
 			if (newText.matches(validInputRegEx)) {
@@ -501,17 +541,7 @@ public class SampleMailerController {
 	}
 	
 	private MimeMessage createMimeMessage() {
-		Properties settings = SettingsManager.getInstance().getSettings();
-		
-		settings.setProperty("mail.smtp.host", serverNameField.getText().trim());
-		
-		if (!toggleFromField.isDisabled()) {
-			settings.setProperty("mail.smtp.from", mailFromField.getText().trim());
-		}
-		
-		if (!toggleTLSBtn.isDisable()) {
-			settings.setProperty("mail.smtp.starttls.enable", "true");
-		}
+		Properties settings = getSettings();
 		
 		Session session = Session.getInstance(settings);
 		
@@ -554,6 +584,22 @@ public class SampleMailerController {
 		}
 		
 		return mimeMessage;
+	}
+	
+	private Properties getSettings() {
+		Properties settings = SettingsManager.getInstance().getSettings();
+		
+		settings.setProperty("mail.smtp.host", serverNameField.getText().trim());
+		
+		if (!toggleFromField.isDisabled()) {
+			settings.setProperty("mail.smtp.from", mailFromField.getText().trim());
+		}
+		
+		if (!toggleTLSBtn.isDisable()) {
+			settings.setProperty("mail.smtp.starttls.enable", "true");
+		}
+		
+		return settings;
 	}
 	
 	private EmailTask createEmailTask() {
