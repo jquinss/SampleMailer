@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.control.ListView;
 
 public class TemplateManager extends ListViewManager<EmailTemplate> {
@@ -19,20 +20,21 @@ public class TemplateManager extends ListViewManager<EmailTemplate> {
 	private static final String TEMPLATES_PATH = TEMPLATES_ROOT_DIR + File.separator + TEMPLATES_FILE_NAME;
 
 	private ObjectSerializer objectSerializer;
-	private boolean templateListModified = false;
+	private SimpleBooleanProperty templateListSaved;
 	
 	public TemplateManager(ListView<EmailTemplate> templateListView) {
 		super(templateListView);
+		templateListSaved = new SimpleBooleanProperty(true);
 	}
 	
 	public void addItem(EmailTemplate emailTemplate) {
 		super.addItem(emailTemplate);
-		templateListModified = true;
+		templateListSaved.set(false);
 	}
 	
 	public void removeItem(EmailTemplate emailTemplate) {
 		super.removeItem(emailTemplate);
-		templateListModified = true;
+		templateListSaved.set(false);
 	}
 	
 	public void loadItems() {
@@ -66,8 +68,10 @@ public class TemplateManager extends ListViewManager<EmailTemplate> {
 			objectSerializer.openFileForWrite();
 			List<EmailTemplate> emailTemplateList = getItems();
 			objectSerializer.writeObject(emailTemplateList);
+			templateListSaved.set(true);
 		}
 		catch (IOException e) {
+			templateListSaved.set(false);
 			e.printStackTrace();
 		}
 		finally {
@@ -77,10 +81,9 @@ public class TemplateManager extends ListViewManager<EmailTemplate> {
 				e.printStackTrace();
 			}
 		}
-		templateListModified = false;
 	}
 	
-	public boolean isTemplateListModified() {
-		return templateListModified;
+	public SimpleBooleanProperty isTemplateListSaved() {
+		return templateListSaved;
 	}
 }
