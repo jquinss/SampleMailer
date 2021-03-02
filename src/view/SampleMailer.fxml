@@ -33,8 +33,8 @@
         <Menu mnemonicParsing="false" text="File">
           <items>
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem fx:id="saveTemplatesBtn" mnemonicParsing="false" onAction="#saveTemplates" text="Save" />
-            <MenuItem fx:id="saveTemplatesAndExitBtn" mnemonicParsing="false" onAction="#saveTemplatesAndExit" text="Save and Exit" />
+            <MenuItem fx:id="saveTemplatesBtn" mnemonicParsing="false" onAction="#saveTemplates" text="Save Templates" />
+            <MenuItem fx:id="saveTemplatesAndExitBtn" mnemonicParsing="false" onAction="#saveTemplatesAndExit" text="Save Templates and Exit" />
             <MenuItem fx:id="exitAppBtn" mnemonicParsing="false" onAction="#exitApp" text="Exit" />
           </items>
         </Menu>
