@@ -343,7 +343,7 @@ public class SampleMailerController {
 
 	@FXML
 	void openAboutInfo(ActionEvent event) {
-		DialogBuilder.getAlertDialog("About", "", "Designed by Joaquin Sampedro", AlertType.INFORMATION).show();
+		DialogBuilder.getAlertDialog("About", "", "SampleMailerv1.0\n\nDesigned by Joaquin Sampedro", AlertType.INFORMATION).show();
 	}
 
 	@FXML
@@ -415,7 +415,7 @@ public class SampleMailerController {
 	}
 	
 	private void saveTemplatesIfModified() {
-		if (templateManager.isTemplateListModified()) {
+		if (!templateManager.isTemplateListSaved().get()) {
 			templateManager.saveItems();
 		}
 	}
@@ -444,11 +444,11 @@ public class SampleMailerController {
 
 	@FXML
 	public void initialize() {
-		initializeFields();
+		logger = new Logger(logArea);
 		initializeManagers();
+		initializeControls();
 		loadSettings();
 		loadTemplates();
-		logger = new Logger(logArea);
 	}
 	
     public void setStage(Stage stage) {
@@ -495,12 +495,13 @@ public class SampleMailerController {
 		emailScheduler = new EmailScheduler(schedulerTableView);
 	}
 
-	private void initializeFields() {
-		setTextFormatters();
-		setListeners();
+	private void initializeControls() {
+		setTextFieldsFormatters();
+		setControlsBinding();
+		setControlsListeners();
 	}
 	
-	private void setTextFormatters() {
+	private void setTextFieldsFormatters() {
 		UnaryOperator<TextFormatter.Change> numEmailsFilter = createInputFilter("[1-9][0-9]{0,2}", "1");
 		UnaryOperator<TextFormatter.Change> delayFilter = createInputFilter("[0-9]|[1-9][0-9]{0,4}", "0");
 
@@ -508,9 +509,7 @@ public class SampleMailerController {
 		delayField.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, delayFilter));
 	}
 	
-	private void setListeners() {
-		fromField.textProperty().bind(mailFromField.textProperty());
-		
+	private void setControlsListeners() {
 		toggleFromField.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
 		    if (isNowSelected) {
 		    	fromField.setDisable(false);
@@ -520,6 +519,12 @@ public class SampleMailerController {
 		    	fromField.textProperty().bind(mailFromField.textProperty());
 		    } 
 		});
+	}
+	
+	private void setControlsBinding() {
+		saveTemplatesBtn.disableProperty().bind(templateManager.isTemplateListSaved());
+		saveTemplatesAndExitBtn.disableProperty().bind(templateManager.isTemplateListSaved());
+		fromField.textProperty().bind(mailFromField.textProperty());
 	}
 
 	private UnaryOperator<TextFormatter.Change> createInputFilter(String validInputRegEx, String defaultText) {
