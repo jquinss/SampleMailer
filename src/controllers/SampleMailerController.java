@@ -35,6 +35,7 @@ import mail.ScheduledEmailTask;
 import util.DialogBuilder;
 import util.Logger;
 import util.OSChecker;
+import util.Validator;
 import control.DateTimePicker;
 
 import java.util.function.UnaryOperator;
@@ -323,18 +324,12 @@ public class SampleMailerController {
 
 	@FXML
 	void modifyHeader(ActionEvent event) {
-		EmailHeader header = headerManager.getSelectedItem();
+		EmailHeader selectedHeader = headerManager.getSelectedItem();
 		
-		if (header != null) {
+		if (selectedHeader != null) {
 			String headerName = headerNameField.getText().trim();
 			String headerValue = headerValueField.getText().trim();
-			
-			if (!headerName.isEmpty() && !headerValue.isEmpty()) {
-				headerManager.replaceItem(header, new EmailHeader(headerName, headerValue));
-			}
-			else {
-				DialogBuilder.getAlertDialog("Error", "Error modifying header", "You must enter a name and value for the header", AlertType.WARNING).show();
-			}
+			replaceHeader(selectedHeader, new EmailHeader(headerName, headerValue));
 		}
 		else {
 			DialogBuilder.getAlertDialog("Error", "Error modifying header", "No headers have been selected", AlertType.WARNING).show();
@@ -424,17 +419,24 @@ public class SampleMailerController {
 	void scheduleEmail(ActionEvent event) {
 		if (dateTimePicker.getDateTimeValue().isAfter(LocalDateTime.now())) {
 			EmailTask emailTask = createEmailTask();
-			emailTask.setLogger(logger);
-			ScheduledEmailTask scheduledEmailTask = new ScheduledEmailTask(emailTask, dateTimePicker.getDateTimeValue());
-			emailScheduler.scheduleEmailTask(scheduledEmailTask);
-		}	
+			scheduleEmailTask(emailTask);
+		}
+		else {
+			DialogBuilder.getAlertDialog("Error", "Invalid date", "The date is invalid. Select a valid date.", AlertType.WARNING).show();
+		}
 	}
 
 	@FXML
 	void sendEmail(ActionEvent event) {
-		EmailTask emailTask = createEmailTask();
-		emailTask.setLogger(logger);
-		futureSubmittedTask = emailTaskExecutor.submit(emailTask);
+		String validationMsg = validateFields();
+		
+		if (!validationMsg.isEmpty()) {
+			DialogBuilder.getAlertDialog("Error", "Invalid input", validationMsg, AlertType.ERROR).show();
+		}
+		else {
+			EmailTask emailTask = createEmailTask();
+			executeEmailTask(emailTask);
+		}
 	}
 	
 	@FXML
@@ -586,6 +588,7 @@ public class SampleMailerController {
 		}
 		catch (MessagingException e) {
 			e.printStackTrace();
+			DialogBuilder.getAlertDialog("Error", "Error sending email", "Error: " + e.getMessage(), AlertType.ERROR).show();
 		}
 		
 		return mimeMessage;
@@ -609,12 +612,39 @@ public class SampleMailerController {
 	
 	private EmailTask createEmailTask() {
 		MimeMessage mimeMessage = createMimeMessage();
-		int numEmails = Integer.parseInt(numEmailsField.getText());
-		int delay = Integer.parseInt(numEmailsField.getText());
+		EmailTask emailTask = null;
 		
-		EmailTask emailTask = new EmailTask(mimeMessage, numEmails, delay);
+		if (mimeMessage != null) {
+			int numEmails = Integer.parseInt(numEmailsField.getText());
+			int delay = Integer.parseInt(numEmailsField.getText());
+			emailTask = new EmailTask(mimeMessage, numEmails, delay);
+		}
 		
 		return emailTask;
+	}
+	
+	private void executeEmailTask(EmailTask emailTask) {
+		if (emailTask != null) {
+			emailTask.setLogger(logger);
+			futureSubmittedTask = emailTaskExecutor.submit(emailTask);
+		}
+	}
+	
+	private void scheduleEmailTask(EmailTask emailTask) {
+		if (emailTask != null) {
+			emailTask.setLogger(logger);
+			ScheduledEmailTask scheduledEmailTask = new ScheduledEmailTask(emailTask, dateTimePicker.getDateTimeValue());
+			emailScheduler.scheduleEmailTask(scheduledEmailTask);
+		}
+	}
+	
+	private void replaceHeader(EmailHeader currentHeader, EmailHeader newHeader) {
+		if (!newHeader.getName().isEmpty() && !newHeader.getName().isEmpty()) {
+			headerManager.replaceItem(currentHeader, newHeader);
+		}
+		else {
+			DialogBuilder.getAlertDialog("Error", "Error modifying header", "You must enter a name and value for the header", AlertType.WARNING).show();
+		}
 	}
 	
 	private void shutdownExecutors() {
@@ -625,5 +655,28 @@ public class SampleMailerController {
 		if (!emailScheduler.getScheduledExecutorService().isShutdown()) {
 			emailScheduler.getScheduledExecutorService().shutdownNow();
 		}
+	}
+	
+	private String validateFields() {
+		StringBuilder validationMsg = new StringBuilder();
+		
+		if (!validateServer()) {
+			validationMsg.append("The server name is not valid\n");
+		}
+		
+		return validationMsg.toString();
+	}
+	
+	private boolean validateServer() {
+		boolean valid = false;
+		String validIpAddressRegex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$";
+		String validHostnameRegex = "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$";
+		
+		if (Validator.validatePattern(serverNameField.getText().trim(), validIpAddressRegex) || 
+				Validator.validatePattern(serverNameField.getText().trim(), validHostnameRegex)) {
+			valid = true;
+		}
+		
+		return valid;
 	}
 }
