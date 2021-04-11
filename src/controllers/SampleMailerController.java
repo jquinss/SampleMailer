@@ -669,14 +669,22 @@ public class SampleMailerController {
 	
 	private boolean validateServer() {
 		boolean valid = false;
-		String validIpAddressRegex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$";
-		String validHostnameRegex = "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$";
 		
-		if (Validator.validatePattern(serverNameField.getText().trim(), validIpAddressRegex) || 
-				Validator.validatePattern(serverNameField.getText().trim(), validHostnameRegex)) {
+		if (validateIpAddress(serverNameField.getText().trim()) || 
+				validateHostname(serverNameField.getText().trim())) {
 			valid = true;
 		}
 		
 		return valid;
+	}
+	
+	private boolean validateHostname(String hostname) {
+		String validHostnameRegex = "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$";
+		return Validator.validatePattern(hostname, validHostnameRegex);
+	}
+	
+	private boolean validateIpAddress(String IpAddress) {
+		String validIpAddressRegex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$";
+		return Validator.validatePattern(serverNameField.getText().trim(), validIpAddressRegex);
 	}
 }
