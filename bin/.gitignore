@@ -1,1 +1,9 @@
 /controllers/
+/application/
+/control/
+/enums/
+/mail/
+/managers/
+/styles/
+/util/
+/view/
