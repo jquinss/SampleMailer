@@ -3,6 +3,7 @@ package mail;
 import java.time.LocalDateTime;
 import java.util.concurrent.FutureTask;
 
+import exceptions.InvalidDateTimeException;
 import util.Observable;
 import util.Observer;
 
@@ -13,8 +14,15 @@ public class ScheduledEmailTask extends FutureTask<Void> implements Observable {
 	private String taskId;
 	private Observer observer;
 	
-	public ScheduledEmailTask(EmailTask emailTask, LocalDateTime scheduledDateTime) {
+	public ScheduledEmailTask(EmailTask emailTask, LocalDateTime scheduledDateTime) throws InvalidDateTimeException {
 		super(emailTask);
+		
+		LocalDateTime currentDateTime = LocalDateTime.now();
+		
+		if (scheduledDateTime.isBefore(currentDateTime)) {
+			throw new InvalidDateTimeException("Invalid date. Date " + scheduledDateTime + " is before date " + currentDateTime);
+		}
+		
 		this.scheduledDateTime = scheduledDateTime;
 	}
 	
