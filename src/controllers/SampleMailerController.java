@@ -35,15 +35,14 @@ import mail.ScheduledEmailTask;
 import util.DialogBuilder;
 import util.Logger;
 import util.OSChecker;
-import util.Validator;
 import control.DateTimePicker;
+import exceptions.InvalidDateTimeException;
 
 import java.util.function.UnaryOperator;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
@@ -417,25 +416,26 @@ public class SampleMailerController {
 
 	@FXML
 	void scheduleEmail(ActionEvent event) {
-		if (dateTimePicker.getDateTimeValue().isAfter(LocalDateTime.now())) {
+		try {
 			EmailTask emailTask = createEmailTask();
 			scheduleEmailTask(emailTask);
 		}
-		else {
-			DialogBuilder.getAlertDialog("Error", "Invalid date", "The date is invalid. Select a valid date.", AlertType.WARNING).show();
+		catch (MessagingException e) {
+			DialogBuilder.getAlertDialog("Error", "Error creating email", "Error: " + e.getMessage(), AlertType.ERROR).show();
+		}
+		catch (InvalidDateTimeException e) {
+			DialogBuilder.getAlertDialog("Error", "Error scheduling email", "Error: " + e.getMessage(), AlertType.ERROR).show();
 		}
 	}
 
 	@FXML
 	void sendEmail(ActionEvent event) {
-		String validationMsg = validateFields();
-		
-		if (!validationMsg.isEmpty()) {
-			DialogBuilder.getAlertDialog("Error", "Invalid input", validationMsg, AlertType.ERROR).show();
-		}
-		else {
+		try {
 			EmailTask emailTask = createEmailTask();
 			executeEmailTask(emailTask);
+		}
+		catch (MessagingException e) {
+			DialogBuilder.getAlertDialog("Error", "Error creating email", "Error: " + e.getMessage(), AlertType.ERROR).show();
 		}
 	}
 	
@@ -547,51 +547,43 @@ public class SampleMailerController {
 		return filter;
 	}
 	
-	private MimeMessage createMimeMessage() {
+	private MimeMessage createMimeMessage() throws MessagingException {
 		Properties settings = getSettings();
 		
 		Session session = Session.getInstance(settings);
 		
 		MimeMessageBuilder mimeMessageBuilder = new MimeMessageBuilder(session);
-		MimeMessage mimeMessage = null;
-		
-		try {
-			mimeMessageBuilder.setFrom(fromField.getText().trim());
-			mimeMessageBuilder.setRecipients(RecipientType.TO, toField.getText().trim());
+
+		mimeMessageBuilder.setFrom(fromField.getText().trim());
+		mimeMessageBuilder.setRecipients(RecipientType.TO, toField.getText().trim());
 			
-			if (!ccField.getText().trim().isEmpty()) {
-				mimeMessageBuilder.setRecipients(RecipientType.CC, ccField.getText().trim());
-			}
-			
-			if (!bccField.getText().trim().isEmpty()) {
-				mimeMessageBuilder.setRecipients(RecipientType.BCC, ccField.getText().trim());
-			}
-			
-			if (!headerManager.getItems().isEmpty()) {
-				mimeMessageBuilder.setHeaders(headerManager.getItems());
-			}
-			
-			if (!subjectField.getText().isEmpty()) {
-				mimeMessageBuilder.setSubject(subjectField.getText());
-			}
-			
-			if (!attachmentManager.getItems().isEmpty()) {
-				mimeMessageBuilder.setMultiPartBody(attachmentManager.getItems(), bodyField.getText(), 
-						settings.getProperty("mail.content.contenttype"), settings.getProperty("mail.content.charset"));
-			}
-			else {
-				mimeMessageBuilder.setBody(bodyField.getText(), settings.getProperty("mail.content.contenttype"), 
-						settings.getProperty("mail.content.charset"));
-			}
-			
-			mimeMessage = mimeMessageBuilder.getMessage();
+		if (!ccField.getText().trim().isEmpty()) {
+			mimeMessageBuilder.setRecipients(RecipientType.CC, ccField.getText().trim());
 		}
-		catch (MessagingException e) {
-			e.printStackTrace();
-			DialogBuilder.getAlertDialog("Error", "Error sending email", "Error: " + e.getMessage(), AlertType.ERROR).show();
+			
+		if (!bccField.getText().trim().isEmpty()) {
+			mimeMessageBuilder.setRecipients(RecipientType.BCC, ccField.getText().trim());
 		}
+			
+		if (!headerManager.getItems().isEmpty()) {
+			mimeMessageBuilder.setHeaders(headerManager.getItems());
+		}
+			
+		if (!subjectField.getText().isEmpty()) {
+			mimeMessageBuilder.setSubject(subjectField.getText());
+		}
+			
+		if (!attachmentManager.getItems().isEmpty()) {
+			mimeMessageBuilder.setMultiPartBody(attachmentManager.getItems(), bodyField.getText(), 
+			settings.getProperty("mail.content.contenttype"), settings.getProperty("mail.content.charset"));
+		}
+		else {
+			mimeMessageBuilder.setBody(bodyField.getText(), settings.getProperty("mail.content.contenttype"), 
+			settings.getProperty("mail.content.charset"));
+		}
+
 		
-		return mimeMessage;
+		return mimeMessageBuilder.buildMessage();
 	}
 	
 	private Properties getSettings() {
@@ -610,32 +602,24 @@ public class SampleMailerController {
 		return settings;
 	}
 	
-	private EmailTask createEmailTask() {
+	private EmailTask createEmailTask() throws MessagingException {
 		MimeMessage mimeMessage = createMimeMessage();
-		EmailTask emailTask = null;
-		
-		if (mimeMessage != null) {
-			int numEmails = Integer.parseInt(numEmailsField.getText());
-			int delay = Integer.parseInt(numEmailsField.getText());
-			emailTask = new EmailTask(mimeMessage, numEmails, delay);
-		}
+		int numEmails = Integer.parseInt(numEmailsField.getText());
+		int delay = Integer.parseInt(numEmailsField.getText());
+		EmailTask emailTask = new EmailTask(mimeMessage, numEmails, delay);
 		
 		return emailTask;
 	}
 	
 	private void executeEmailTask(EmailTask emailTask) {
-		if (emailTask != null) {
-			emailTask.setLogger(logger);
-			futureSubmittedTask = emailTaskExecutor.submit(emailTask);
-		}
+		emailTask.setLogger(logger);
+		futureSubmittedTask = emailTaskExecutor.submit(emailTask);
 	}
 	
-	private void scheduleEmailTask(EmailTask emailTask) {
-		if (emailTask != null) {
-			emailTask.setLogger(logger);
-			ScheduledEmailTask scheduledEmailTask = new ScheduledEmailTask(emailTask, dateTimePicker.getDateTimeValue());
-			emailScheduler.scheduleEmailTask(scheduledEmailTask);
-		}
+	private void scheduleEmailTask(EmailTask emailTask) throws InvalidDateTimeException {
+		emailTask.setLogger(logger);
+		ScheduledEmailTask scheduledEmailTask = new ScheduledEmailTask(emailTask, dateTimePicker.getDateTimeValue());
+		emailScheduler.scheduleEmailTask(scheduledEmailTask);
 	}
 	
 	private void replaceHeader(EmailHeader currentHeader, EmailHeader newHeader) {
@@ -656,7 +640,7 @@ public class SampleMailerController {
 			emailScheduler.getScheduledExecutorService().shutdownNow();
 		}
 	}
-	
+	/*
 	private String validateFields() {
 		StringBuilder validationMsg = new StringBuilder();
 		
@@ -687,4 +671,5 @@ public class SampleMailerController {
 		String validIpAddressRegex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$";
 		return Validator.validatePattern(serverNameField.getText().trim(), validIpAddressRegex);
 	}
+	*/
 }
