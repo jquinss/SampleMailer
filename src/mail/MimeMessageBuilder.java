@@ -65,7 +65,7 @@ public class MimeMessageBuilder {
 		message.setContent(multipart);
 	}
 	
-	public MimeMessage getMessage() {
+	public MimeMessage buildMessage() {
 		return message;
 	}
 }
