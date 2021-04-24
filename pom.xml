@@ -30,10 +30,5 @@
     <artifactId>dnsjava</artifactId>
     <version>3.3.1</version>
 </dependency>
-<dependency>
-  <groupId>javax.mail</groupId>
-  <artifactId>javax.mail-api</artifactId>
-  <version>1.6.2</version>
-</dependency>
 </dependencies>
 </project>
