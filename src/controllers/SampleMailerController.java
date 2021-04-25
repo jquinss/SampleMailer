@@ -40,7 +40,9 @@ import exceptions.InvalidDateTimeException;
 
 import java.util.function.UnaryOperator;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -481,7 +483,7 @@ public class SampleMailerController {
 		defaultSettings.setProperty("mail.content.charset", "utf-8");
 		
 		defaultSettings.setProperty("mail.debug", "false");
-		defaultSettings.setProperty("mail.debugurl", OSChecker.getOSDataDirectory() + File.separator + "Debug.log");
+		defaultSettings.setProperty("mail.debugurl", OSChecker.getOSDataDirectory() + File.separator + "SampleMailer" + File.separator + "Debug.log");
 
 		return defaultSettings;
 	}
@@ -549,8 +551,15 @@ public class SampleMailerController {
 	
 	private MimeMessage createMimeMessage() throws MessagingException {
 		Properties settings = getSettings();
+		String debugURL = settings.getProperty("mail.debugurl");
 		
 		Session session = Session.getInstance(settings);
+		
+		try {
+			session.setDebugOut(new PrintStream(debugURL));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		
 		MimeMessageBuilder mimeMessageBuilder = new MimeMessageBuilder(session);
 
