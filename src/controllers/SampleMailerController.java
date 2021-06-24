@@ -196,7 +196,6 @@ public class SampleMailerController {
 	void addAttachment(ActionEvent event) {
 		FileChooser fileChooser = DialogBuilder.getFileChooser("Select one or multiple files");
 		List<File> files = fileChooser.showOpenMultipleDialog(getStage());
-		System.out.println(files);
 		if (files != null) {
 			attachmentManager.addItems(files);
 		}
@@ -294,7 +293,6 @@ public class SampleMailerController {
 	@FXML
 	void cancelScheduledEmail(ActionEvent event) {
 		ScheduledEmailTask scheduledEmailTask = emailScheduler.getSelectedItem();
-		
 		if (scheduledEmailTask != null) {
 			emailScheduler.cancelScheduledEmailTask(scheduledEmailTask);
 		}
@@ -344,13 +342,13 @@ public class SampleMailerController {
 
 	@FXML
 	void openSettingsDialog(ActionEvent event) throws IOException {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("..\\view\\SettingsPane.fxml"));
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/SettingsPane.fxml"));
 		Parent parent = fxmlLoader.load();
 		
 		SettingsPaneController settingsPaneController = fxmlLoader.getController();
 		
 		Scene scene = new Scene(parent, 800, 350);
-		scene.getStylesheets().add(getClass().getResource("..\\styles\\application.css").toExternalForm());
+		scene.getStylesheets().add(getClass().getResource("/styles/application.css").toExternalForm());
         Stage stage = new Stage();
         stage.setResizable(false);
         stage.setTitle("Settings");
@@ -649,36 +647,4 @@ public class SampleMailerController {
 			emailScheduler.getScheduledExecutorService().shutdownNow();
 		}
 	}
-	/*
-	private String validateFields() {
-		StringBuilder validationMsg = new StringBuilder();
-		
-		if (!validateServer()) {
-			validationMsg.append("The server name is not valid\n");
-		}
-		
-		return validationMsg.toString();
-	}
-	
-	private boolean validateServer() {
-		boolean valid = false;
-		
-		if (validateIpAddress(serverNameField.getText().trim()) || 
-				validateHostname(serverNameField.getText().trim())) {
-			valid = true;
-		}
-		
-		return valid;
-	}
-	
-	private boolean validateHostname(String hostname) {
-		String validHostnameRegex = "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\\-]*[A-Za-z0-9])$";
-		return Validator.validatePattern(hostname, validHostnameRegex);
-	}
-	
-	private boolean validateIpAddress(String IpAddress) {
-		String validIpAddressRegex = "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$";
-		return Validator.validatePattern(serverNameField.getText().trim(), validIpAddressRegex);
-	}
-	*/
 }
