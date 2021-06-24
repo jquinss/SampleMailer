@@ -5,6 +5,7 @@
 * [Technologies](#technologies)
 * [Setup](#setup)
 * [Features](#features)
+* [Status](#status)
 
 ## General info
 This a SMTP client application created in JavaFX. The application is mainly intended to be used for testing purposes (e.g. testing of email security technologies)
