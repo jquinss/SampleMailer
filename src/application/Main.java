@@ -12,14 +12,14 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("..\\view\\SampleMailer.fxml"));
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/SampleMailer.fxml"));
 			primaryStage.setResizable(false);
 			primaryStage.setTitle("SampleMailer");
 			VBox root = (VBox)fxmlLoader.load();
 			final SampleMailerController controller = fxmlLoader.getController();
 			controller.setStage(primaryStage);
-			Scene scene = new Scene(root,1200,900);
-			scene.getStylesheets().add(getClass().getResource("..\\styles\\application.css").toExternalForm());
+			Scene scene = new Scene(root,1150,768);
+			scene.getStylesheets().add(getClass().getResource("/styles/application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch(Exception e) {
