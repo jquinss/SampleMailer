@@ -601,9 +601,15 @@ public class SampleMailerController {
 		if (!toggleFromField.isDisabled()) {
 			settings.setProperty("mail.smtp.from", mailFromField.getText().trim());
 		}
+		else {
+			settings.setProperty("mail.smtp.from", fromField.getText().trim());
+		}
 		
 		if (!toggleTLSBtn.isDisable()) {
 			settings.setProperty("mail.smtp.starttls.enable", "true");
+		}
+		else {
+			settings.setProperty("mail.smtp.starttls.enable", "false");
 		}
 		
 		return settings;
