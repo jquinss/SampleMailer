@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioMenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.web.HTMLEditor?>
+<?import javafx.scene.image.ImageView?>
+
+<VBox prefHeight="831.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jquinss.samplemailer.controllers.SampleMailerController">
+  <children>
+    <MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
+               <items>
+                  <MenuItem mnemonicParsing="false" fx:id="saveTemplatesBtn" onAction="#saveTemplates" text="Save Templates" accelerator="Shortcut+S" />
+                  <MenuItem mnemonicParsing="false" fx:id="saveTemplatesAndExitBtn" onAction="#saveTemplatesAndExit" text="Save Templates and Exit" accelerator="Shortcut+Shift+X" />
+                  <MenuItem mnemonicParsing="false" onAction="#exitApp" text="Exit" accelerator="Shortcut+X" />
+               </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Options">
+               <items>
+                  <Menu mnemonicParsing="false" text="Editor">
+                     <items>
+                        <RadioMenuItem mnemonicParsing="false" text="HTML" fx:id="hmtlEditorRadioMenuItem" onAction="#switchEditor" accelerator="Shortcut+Shift+H">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="editorTypeToggleGroup" />
+                           </toggleGroup></RadioMenuItem>
+                        <RadioMenuItem mnemonicParsing="false" selected="true" text="Plain-text" fx:id="plainTextEditorRadioMenuItem" toggleGroup="$editorTypeToggleGroup" onAction="#switchEditor" accelerator="Shortcut+Shift+P" />
+                     </items>
+                  </Menu>
+                  <MenuItem mnemonicParsing="false" onAction="#openSettingsDialog" text="Settings..." accelerator="Shortcut+T" />
+               </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help" accelerator="Shortcut+H">
+          <items>
+            <MenuItem mnemonicParsing="false" onAction="#openAboutInfo" text="About" accelerator="Shortcut+A" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+      <VBox prefHeight="806.0" prefWidth="900.0" spacing="10.0">
+         <children>
+            <HBox prefHeight="118.0" prefWidth="900.0">
+               <children>
+                  <HBox prefHeight="105.0" prefWidth="292.0">
+                     <children>
+                        <GridPane hgap="10.0">
+                          <columnConstraints>
+                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="144.0" minWidth="10.0" prefWidth="144.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="85.0" minWidth="10.0" prefWidth="36.0" />
+                              <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Server:" />
+                              <Label text="Mail From:" GridPane.rowIndex="1" />
+                              <Label text="From:" GridPane.rowIndex="2" />
+                              <TextField fx:id="serverNameField" GridPane.columnIndex="1" />
+                              <TextField fx:id="mailFromField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="fromField" GridPane.columnIndex="1" GridPane.rowIndex="2" disable="true" />
+                              <CheckBox fx:id="toggleFromField" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="toggleServerField" mnemonicParsing="false" GridPane.columnIndex="2" selected="true" />
+                               <ImageView fx:id="serverNameFieldQuestionMark" fitHeight="12.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3"/>
+                               <ImageView fx:id="fromFieldQuestionMark" fitHeight="12.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+                           </children>
+                        </GridPane>
+                     </children>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefHeight="134.0" prefWidth="292.0">
+                     <children>
+                        <GridPane hgap="10.0" prefHeight="105.0" prefWidth="296.0">
+                          <columnConstraints>
+                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="135.0" minWidth="10.0" prefWidth="48.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="233.0" minWidth="10.0" prefWidth="232.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="To:" />
+                              <Label text="CC:" GridPane.rowIndex="1" />
+                              <Label text="BCC:" GridPane.rowIndex="2" />
+                              <TextField fx:id="toField" GridPane.columnIndex="1" />
+                              <TextField fx:id="ccField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="bccField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                           </children>
+                        </GridPane>
+                     </children>
+                     <padding>
+                        <Insets top="20.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefHeight="134.0" prefWidth="323.0" spacing="5.0">
+                     <children>
+                        <VBox prefHeight="105.0" prefWidth="190.0">
+                           <children>
+                              <Label text="Attachments:" />
+                              <ListView fx:id="attachmentListView" prefHeight="200.0" prefWidth="201.0" />
+                           </children>
+                        </VBox>
+                        <VBox alignment="CENTER_LEFT" prefHeight="105.0" prefWidth="127.0" spacing="5.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#addAttachment" prefHeight="25.0" prefWidth="59.0" text="Add" />
+                              <Button mnemonicParsing="false" onAction="#removeAttachment" text="Remove" />
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <padding>
+                              <Insets left="10.0" />
+                           </padding>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets left="25.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </HBox>
+            <Separator prefWidth="200.0" />
+            <HBox prefHeight="239.0" prefWidth="900.0" spacing="10.0">
+               <children>
+                  <TabPane prefHeight="142.0" prefWidth="412.0" tabClosingPolicy="UNAVAILABLE">
+                    <tabs>
+                      <Tab text="Headers">
+                           <content>
+                              <fx:include fx:id="customHeadersPane" source="CustomHeadersPane.fxml" />
+                           </content>
+                      </Tab>
+                      <Tab text="Templates">
+                           <content>
+                              <fx:include fx:id="templatesPane" source="TemplatesPane.fxml" />
+                           </content>
+                      </Tab>
+                    </tabs>
+                     <padding>
+                        <Insets left="15.0" right="10.0" />
+                     </padding>
+                  </TabPane>
+                  <Separator orientation="VERTICAL" prefHeight="200.0" />
+                  <fx:include fx:id="schedulerPane" source="SchedulerPane.fxml" />      
+               </children>
+               <padding>
+                  <Insets left="25.0" right="25.0" />
+               </padding>
+            </HBox>
+            <Separator layoutX="10.0" layoutY="148.0" prefWidth="200.0" />
+            <HBox prefHeight="328.0" prefWidth="900.0">
+               <children>
+                  <VBox prefHeight="184.0" prefWidth="900.0">
+                     <children>
+                        <GridPane hgap="10.0" prefHeight="258.0" prefWidth="885.0" vgap="10.0">
+                          <columnConstraints>
+                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="445.0" minWidth="10.0" prefWidth="63.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="851.0" minWidth="10.0" prefWidth="767.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="99.0" minHeight="10.0" prefHeight="23.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="177.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Subject:" />
+                              <Label text="Body:" GridPane.rowIndex="1" GridPane.valignment="TOP" />
+                              <TextField fx:id="subjectField" GridPane.columnIndex="1" />
+                              <StackPane prefHeight="150.0" prefWidth="825.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <children>
+                                    <TextArea fx:id="bodyTextArea" prefHeight="200.0" prefWidth="200.0" />
+                                    <HTMLEditor fx:id="bodyHTMLEditor" htmlText="&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body contenteditable=&quot;true&quot;&gt;&lt;/body&gt;&lt;/html&gt;" prefHeight="200.0" prefWidth="506.0" visible="false" />
+                                 </children>
+                              </StackPane>
+                           </children>
+                        </GridPane>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <HBox alignment="CENTER" prefHeight="33.0" prefWidth="208.0" spacing="5.0">
+                                 <children>
+                                    <Label text="Number of emails:" />
+                                    <TextField fx:id="numEmailsField" layoutX="38.0" layoutY="10.0" prefHeight="25.0" prefWidth="52.0" />
+                                 </children>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="33.0" prefWidth="186.0" spacing="5.0">
+                                 <children>
+                                    <Label text="Delay (seconds):" />
+                                    <TextField fx:id="delayField" prefHeight="25.0" prefWidth="58.0" />
+                                 </children>
+                              </HBox>
+                              <ToggleButton fx:id="toggleTLSBtn" mnemonicParsing="false" text="Use TLS" />
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER" layoutX="10.0" layoutY="168.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#sendEmail" text="Send" styleClass="main-btn" />
+                              <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#cancelEmail" text="Cancel" styleClass="main-btn" />
+                              <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#clearEmail" text="Clear" styleClass="main-btn" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" right="40.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="TOP_CENTER" prefHeight="106.0" prefWidth="900.0" spacing="10.0">
+               <children>
+                  <Label text="Status:" />
+                  <TextArea fx:id="logArea" editable="false" prefHeight="74.0" prefWidth="687.0" />
+                  <VBox spacing="15.0" alignment="CENTER">
+                  	<children>
+						<Button mnemonicParsing="false" onAction="#clearLogs" text="Clear logs" />
+						<Button mnemonicParsing="false" onAction="#exportLogs" text="Export logs" />
+                    </children>
+                  </VBox>
+                  
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" />
+               </padding>
+            </HBox>
+         </children>
+         <padding>
+            <Insets top="10.0" />
+         </padding>
+      </VBox>
+  </children>
+</VBox>

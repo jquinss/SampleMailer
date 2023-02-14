@@ -1,0 +1,300 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+/* Styles for the root node */
+
+.root {
+    -fx-background-color: #252525;
+}
+
+/* Styles for the menu bar and items */
+
+.menu-bar {
+	-fx-background-color: #252525;
+}
+
+.menu:hover, .menu:showing {
+	-fx-background-color: #0078d7;
+}
+
+.menu-item:focused {
+	-fx-background-color: #0078d7;
+}
+
+.menu .context-menu {
+	-fx-background-color: #252525;
+}
+
+/* Styles for labels */
+
+.label {
+	-fx-font-size: 10pt;
+	-fx-text-fill: white;
+}
+
+/* Styles for the separators */
+
+.separator .line {
+	-fx-border-width: 0.1;
+}
+
+/* Styles for the tab pane */
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #252525;
+}
+
+.tab-pane .tab {
+	-fx-background-color: #333333;
+}
+
+.tab-pane .tab:selected {
+	-fx-background-color: #333333;
+}
+
+.tab-pane .tab .tab-label {
+	-fx-text-fill: white;
+	-fx-font-size: 10pt;
+	-fx-opacity: 0.4;
+}
+
+.tab-pane .tab:selected .tab-label {
+	-fx-opacity: 1;
+}
+
+/* Styles for the text area */
+
+.text-area {
+	-fx-text-fill: white;
+	-fx-border-color: grey;
+}
+
+.text-area .content {
+	-fx-background-color: #111111;
+}
+
+.text-area:focused {
+	-fx-border-color: #0078d7;
+}
+
+/* Styles for the scroll bar */
+
+.scroll-bar:vertical {
+    -fx-background-color: #333333;
+}
+
+.scroll-bar:vertical .thumb {
+	-fx-background-color: grey;
+}
+
+.scroll-bar:horizontal {
+    -fx-background-color: #333333;
+}
+
+.scroll-bar:horizontal .thumb {
+	-fx-background-color: grey;
+}
+
+/* Styles for the html editor */
+
+.html-editor .top-toolbar {
+     -fx-background-color: #333333;
+}
+
+.html-editor .bottom-toolbar {
+    -fx-background-color: #333333;
+}
+
+/* Styles for the table view */
+
+.table-view {
+	-fx-background-color: #252525;
+	-fx-border-color: black;
+}
+
+.table-view:focused {
+	-fx-border-color: #0078d7;
+}
+
+.table-view .column-header {
+	-fx-background-color: #333333;
+}
+
+.table-cell {
+    -fx-background-color: #252525;
+    -fx-text-fill: white;
+}
+
+.table-view:row-selection .table-row-cell:selected .table-cell {
+    -fx-background-color: #0078d7;
+}
+
+.table-view:cell-selection .table-cell:selected {
+    -fx-background-color: #0078d7;
+}
+
+.table-view .table-column-cell {
+	-fx-background-color: #252525;
+}
+
+/* Styles for the listview */
+
+.list-view {
+	-fx-background-color: #252525;
+	-fx-border-color: black;
+}
+
+.list-view:focused {
+	-fx-border-color: #0078d7;
+}
+
+.list-cell {
+	-fx-background-color: #252525;
+	-fx-text-fill: white;
+}
+
+.list-cell:selected {
+	-fx-background-color: #0078d7;
+}
+
+/* Styles for the text field */
+
+.text-field {
+	-fx-text-fill: white;
+  -fx-border-color: grey;
+  -fx-border-width: 0 0 2 0;
+  -fx-background-color: transparent;
+}
+
+.text-field:focused {
+    -fx-border-color: #0078d7;
+}
+
+/* Styles for the radio button */
+
+.radio-button {
+	-fx-text-fill: white;
+	-fx-opacity: 0.4;
+}
+
+.radio-button:selected {
+	-fx-opacity: 1;
+}
+
+/* Styles for the checkbox */
+
+.check-box {
+	-fx-text-fill: white;
+}
+
+.check-box .box {
+	-fx-background-color: white;
+	-fx-border-color:grey;
+	-fx-border-radius:3px; 
+}
+
+.check-box:selected .mark {
+	-fx-background-color: white;
+}
+
+.check-box:selected .box {
+	-fx-background-color: #0078d7;
+}
+
+/* Styles for the combo box */
+
+.combo-box .arrow {
+	-fx-background-color: white;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: #333333;
+}
+
+.combo-box .list-cell {
+    -fx-background-color: #252525;
+}
+
+.combo-box-popup .list-view .list-cell {
+    -fx-background-color: #252525;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover {
+    -fx-background-color: #0078d7;
+}
+
+/* Styles for the buttons and toggle button */
+
+.button {
+	-fx-background-color: #333333;
+	-fx-text-fill: white;
+	-fx-border-width: 1;
+}
+
+.button:hover {
+	-fx-background-color: #0078d7;
+}
+
+.main-btn {
+	-fx-font-size: 10pt;
+	-fx-pref-width: 100px;
+}
+
+.toggle-button {
+	-fx-text-fill: white;
+	-fx-background-color: #333333;
+	-fx-opacity: 0.4;
+}
+
+.toggle-button:selected {
+	-fx-background-color: #0078d7;
+	-fx-opacity: 1;
+}
+
+/* Styles for the date picker */
+
+.date-picker .arrow-button {
+	-fx-background-color: #333333;
+}
+
+.date-picker .text-field {
+	-fx-background-color: #333333;
+}
+
+.date-picker-popup > .month-year-pane {
+    -fx-background-color: #333333;
+}
+
+/* Styles for the dialog pane */
+
+.dialog-pane {
+    -fx-background-color: #252525;
+}
+
+.dialog-pane:header .header-panel {
+    -fx-background-color: #333333;
+}
+
+.dialog-pane:header .header-panel .label {
+    -fx-font-size: 11pt;
+}
+
+/* Styles for the color picker */
+
+.color-picker {
+	-fx-background-color: #333333;
+}
+
+/* Styles for the corner left by the scroll bar */
+
+.corner {    
+    -fx-background-color: #363636 ;
+}
+
+/* Styles for the context menu */
+
+.context-menu {    
+    -fx-background-color: #333333;
+    -fx-text-fill: white;
+    -fx-font-size: 8pt;
+}
+

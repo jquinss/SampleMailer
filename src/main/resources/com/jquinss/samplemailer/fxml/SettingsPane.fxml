@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.image.ImageView?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="345.0" prefWidth="724.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.jquinss.samplemailer.controllers.SettingsPaneController">
+   <children>
+      <TabPane prefHeight="256.0" prefWidth="692.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="SMTP settings">
+               <content>
+                  <GridPane hgap="20.0" prefWidth="690.0" vgap="10.0">
+                    <columnConstraints>
+                      <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="538.0" minWidth="0.0" prefWidth="181.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="553.0" minWidth="10.0" prefWidth="450.0" />
+                      <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="HELO/EHLO Hostname:" />
+                        <Label text="SMTP Port:" GridPane.rowIndex="1" />
+                        <Label text="Connection Timeout:" GridPane.rowIndex="2" />
+                        <Label text="SSL/TLS Protocols:" GridPane.rowIndex="3" />
+                        <TextField fx:id="heloHostnameTextField" GridPane.columnIndex="1" />
+                        <TextField fx:id="smtpPortTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="connTimeoutTextField" prefWidth="386.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="30.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                           <children>
+                              <CheckBox fx:id="sslv3CheckBox" mnemonicParsing="false" text="SSLv3" />
+                              <CheckBox fx:id="tlsv1CheckBox" mnemonicParsing="false" text="TLSv1" />
+                              <CheckBox fx:id="tlsv1_1CheckBox" mnemonicParsing="false" text="TLSv1.1" />
+                              <CheckBox fx:id="tlsv1_2CheckBox" mnemonicParsing="false" text="TLSv1.2" />
+                           </children>
+                        </HBox>
+                        <ImageView fx:id="connTimeoutTextFieldQuestionMark" fitHeight="12.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                     </children>
+                     <padding>
+                        <Insets left="40.0" right="50.0" top="20.0" />
+                     </padding>
+                  </GridPane>
+               </content>
+            </Tab>
+          <Tab text="Email settings">
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="327.0" minWidth="10.0" prefWidth="151.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="519.0" minWidth="10.0" prefWidth="483.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="Character Encoding:" />
+                        <Label text="Content Type:" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="charEncodingComboBox" prefWidth="250.0" GridPane.columnIndex="1" />
+                        <ComboBox fx:id="contentTypeComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     </children>
+                     <padding>
+                        <Insets left="40.0" right="50.0" top="20.0" />
+                     </padding>
+                  </GridPane>
+               </content>
+            </Tab>
+            <Tab text="Log settings">
+               <content>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="311.0" minWidth="10.0" prefWidth="165.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="469.0" minWidth="10.0" prefWidth="469.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="Enable Debug Logs:" />
+                        <Label text="Debug Logs Location:" GridPane.rowIndex="1" />
+                        <CheckBox fx:id="enableDebugCheckBox" mnemonicParsing="false" GridPane.columnIndex="1" />
+                        <TextField fx:id="debugLogDirTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" disable="true" />
+                     </children>
+                     <padding>
+                        <Insets left="40.0" right="50.0" top="20.0" />
+                     </padding>
+                  </GridPane>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="150.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#resetSettings" text="Reset to Default" />
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="40.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#cancelSettings" text="Cancel" styleClass="main-btn" />
+                  <Button mnemonicParsing="false" onAction="#applySettings" text="Apply" styleClass="main-btn" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>
