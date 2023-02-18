@@ -36,13 +36,14 @@ No special instructions are required to use the application. You can export the 
 * Users are able to see additional info in the Status field logs (e.g. sender, recipients and server)
 * Users can export the Status field logs
 * Users can exclude some headers when importing headers from file.
+* Add tooltips with information for some fields.
 
 ### To Do
 
 * Add option for SMTP authentication.
 * Add option for adding a DKIM signature.
-* Add option for editing HTML code manually
-* Add tooltips with information for some fields.
+* Add option for editing HTML code manually.
+* Add support for TLSv1.3.
 
 ## Status
 This project is still in "In Progress" status
