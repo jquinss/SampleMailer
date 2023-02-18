@@ -18,6 +18,7 @@ This a SMTP client application created in JavaFX. The application is mainly inte
 
 ## Setup
 No special instructions are required to use the application. You can export the project as a runnable Jar file and execute it.
+Alternatively, you can directly use the samplemailer.jar located at the out/artifacts/samplemailer_jar directory. 
 
 ## Features
 * Users can send emails by customising different fields (From, Mail from, To, CC, BCC, Subject, Body)
