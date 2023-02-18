@@ -44,6 +44,7 @@ No special instructions are required to use the application. You can export the 
 * Add option for adding a DKIM signature.
 * Add option for editing HTML code manually.
 * Add support for TLSv1.3.
+* Add documentation.
 
 ## Status
 This project is still in "In Progress" status
