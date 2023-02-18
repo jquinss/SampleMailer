@@ -183,7 +183,7 @@ public class CustomHeadersPaneController {
 		addHeadersFromFileQuestionMark.setImage(new Image(getClass().getResource("/com/jquinss/samplemailer/images/question_mark.png").toString()));
 		Tooltip.install(addHeadersFromFileQuestionMark, new Tooltip("Select a file to import the headers from. This can be an .eml"
 																	+ "\nor an Outlook .msg file or a text file containing key-value"
-																	+ "\nentities separated by a semi-colon (e.g. test: 1234)"));
+																	+ "\nentities separated by a colon (e.g. test: 1234)"));
 
 	}
 	
