@@ -48,6 +48,7 @@
                               <CheckBox fx:id="tlsv1CheckBox" mnemonicParsing="false" text="TLSv1" />
                               <CheckBox fx:id="tlsv1_1CheckBox" mnemonicParsing="false" text="TLSv1.1" />
                               <CheckBox fx:id="tlsv1_2CheckBox" mnemonicParsing="false" text="TLSv1.2" />
+                               <CheckBox fx:id="tlsv1_3CheckBox" mnemonicParsing="false" text="TLSv1.3" />
                            </children>
                         </HBox>
                         <ImageView fx:id="connTimeoutTextFieldQuestionMark" fitHeight="12.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="2"/>

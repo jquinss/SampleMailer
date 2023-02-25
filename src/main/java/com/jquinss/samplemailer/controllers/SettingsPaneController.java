@@ -49,6 +49,9 @@ public class SettingsPaneController {
     @FXML
     private CheckBox tlsv1_2CheckBox;
 
+	@FXML
+	private CheckBox tlsv1_3CheckBox;
+
     @FXML
     private ComboBox<Charset> charEncodingComboBox;
 
@@ -159,6 +162,7 @@ public class SettingsPaneController {
 		tlsv1CheckBox.setSelected(false);
 		tlsv1_1CheckBox.setSelected(false);
 		tlsv1_2CheckBox.setSelected(false);
+		tlsv1_3CheckBox.setSelected(false);
     }
     
     private void loadTLSSettings(Properties settings) {
@@ -177,6 +181,7 @@ public class SettingsPaneController {
 					case "TLSv1" -> tlsv1CheckBox.setSelected(true);
 					case "TLSv1.1" -> tlsv1_1CheckBox.setSelected(true);
 					case "TLSv1.2" -> tlsv1_2CheckBox.setSelected(true);
+					case "TLSv1.3" -> tlsv1_3CheckBox.setSelected(true);
 				}
     		}
     	}
@@ -245,7 +250,8 @@ public class SettingsPaneController {
     	}
     	
        if (!sslv3CheckBox.isSelected() && !tlsv1CheckBox.isSelected() 
-    		   && !tlsv1_1CheckBox.isSelected() && !tlsv1_2CheckBox.isSelected()) {
+    		   && !tlsv1_1CheckBox.isSelected() && !tlsv1_2CheckBox.isSelected()
+	   			&& !tlsv1_3CheckBox.isSelected()) {
     	   validationText.append("- At least one TLS option must be selected.");
        }
     	
@@ -290,6 +296,10 @@ public class SettingsPaneController {
     	if (tlsv1_2CheckBox.isSelected()) {
     		protocols.append(SSLProtocol.TLSv1_2.toString());
     	}
+
+		if (tlsv1_3CheckBox.isSelected()) {
+			protocols.append(SSLProtocol.TLSv1_3.toString());
+		}
 
     	return protocols.toString().trim();
     }

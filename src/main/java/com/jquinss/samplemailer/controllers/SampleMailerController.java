@@ -351,7 +351,7 @@ public class SampleMailerController {
 		
 		SettingsPaneController settingsPaneController = fxmlLoader.getController();
 		
-		Scene scene = new Scene(parent, 700, 300);
+		Scene scene = new Scene(parent, 710, 300);
 		scene.getStylesheets().add(getClass().getResource("/com/jquinss/samplemailer/styles/application.css").toString());
         Stage stage = new Stage();
         stage.setResizable(false);

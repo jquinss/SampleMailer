@@ -4,7 +4,8 @@ public enum SSLProtocol {
 	SSLv3,
 	TLSv1,
 	TLSv1_1,
-	TLSv1_2;
+	TLSv1_2,
+	TLSv1_3;
 	
 	@Override
 	public String toString() {
@@ -13,6 +14,7 @@ public enum SSLProtocol {
 			case TLSv1 -> "TLSv1";
 			case TLSv1_1 -> "TLSv1.1";
 			case TLSv1_2 -> "TLSv1.2";
+			case TLSv1_3 -> "TLSv1.3";
 			default -> throw new IllegalArgumentException();
 		};
 	}
