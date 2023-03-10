@@ -41,6 +41,7 @@ Alternatively, you can directly use the samplemailer.jar located at the out/arti
 
 ### To Do
 
+* Add option for importing and exporting templates.
 * Add option for SMTP authentication.
 * Add option for adding a DKIM signature.
 * Add option for editing HTML code manually.
