@@ -32,16 +32,16 @@
          <children>
             <Label text="Email address:" />
             <Label text="Server profile:" GridPane.rowIndex="1" />
-            <TextField GridPane.columnIndex="1" />
-            <ComboBox prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="emailAddressField" GridPane.columnIndex="1" />
+            <ComboBox fx:id="serverProfilesComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Enabled:" GridPane.rowIndex="2" />
-            <CheckBox mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <CheckBox fx:id="enableProfileCheckBox" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
       </GridPane>
       <HBox alignment="CENTER" prefHeight="57.0" prefWidth="265.0" spacing="20.0">
          <children>
-            <Button mnemonicParsing="false" text="Save" />
-            <Button mnemonicParsing="false" text="Cancel" />
+            <Button mnemonicParsing="false" text="Save" onAction="#saveAuthenticationProfile" />
+            <Button mnemonicParsing="false" text="Cancel" onAction="#cancelEditAuthenticationProfileDialog" />
          </children>
       </HBox>
    </children>
