@@ -48,6 +48,7 @@
                      </items>
                   </Menu>
                   <MenuItem mnemonicParsing="false" onAction="#openSettingsDialog" text="Settings..." accelerator="Shortcut+T" />
+                   <MenuItem mnemonicParsing="false" onAction="#openSMTPAuthenticationDialog" text="SMTP Authentication..." accelerator="Shortcut+U"/>
                </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Help" accelerator="Shortcut+H">
