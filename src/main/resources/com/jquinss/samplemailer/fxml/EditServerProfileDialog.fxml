@@ -35,16 +35,16 @@
             <Label text="Server name/IP address:" GridPane.rowIndex="1" />
             <Label text="SMTP port:" GridPane.rowIndex="2" />
             <Label text="Use TLS:" GridPane.rowIndex="3" />
-            <TextField GridPane.columnIndex="1" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <CheckBox mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="serverProfileNameField" GridPane.columnIndex="1" />
+            <TextField fx:id="serverNameOrIPField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="smtpPortField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <CheckBox fx:id="useTLSCheckBox" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
          <children>
-            <Button mnemonicParsing="false" text="Save" />
-            <Button mnemonicParsing="false" text="Cancel" />
+            <Button mnemonicParsing="false" text="Save" onAction="saveServerProfile" />
+            <Button mnemonicParsing="false" text="Cancel" onAction="cancelEditServerProfileDialog" />
          </children>
       </HBox>
    </children>
