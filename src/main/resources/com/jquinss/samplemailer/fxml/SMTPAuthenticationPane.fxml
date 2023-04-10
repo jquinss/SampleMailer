@@ -18,12 +18,12 @@
             <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                <children>
                   <Label text="Manage server profiles:" />
-                  <ListView prefHeight="200.0" prefWidth="200.0" />
+                  <ListView fx:id="serverProfilesListView" prefHeight="200.0" prefWidth="200.0" />
                   <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Add" />
-                        <Button mnemonicParsing="false" text="Remove" />
-                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Edit" />
+                        <Button mnemonicParsing="false" text="Add" onAction="#addServerProfile" />
+                        <Button mnemonicParsing="false" text="Remove" onAction="#removeServerProfile" />
+                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Edit" onAction="#editServerProfile" />
                      </children>
                   </HBox>
                </children>
@@ -38,7 +38,7 @@
             <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                <children>
                   <Label text="Manage authentication profiles:" />
-                  <TableView prefHeight="200.0" prefWidth="200.0">
+                  <TableView fx:id="authenticationProfilesTableView" prefHeight="200.0" prefWidth="200.0">
                     <columns>
                       <TableColumn prefWidth="169.0" text="Name" />
                       <TableColumn prefWidth="145.0" text="Enabled" />
@@ -46,9 +46,9 @@
                   </TableView>
                   <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Add" />
-                        <Button mnemonicParsing="false" text="Remove" />
-                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Edit" />
+                        <Button mnemonicParsing="false" text="Add" onAction="#addAuthenticationProfile" />
+                        <Button mnemonicParsing="false" text="Remove" onAction="#removeAuthenticationProfile" />
+                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Edit" onAction="#editAuthenticationProfile" />
                      </children>
                   </HBox>
                </children>
