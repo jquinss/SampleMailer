@@ -40,8 +40,8 @@
       </GridPane>
       <HBox alignment="CENTER" prefHeight="57.0" prefWidth="265.0" spacing="20.0">
          <children>
-            <Button mnemonicParsing="false" text="Save" onAction="#saveAuthenticationProfile" />
-            <Button mnemonicParsing="false" text="Cancel" onAction="#cancelEditAuthenticationProfileDialog" />
+            <Button mnemonicParsing="false" text="Save" onAction="#saveAuthenticationProfile" styleClass="dialog-btn" />
+            <Button mnemonicParsing="false" text="Cancel" onAction="#cancelEditAuthenticationProfileDialog" styleClass="dialog-btn" />
          </children>
       </HBox>
    </children>
