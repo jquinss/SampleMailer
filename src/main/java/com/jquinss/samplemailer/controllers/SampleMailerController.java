@@ -1,5 +1,6 @@
 package com.jquinss.samplemailer.controllers;
 
+import com.jquinss.samplemailer.managers.SMTPAuthenticationManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -67,6 +68,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 
+import org.apache.poi.hslf.record.InteractiveInfoAtom;
 import org.xbill.DNS.TextParseException;
 
 public class SampleMailerController {
@@ -152,6 +154,8 @@ public class SampleMailerController {
 	private Stage stage;
 	
 	private ListViewManager<File> attachmentManager;
+
+	private SMTPAuthenticationManager smtpAuthenticationManager = new SMTPAuthenticationManager();
 	
 	private final ExecutorService emailTaskExecutor = Executors.newSingleThreadExecutor();
 	
@@ -363,6 +367,25 @@ public class SampleMailerController {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(scene);
         stage.showAndWait();
+	}
+
+	@FXML
+	void openSMTPAuthenticationDialog(ActionEvent event) throws IOException {
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/jquinss/samplemailer/fxml/SMTPAuthenticationPane.fxml"));
+		SMTPAuthenticationPaneController smtpAuthenticationPaneController = new SMTPAuthenticationPaneController(smtpAuthenticationManager);
+		fxmlLoader.setController(smtpAuthenticationPaneController);
+
+		Parent parent = fxmlLoader.load();
+		Scene scene = new Scene(parent, 415, 345);
+		scene.getStylesheets().add(getClass().getResource("/com/jquinss/samplemailer/styles/application.css").toString());
+		Stage stage = new Stage();
+		stage.setResizable(false);
+		stage.setTitle("SMTP Authentication Manager");
+		stage.getIcons().add(new Image(getClass().getResource("/com/jquinss/samplemailer/images/logo.png").toString()));
+
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.setScene(scene);
+		stage.showAndWait();
 	}
 
 	@FXML
