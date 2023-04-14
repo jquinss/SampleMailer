@@ -21,10 +21,13 @@
                   <ListView fx:id="serverProfilesListView" prefHeight="200.0" prefWidth="200.0" />
                   <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Add" onAction="#addServerProfile" />
-                        <Button mnemonicParsing="false" text="Remove" onAction="#removeServerProfile" />
-                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Edit" onAction="#editServerProfile" />
+                        <Button mnemonicParsing="false" text="Add" onAction="#addServerProfile" styleClass="dialog-btn" />
+                        <Button mnemonicParsing="false" text="Remove" onAction="#removeServerProfile" styleClass="dialog-btn" />
+                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Edit" onAction="#editServerProfile" styleClass="dialog-btn" />
                      </children>
+                      <padding>
+                          <Insets top="10.0" />
+                      </padding>
                   </HBox>
                </children>
                <padding>
@@ -39,17 +42,23 @@
                <children>
                   <Label text="Manage authentication profiles:" />
                   <TableView fx:id="authenticationProfilesTableView" prefHeight="200.0" prefWidth="200.0">
+                      <placeholder>
+                          <Label text="No authentication profiles have been created" />
+                      </placeholder>
                     <columns>
-                      <TableColumn prefWidth="169.0" text="Name" />
-                      <TableColumn prefWidth="145.0" text="Enabled" />
+                      <TableColumn prefWidth="169.0" minWidth="169.0" text="Name" />
+                      <TableColumn prefWidth="145.0" minWidth="145.0" text="Enabled" />
                     </columns>
                   </TableView>
                   <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
-                        <Button mnemonicParsing="false" text="Add" onAction="#addAuthenticationProfile" />
-                        <Button mnemonicParsing="false" text="Remove" onAction="#removeAuthenticationProfile" />
-                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Edit" onAction="#editAuthenticationProfile" />
+                        <Button mnemonicParsing="false" text="Add" onAction="#addAuthenticationProfile" styleClass="dialog-btn" />
+                        <Button mnemonicParsing="false" text="Remove" onAction="#removeAuthenticationProfile" styleClass="dialog-btn" />
+                        <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" text="Edit" onAction="#editAuthenticationProfile" styleClass="dialog-btn" />
                      </children>
+                      <padding>
+                          <Insets top="10.0" />
+                      </padding>
                   </HBox>
                </children>
                <padding>
