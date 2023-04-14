@@ -119,6 +119,10 @@
 	-fx-background-color: #333333;
 }
 
+.table-view .placeholder .label {
+    -fx-font-size: 8.5pt;
+}
+
 .table-cell {
     -fx-background-color: #252525;
     -fx-text-fill: white;
@@ -237,6 +241,11 @@
 .main-btn {
 	-fx-font-size: 10pt;
 	-fx-pref-width: 100px;
+}
+
+.dialog-btn {
+	-fx-font-size: 9pt;
+	-fx-pref-width: 80px;
 }
 
 .toggle-button {
