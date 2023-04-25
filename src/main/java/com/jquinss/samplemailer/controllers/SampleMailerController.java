@@ -335,11 +335,17 @@ public class SampleMailerController {
 	
 	private void exit() {
 		shutdownExecutors();
+		try {
+			saveSMTPAuthenticationData();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 		stage.close();
 	}
 	
 	private void saveAndExit() {
-		saveTemplatesIfModified();;
+		saveTemplatesIfModified();
 		exit();
 	}
 	
@@ -418,6 +424,10 @@ public class SampleMailerController {
 		}
 	}
 
+	private void saveSMTPAuthenticationData() throws IOException {
+		smtpAuthenticationManager.saveSMTPAuthenticationData(SettingsManager.getInstance().getSMTPAuthDataFilePath());
+	}
+
 	@FXML
 	void sendEmail(ActionEvent event) {
 		try {
@@ -454,7 +464,7 @@ public class SampleMailerController {
 	}
 
 	@FXML
-	public void initialize() {
+	public void initialize() throws IOException, ClassNotFoundException {
 		logger = new Logger(logArea);
 		initializeManagers();
 		initializeControls();
@@ -492,7 +502,7 @@ public class SampleMailerController {
 		defaultSettings.setProperty("mail.content.charset", "utf-8");
 		
 		defaultSettings.setProperty("mail.debug", "false");
-		defaultSettings.setProperty("mail.debugurl", OSChecker.getOSDataDirectory() + File.separator + "SampleMailer" + File.separator + "Debug.log");
+		defaultSettings.setProperty("mail.debugurl", SettingsManager.getInstance().getDataPath() + File.separator + "Debug.log");
 
 		return defaultSettings;
 	}
@@ -501,12 +511,18 @@ public class SampleMailerController {
 		templatesPaneController.loadTemplates();
 	}
 	
-	private void initializeManagers() {
+	private void initializeManagers() throws IOException, ClassNotFoundException {
 		attachmentManager = new ListViewManager<File>(attachmentListView);
 		schedulerPaneController.setMainController(this);
 		schedulerPaneController.setLogger(logger);
 		customHeadersPaneController.setMainController(this);
 		templatesPaneController.setMainController(this);
+		try {
+			smtpAuthenticationManager.loadSMTPAuthenticationData(SettingsManager.getInstance().getSMTPAuthDataFilePath());
+		}
+		catch (FileNotFoundException e) {
+			// ignore exception as the files may not have been created yet
+		}
 	}
 
 	private void initializeControls() {
