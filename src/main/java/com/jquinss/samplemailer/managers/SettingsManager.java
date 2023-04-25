@@ -12,16 +12,22 @@ import java.nio.file.Paths;
 public class SettingsManager {
 	private static SettingsManager instance;
 	private static final String SETTINGS_FILE_NAME = "Settings.dat";
-	private static final String SETTINGS_DIR_NAME = "SampleMailer";
-	private static final String SETTINGS_ROOT_DIR = OSChecker.getOSDataDirectory() + File.separator + SETTINGS_DIR_NAME;
-	private static final String SETTINGS_PATH = SETTINGS_ROOT_DIR + File.separator + SETTINGS_FILE_NAME;
+	private static final String TEMPLATES_FILE_NAME = "Templates.dat";
+
+	private static final String SMTP_AUTH_DATA_FILE_NAME = "smtp_auth_data.dat";
+	private static final String APP_DIR_NAME = "SampleMailer";
+	private static final String DATA_DIR_NAME = "data";
+	private static final String DATA_PATH = OSChecker.getOSDataDirectory() + File.separator +
+												APP_DIR_NAME + File.separator + DATA_DIR_NAME;;
+	private static final String SETTINGS_FILE_PATH = DATA_PATH + File.separator + SETTINGS_FILE_NAME;
+	private static final String TEMPLATES_FILE_PATH = DATA_PATH + File.separator + TEMPLATES_FILE_NAME;
+	private static final String SMTP_AUTH_DATA_FILE_PATH = DATA_PATH + File.separator + SMTP_AUTH_DATA_FILE_NAME;
 	
 	private Properties settings;
 	private Properties defaultSettings;
 	private ObjectSerializer objectSerializer;
 	
-	private SettingsManager() {
-	}
+	private SettingsManager() { }
 	
 	public static synchronized SettingsManager getInstance() {
 		if (instance == null) {
@@ -29,6 +35,16 @@ public class SettingsManager {
 		}
 		
 		return instance;
+	}
+
+	public String getTemplatesFilePath() {
+		return TEMPLATES_FILE_PATH;
+	}
+
+	public String getSMTPAuthDataFilePath() { return SMTP_AUTH_DATA_FILE_PATH; }
+
+	public String getDataPath() {
+		return DATA_PATH;
 	}
 	
 	public Properties getSettings() {
@@ -44,7 +60,7 @@ public class SettingsManager {
 	}
 	
 	public void loadSettings(Properties defaultSettings) {
-		objectSerializer = new ObjectSerializer(SETTINGS_PATH);
+		objectSerializer = new ObjectSerializer(SETTINGS_FILE_PATH);
 		
 		this.defaultSettings = defaultSettings;
 		
@@ -70,10 +86,10 @@ public class SettingsManager {
 	}
 	
 	public void saveSettings() {
-		objectSerializer = new ObjectSerializer(SETTINGS_PATH);
+		objectSerializer = new ObjectSerializer(SETTINGS_FILE_PATH);
 		
 		try {
-			Files.createDirectories(Paths.get(SETTINGS_ROOT_DIR));
+			Files.createDirectories(Paths.get(DATA_PATH));
 			objectSerializer.openFileForWrite();
 			objectSerializer.writeObject(settings);
 		}
