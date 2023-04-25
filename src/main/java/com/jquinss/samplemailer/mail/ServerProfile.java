@@ -46,4 +46,8 @@ public class ServerProfile implements Serializable {
     public void setProfileName(String profileName) {
         this.profileName = profileName;
     }
+
+    public String toString() {
+        return profileName;
+    }
 }
