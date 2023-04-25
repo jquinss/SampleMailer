@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="345.0" prefWidth="415.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<TabPane fx:id="smtpAuthenticationPaneTabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="345.0" prefWidth="415.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
   <tabs>
-    <Tab text="Server profiles">
+    <Tab fx:id="smtpAuthenticationPaneServerProfilesTab" text="Server profiles">
          <content>
             <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                <children>
@@ -46,8 +46,8 @@
                           <Label text="No authentication profiles have been created" />
                       </placeholder>
                     <columns>
-                      <TableColumn prefWidth="169.0" minWidth="169.0" text="Name" />
-                      <TableColumn prefWidth="145.0" minWidth="145.0" text="Enabled" />
+                      <TableColumn fx:id="authenticationProfileNameTableColumn" prefWidth="169.0" minWidth="169.0" text="Name" />
+                      <TableColumn fx:id="authenticationProfileStateTableColumn" prefWidth="145.0" minWidth="145.0" text="Enabled" />
                     </columns>
                   </TableView>
                   <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
