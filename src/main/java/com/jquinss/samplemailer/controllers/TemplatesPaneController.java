@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.jquinss.samplemailer.managers.SettingsManager;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -26,11 +27,6 @@ import com.jquinss.samplemailer.util.ObjectSerializer;
 public class TemplatesPaneController {
 	@FXML
 	private ListView<EmailTemplate> templateListView;
-
-	private static final String TEMPLATES_FILE_NAME = "Templates.dat";
-	private static final String TEMPLATES_DIR_NAME = "SampleMailer";
-	private static final String TEMPLATES_ROOT_DIR = OSChecker.getOSDataDirectory() + File.separator + TEMPLATES_DIR_NAME;
-	private static final String TEMPLATES_PATH = TEMPLATES_ROOT_DIR + File.separator + TEMPLATES_FILE_NAME;
 	private final ObservableList<EmailTemplate> emailTemplateObsList = FXCollections.observableArrayList();
 	private SimpleBooleanProperty templateListSaved = new SimpleBooleanProperty(true);
 	private ObjectSerializer objectSerializer;
@@ -85,7 +81,7 @@ public class TemplatesPaneController {
 	}
 	
 	void loadTemplates() {
-		objectSerializer = new ObjectSerializer(TEMPLATES_PATH);
+		objectSerializer = new ObjectSerializer(SettingsManager.getInstance().getTemplatesFilePath());
 		
 		if (objectSerializer.fileExists()) {
 			try {
@@ -108,10 +104,10 @@ public class TemplatesPaneController {
 	}
 	
 	void saveTemplates() {
-		objectSerializer = new ObjectSerializer(TEMPLATES_PATH);
+		objectSerializer = new ObjectSerializer(SettingsManager.getInstance().getTemplatesFilePath());
 		
 		try {
-			Files.createDirectories(Paths.get(TEMPLATES_ROOT_DIR));
+			Files.createDirectories(Paths.get(SettingsManager.getInstance().getDataPath()));
 			objectSerializer.openFileForWrite();
 			List<EmailTemplate> emailTemplateList = emailTemplateObsList.stream().collect(Collectors.toList());
 			objectSerializer.writeObject(emailTemplateList);
