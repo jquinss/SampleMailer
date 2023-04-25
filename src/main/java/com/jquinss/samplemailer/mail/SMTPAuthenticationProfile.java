@@ -7,7 +7,8 @@ public class SMTPAuthenticationProfile implements Serializable {
     private ServerProfile serverProfile;
     private boolean enabled;
 
-    public SMTPAuthenticationProfile(ServerProfile serverProfile, boolean enabled) {
+    public SMTPAuthenticationProfile(String emailAddress, ServerProfile serverProfile, boolean enabled) {
+        this.emailAddress = emailAddress;
         this.serverProfile = serverProfile;
         this.enabled = enabled;
     }
