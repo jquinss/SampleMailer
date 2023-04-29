@@ -31,7 +31,11 @@ public class MimeMessageBuilder {
 	public void setRecipients(RecipientType type, List<String> recipients) throws MessagingException {
 		String rcpts = recipients.toString();
 		rcpts = rcpts.substring(1, rcpts.length() - 1);
-		message.setRecipients(type, rcpts);
+		this.setRecipients(type, rcpts);
+	}
+
+	public void setRecipients(RecipientType type, String recipients) throws MessagingException {
+		message.setRecipients(type, recipients);
 	}
 	
 	public void setHeaders(List<EmailHeader> headers) throws MessagingException {
