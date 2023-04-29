@@ -12,7 +12,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,7 +59,9 @@ public class SMTPAuthenticationManager {
                                              SMTPAuthenticationProfile newSMTPAuthenticationProfile) {
         int oldSMTPAuthenticationProfileIndex = smtpAuthenticationProfileObservableList.indexOf(oldSMTPAuthenticationProfile);
         smtpAuthenticationProfileObservableList.remove(oldSMTPAuthenticationProfile);
+        smtpAuthenticationProfileHashMap.remove(oldSMTPAuthenticationProfile.getEmailAddress());
         smtpAuthenticationProfileObservableList.add(oldSMTPAuthenticationProfileIndex, newSMTPAuthenticationProfile);
+        smtpAuthenticationProfileHashMap.put(newSMTPAuthenticationProfile.getEmailAddress(), newSMTPAuthenticationProfile);
     }
 
     private boolean isUsedServerProfile(ServerProfile serverProfile) {
@@ -88,6 +89,10 @@ public class SMTPAuthenticationManager {
 
             serverProfileObservableList.setAll(serverProfileList);
             smtpAuthenticationProfileObservableList.setAll(smtpAuthenticationProfileList);
+
+            for (SMTPAuthenticationProfile smtpAuthenticationProfile : smtpAuthenticationProfileList) {
+                smtpAuthenticationProfileHashMap.put(smtpAuthenticationProfile.getEmailAddress(), smtpAuthenticationProfile);
+            }
         }
     }
 
@@ -97,18 +102,6 @@ public class SMTPAuthenticationManager {
             smtpAuthenticationData.setServerProfileList(serverProfileObservableList.stream().toList());
             smtpAuthenticationData.setSmtpAuthenticationProfileList(smtpAuthenticationProfileObservableList.stream().toList());
             output.writeObject(smtpAuthenticationData);
-        }
-    }
-
-    public void saveSMTPAuthenticationProfiles(String fileName) throws IOException {
-        try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(fileName))) {
-            output.writeObject(new ArrayList<SMTPAuthenticationProfile>(smtpAuthenticationProfileObservableList));
-        }
-    }
-
-    public void saveServerProfiles(String fileName) throws IOException {
-        try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(fileName))) {
-            output.writeObject(new ArrayList<ServerProfile>(serverProfileObservableList));
         }
     }
 }
