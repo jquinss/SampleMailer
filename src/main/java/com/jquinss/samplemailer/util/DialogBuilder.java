@@ -1,11 +1,10 @@
 package com.jquinss.samplemailer.util;
 
 import javafx.event.ActionEvent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.TextInputDialog;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.scene.control.Alert.AlertType;
@@ -65,6 +64,28 @@ public class DialogBuilder {
 		
 		dialog.getDialogPane().getButtonTypes().addAll(saveButton, doNotSaveButton, cancelButton);
 		
+		return dialog;
+	}
+
+	public static Dialog<String> buildPasswordFieldInputDialog(String title, String headerText, String contentText) {
+		Dialog<String> dialog = new Dialog<>();
+		dialog.setTitle(title);
+		dialog.setHeaderText(headerText);
+		dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+		PasswordField passwordField = new PasswordField();
+		VBox vBox = new VBox();
+		vBox.getChildren().addAll(new Label(contentText), passwordField);
+		vBox.setAlignment(Pos.CENTER_LEFT);
+		vBox.setSpacing(10);
+		dialog.getDialogPane().setContent(vBox);
+		dialog.setResultConverter(dialogButton -> {
+			if (dialogButton == ButtonType.OK) {
+				return passwordField.getText();
+			}
+			return null;
+		});
+
 		return dialog;
 	}
 }
