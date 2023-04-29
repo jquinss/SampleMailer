@@ -1,6 +1,9 @@
 package com.jquinss.samplemailer.controllers;
 
+import com.jquinss.samplemailer.mail.*;
 import com.jquinss.samplemailer.managers.SMTPAuthenticationManager;
+import jakarta.mail.Authenticator;
+import jakarta.mail.PasswordAuthentication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,13 +36,9 @@ import javafx.util.converter.IntegerStringConverter;
 import javafx.scene.image.ImageView;
 import com.jquinss.samplemailer.managers.SettingsManager;
 import com.jquinss.samplemailer.managers.ListViewManager;
-import com.jquinss.samplemailer.mail.EmailTask;
-import com.jquinss.samplemailer.mail.EmailTemplate;
-import com.jquinss.samplemailer.mail.MimeMessageBuilder;
 import com.jquinss.samplemailer.util.DialogBuilder;
 import com.jquinss.samplemailer.util.Logger;
 import com.jquinss.samplemailer.util.OSChecker;
-import com.jquinss.samplemailer.mail.ServerToRecipientsMapper;
 
 import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
@@ -282,7 +281,7 @@ public class SampleMailerController {
 	void cancelEmail(ActionEvent event) {
 		if (futureSubmittedTask != null) {
 			if (futureSubmittedTask.cancel(true)) {
-				System.out.println("Email has been cancelled");
+				logger.logMessage("Email has been cancelled");
 			}
 		}
 	}
@@ -316,7 +315,7 @@ public class SampleMailerController {
 			if (result.isPresent()) {
 				ButtonType btn = (ButtonType) result.get();
 				if (btn.getButtonData() == ButtonData.OK_DONE) {
-					saveAndExit();
+					saveTemplatesAndExit();
 				}
 				else if (btn.getButtonData() == ButtonData.NO) {
 					exit();
@@ -326,13 +325,12 @@ public class SampleMailerController {
 				}
 			}
 		}
+		else {
+			exit();
+		}
 	}
 
 	@FXML
-	void exitApp(ActionEvent event) {
-		exit();
-	}
-	
 	private void exit() {
 		shutdownExecutors();
 		try {
@@ -343,9 +341,10 @@ public class SampleMailerController {
 		}
 		stage.close();
 	}
-	
-	private void saveAndExit() {
-		saveTemplatesIfModified();
+
+	@FXML
+	void saveTemplatesAndExit() {
+		saveTemplates();
 		exit();
 	}
 	
@@ -407,18 +406,7 @@ public class SampleMailerController {
 	}
 
 	@FXML
-	void saveTemplates(ActionEvent event) {
-		saveTemplatesIfModified();
-	}
-	
-	@FXML
-	void saveTemplatesAndExit(ActionEvent event) {
-		saveTemplatesIfModified();;
-		shutdownExecutors();
-		stage.close();
-	}
-	
-	private void saveTemplatesIfModified() {
+	void saveTemplates() {
 		if (!templatesPaneController.isTemplateListSaved().get()) {
 			templatesPaneController.saveTemplates();
 		}
@@ -607,66 +595,135 @@ public class SampleMailerController {
 		String toRecipients = toField.getText().trim();
 		String ccRecipients = ccField.getText().trim();
 		String bccRecipients = bccField.getText().trim();
-		
-		HashMap<String, HashMap<RecipientType, List<String>>> serverToRecipientsMap = getServerToRecipientsMap(toRecipients, ccRecipients, bccRecipients);
-		
-		Set<String> servers = serverToRecipientsMap.keySet();
-		
-		for (String server : servers) {
-			Properties settingsCopy = new Properties();
-			settings.forEach((key, value) -> {
-				settingsCopy.setProperty((String) key, (String) value);
-			});
-			
-			settingsCopy.setProperty("mail.smtp.host", server);
-			
-			Session session = Session.getInstance(settingsCopy);
-			
-			try {
-				session.setDebugOut(new PrintStream(debugURL));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-			
-			HashMap<RecipientType, List<String>> rcptTypeToRcptsMap = serverToRecipientsMap.get(server);
-			
-			MimeMessageBuilder mimeMessageBuilder = new MimeMessageBuilder(session);
 
-			mimeMessageBuilder.setFrom(sender);
-			
-			if (rcptTypeToRcptsMap.containsKey(RecipientType.TO)) {
-				mimeMessageBuilder.setRecipients(RecipientType.TO, rcptTypeToRcptsMap.get(RecipientType.TO));
-			}
-				
-			if (rcptTypeToRcptsMap.containsKey(RecipientType.CC)) {
-				mimeMessageBuilder.setRecipients(RecipientType.CC, rcptTypeToRcptsMap.get(RecipientType.CC));
-			}
-				
-			if (rcptTypeToRcptsMap.containsKey(RecipientType.BCC)) {
-				mimeMessageBuilder.setRecipients(RecipientType.BCC, rcptTypeToRcptsMap.get(RecipientType.BCC));
-			}
-				
-			if (!customHeadersPaneController.getHeaders().isEmpty()) {
-				mimeMessageBuilder.setHeaders(customHeadersPaneController.getHeaders());
-			}
-				
-			if (!subjectField.getText().isEmpty()) {
-				mimeMessageBuilder.setSubject(subjectField.getText());
-			}
-				
-			if (!attachmentManager.getItems().isEmpty()) {
-				mimeMessageBuilder.setMultiPartBody(attachmentManager.getItems(), getBodyText(), 
-				settings.getProperty("mail.content.contenttype"), settings.getProperty("mail.content.charset"));
+		SMTPAuthenticationProfile smtpAuthenticationProfile = smtpAuthenticationManager.getSMTPAuthenticationProfile(settings.getProperty("mail.smtp.from"));
+
+		if (smtpAuthenticationProfile != null && smtpAuthenticationProfile.isEnabled()) {
+			String emailAddress = smtpAuthenticationProfile.getEmailAddress();
+			logger.logMessage("Found an authentication profile that matches the sender email address (" + emailAddress + ")");
+			logger.logMessage("Requesting for authentication");
+			Dialog<String> dialog = DialogBuilder.buildPasswordFieldInputDialog("Authenticate", "Enter password",
+									"Enter the authentication password for \nthe email account " + emailAddress);
+			Optional<String> input = dialog.showAndWait();
+			if (input.isPresent()) {
+				String password = input.get();
+
+				String server = smtpAuthenticationProfile.getServerProfile().getServerHostName();
+				String port = smtpAuthenticationProfile.getServerProfile().getPort();
+				boolean tlsEnabled = smtpAuthenticationProfile.getServerProfile().isTLSEnabled();
+
+				Authenticator authenticator = new Authenticator() {
+					@Override
+					protected PasswordAuthentication getPasswordAuthentication() {
+						return new PasswordAuthentication(emailAddress, password);
+					}
+				};
+
+				Properties settingsCopy = copySettings(settings);
+				settingsCopy.setProperty("mail.smtp.host", server);
+				settingsCopy.setProperty("mail.smtp.starttls.enable", Boolean.toString(tlsEnabled));
+				settingsCopy.setProperty("mail.smtp.auth", "true");
+				settingsCopy.setProperty("mail.smtp.port", port);
+
+				Session session = Session.getInstance(settingsCopy, authenticator);
+
+				MimeMessageBuilder mimeMessageBuilder = new MimeMessageBuilder(session);
+
+				mimeMessageBuilder.setFrom(sender);
+				mimeMessageBuilder.setRecipients(RecipientType.TO, toRecipients);
+				mimeMessageBuilder.setRecipients(RecipientType.CC, ccRecipients);
+				mimeMessageBuilder.setRecipients(RecipientType.BCC, bccRecipients);
+
+				if (!customHeadersPaneController.getHeaders().isEmpty()) {
+					mimeMessageBuilder.setHeaders(customHeadersPaneController.getHeaders());
+				}
+
+				if (!subjectField.getText().isEmpty()) {
+					mimeMessageBuilder.setSubject(subjectField.getText());
+				}
+
+				if (!attachmentManager.getItems().isEmpty()) {
+					mimeMessageBuilder.setMultiPartBody(attachmentManager.getItems(), getBodyText(),
+							settings.getProperty("mail.content.contenttype"), settings.getProperty("mail.content.charset"));
+				}
+				else {
+					mimeMessageBuilder.setBody(getBodyText(), settings.getProperty("mail.content.contenttype"),
+							settings.getProperty("mail.content.charset"));
+				}
+
+				messages.add(mimeMessageBuilder.buildMessage());
 			}
 			else {
-				mimeMessageBuilder.setBody(getBodyText(), settings.getProperty("mail.content.contenttype"), 
-				settings.getProperty("mail.content.charset"));
+				logger.logMessage("Authentication dialog has been cancelled");
 			}
-			
-			messages.add(mimeMessageBuilder.buildMessage());
+		}
+		else {
+			HashMap<String, HashMap<RecipientType, List<String>>> serverToRecipientsMap = getServerToRecipientsMap(toRecipients, ccRecipients, bccRecipients);
+
+			Set<String> servers = serverToRecipientsMap.keySet();
+
+			for (String server : servers) {
+				Properties settingsCopy = copySettings(settings);
+				settingsCopy.setProperty("mail.smtp.host", server);
+
+				Session session = Session.getInstance(settingsCopy);
+
+				try {
+					session.setDebugOut(new PrintStream(debugURL));
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+
+				HashMap<RecipientType, List<String>> rcptTypeToRcptsMap = serverToRecipientsMap.get(server);
+
+				MimeMessageBuilder mimeMessageBuilder = new MimeMessageBuilder(session);
+
+				mimeMessageBuilder.setFrom(sender);
+
+				if (rcptTypeToRcptsMap.containsKey(RecipientType.TO)) {
+					mimeMessageBuilder.setRecipients(RecipientType.TO, rcptTypeToRcptsMap.get(RecipientType.TO));
+				}
+
+				if (rcptTypeToRcptsMap.containsKey(RecipientType.CC)) {
+					mimeMessageBuilder.setRecipients(RecipientType.CC, rcptTypeToRcptsMap.get(RecipientType.CC));
+				}
+
+				if (rcptTypeToRcptsMap.containsKey(RecipientType.BCC)) {
+					mimeMessageBuilder.setRecipients(RecipientType.BCC, rcptTypeToRcptsMap.get(RecipientType.BCC));
+				}
+
+				if (!customHeadersPaneController.getHeaders().isEmpty()) {
+					mimeMessageBuilder.setHeaders(customHeadersPaneController.getHeaders());
+				}
+
+				if (!subjectField.getText().isEmpty()) {
+					mimeMessageBuilder.setSubject(subjectField.getText());
+				}
+
+				if (!attachmentManager.getItems().isEmpty()) {
+					mimeMessageBuilder.setMultiPartBody(attachmentManager.getItems(), getBodyText(),
+							settings.getProperty("mail.content.contenttype"), settings.getProperty("mail.content.charset"));
+				}
+				else {
+					mimeMessageBuilder.setBody(getBodyText(), settings.getProperty("mail.content.contenttype"),
+							settings.getProperty("mail.content.charset"));
+				}
+
+				messages.add(mimeMessageBuilder.buildMessage());
+			}
 		}
 		
+
+		
 		return messages;
+	}
+
+	private Properties copySettings(Properties settings) {
+		Properties settingsCopy = new Properties();
+		settings.forEach((key, value) -> {
+			settingsCopy.setProperty((String) key, (String) value);
+		});
+		return  settingsCopy;
 	}
 	
 	private Properties getSettings() {
