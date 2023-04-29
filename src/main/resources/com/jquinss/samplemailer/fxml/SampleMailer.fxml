@@ -33,7 +33,7 @@
                <items>
                   <MenuItem mnemonicParsing="false" fx:id="saveTemplatesBtn" onAction="#saveTemplates" text="Save Templates" accelerator="Shortcut+S" />
                   <MenuItem mnemonicParsing="false" fx:id="saveTemplatesAndExitBtn" onAction="#saveTemplatesAndExit" text="Save Templates and Exit" accelerator="Shortcut+Shift+X" />
-                  <MenuItem mnemonicParsing="false" onAction="#exitApp" text="Exit" accelerator="Shortcut+X" />
+                  <MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" accelerator="Shortcut+X" />
                </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Options">
