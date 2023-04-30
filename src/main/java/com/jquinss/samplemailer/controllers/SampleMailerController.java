@@ -2,6 +2,7 @@ package com.jquinss.samplemailer.controllers;
 
 import com.jquinss.samplemailer.mail.*;
 import com.jquinss.samplemailer.managers.SMTPAuthenticationManager;
+import com.jquinss.samplemailer.util.IntRangeStringConverter;
 import jakarta.mail.Authenticator;
 import jakarta.mail.PasswordAuthentication;
 import javafx.event.ActionEvent;
@@ -350,7 +351,7 @@ public class SampleMailerController {
 	
 	@FXML
 	void openAboutInfo(ActionEvent event) {
-		showAlertDialog("About", "", "SampleMailerv1.0\n\nCreated by Joaquin Sampedro", AlertType.INFORMATION);
+		showAlertDialog("About", "", "SampleMailerv1.1\n\nCreated by Joaquin Sampedro", AlertType.INFORMATION);
 	}
 
 	@FXML
@@ -521,11 +522,8 @@ public class SampleMailerController {
 	}
 	
 	private void setTextFieldsFormatters() {
-		UnaryOperator<TextFormatter.Change> numEmailsFilter = createInputFilter("[1-9][0-9]{0,2}", "1");
-		UnaryOperator<TextFormatter.Change> delayFilter = createInputFilter("[0-9]|[1-9][0-9]{0,4}", "0");
-
-		numEmailsField.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 1, numEmailsFilter));
-		delayField.setTextFormatter(new TextFormatter<Integer>(new IntegerStringConverter(), 0, delayFilter));
+		numEmailsField.setTextFormatter(new TextFormatter<>(new IntRangeStringConverter(1, 1000), 1));
+		delayField.setTextFormatter(new TextFormatter<>(new IntRangeStringConverter(0, 1000000), 0));
 	}
 	
 	private void setControlsListeners() {
@@ -634,22 +632,7 @@ public class SampleMailerController {
 				mimeMessageBuilder.setRecipients(RecipientType.CC, ccRecipients);
 				mimeMessageBuilder.setRecipients(RecipientType.BCC, bccRecipients);
 
-				if (!customHeadersPaneController.getHeaders().isEmpty()) {
-					mimeMessageBuilder.setHeaders(customHeadersPaneController.getHeaders());
-				}
-
-				if (!subjectField.getText().isEmpty()) {
-					mimeMessageBuilder.setSubject(subjectField.getText());
-				}
-
-				if (!attachmentManager.getItems().isEmpty()) {
-					mimeMessageBuilder.setMultiPartBody(attachmentManager.getItems(), getBodyText(),
-							settings.getProperty("mail.content.contenttype"), settings.getProperty("mail.content.charset"));
-				}
-				else {
-					mimeMessageBuilder.setBody(getBodyText(), settings.getProperty("mail.content.contenttype"),
-							settings.getProperty("mail.content.charset"));
-				}
+				addCustomHeadersAndBodyContents(mimeMessageBuilder, settings);
 
 				messages.add(mimeMessageBuilder.buildMessage());
 			}
@@ -692,30 +675,32 @@ public class SampleMailerController {
 					mimeMessageBuilder.setRecipients(RecipientType.BCC, rcptTypeToRcptsMap.get(RecipientType.BCC));
 				}
 
-				if (!customHeadersPaneController.getHeaders().isEmpty()) {
-					mimeMessageBuilder.setHeaders(customHeadersPaneController.getHeaders());
-				}
-
-				if (!subjectField.getText().isEmpty()) {
-					mimeMessageBuilder.setSubject(subjectField.getText());
-				}
-
-				if (!attachmentManager.getItems().isEmpty()) {
-					mimeMessageBuilder.setMultiPartBody(attachmentManager.getItems(), getBodyText(),
-							settings.getProperty("mail.content.contenttype"), settings.getProperty("mail.content.charset"));
-				}
-				else {
-					mimeMessageBuilder.setBody(getBodyText(), settings.getProperty("mail.content.contenttype"),
-							settings.getProperty("mail.content.charset"));
-				}
+				addCustomHeadersAndBodyContents(mimeMessageBuilder, settings);
 
 				messages.add(mimeMessageBuilder.buildMessage());
 			}
 		}
-		
 
-		
 		return messages;
+	}
+
+	private void addCustomHeadersAndBodyContents(MimeMessageBuilder mimeMessageBuilder, Properties settings) throws MessagingException {
+		if (!customHeadersPaneController.getHeaders().isEmpty()) {
+			mimeMessageBuilder.setHeaders(customHeadersPaneController.getHeaders());
+		}
+
+		if (!subjectField.getText().isEmpty()) {
+			mimeMessageBuilder.setSubject(subjectField.getText());
+		}
+
+		if (!attachmentManager.getItems().isEmpty()) {
+			mimeMessageBuilder.setMultiPartBody(attachmentManager.getItems(), getBodyText(),
+					settings.getProperty("mail.content.contenttype"), settings.getProperty("mail.content.charset"));
+		}
+		else {
+			mimeMessageBuilder.setBody(getBodyText(), settings.getProperty("mail.content.contenttype"),
+					settings.getProperty("mail.content.charset"));
+		}
 	}
 
 	private Properties copySettings(Properties settings) {
