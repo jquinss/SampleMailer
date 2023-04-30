@@ -5,6 +5,7 @@ import com.jquinss.samplemailer.mail.SMTPAuthenticationProfile;
 import com.jquinss.samplemailer.mail.ServerProfile;
 import com.jquinss.samplemailer.managers.SMTPAuthenticationManager;
 import com.jquinss.samplemailer.util.DialogBuilder;
+import com.jquinss.samplemailer.util.IntRangeStringConverter;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -66,6 +68,8 @@ public class SMTPAuthenticationPaneController implements Initializable {
 
     private boolean isEditServerProfileMode = false;
 
+    private boolean isAddServerProfileMode = false;
+
     private boolean isEditAuthenticationProfileMode = false;
 
     private boolean isAddAuthenticationProfileMode = false;
@@ -83,6 +87,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
     @FXML
     private void addServerProfile(ActionEvent event) {
         try {
+            isAddServerProfileMode = true;
             openServerProfileDialog();
         }
         catch (IOException e) {
@@ -273,6 +278,14 @@ public class SMTPAuthenticationPaneController implements Initializable {
             initializeServerProfilesComboBox();
         }
 
+        if (isEditServerProfileMode || isAddServerProfileMode) {
+            initializeServerProfileTextFormatters();
+        }
+
+        if (isAddAuthenticationProfileMode) {
+            serverProfilesComboBox.getSelectionModel().select(0);
+        }
+
         if (isEditServerProfileMode) {
             loadCurrentlyEditedServerProfileInfo();
         }
@@ -286,6 +299,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
     }
 
     private void closeServerProfileDialogStage() {
+        isAddServerProfileMode = false;
         isEditServerProfileMode = false;
         serverProfileDialogStage.close();
     }
@@ -319,7 +333,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
         serverProfileDialogStage = new Stage();
         serverProfileDialogStage.setResizable(false);
         serverProfileDialogStage.setTitle("Server Profiles");
-        //editServerProfileDialogStage.getIcons().add(new Image(getClass().getResource(SettingsManager.getInstance().getLogoPath()).toString()));
+        serverProfileDialogStage.getIcons().add(new Image(getClass().getResource("/com/jquinss/samplemailer/images/logo.png").toString()));
         serverProfileDialogStage.initModality(Modality.APPLICATION_MODAL);
         serverProfileDialogStage.setScene(scene);
         serverProfileDialogStage.setOnCloseRequest(e -> {
@@ -338,7 +352,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
         authenticationProfileDialogStage = new Stage();
         authenticationProfileDialogStage.setResizable(false);
         authenticationProfileDialogStage.setTitle("Authentication Profiles");
-        //authenticationProfileDialogStage.getIcons().add(new Image(getClass().getResource(SettingsManager.getInstance().getLogoPath()).toString()));
+        authenticationProfileDialogStage.getIcons().add(new Image(getClass().getResource("/com/jquinss/samplemailer/images/logo.png").toString()));
         authenticationProfileDialogStage.initModality(Modality.APPLICATION_MODAL);
         authenticationProfileDialogStage.setScene(scene);
         authenticationProfileDialogStage.setOnCloseRequest(e -> {
@@ -369,5 +383,9 @@ public class SMTPAuthenticationPaneController implements Initializable {
             boolean state = cellData.getValue().isEnabled();
             return state ? new SimpleStringProperty("Yes") : new SimpleStringProperty("No");
         });
+    }
+
+    private void initializeServerProfileTextFormatters() {
+        smtpPortField.setTextFormatter(new TextFormatter<>(new IntRangeStringConverter(0, 65536), 25));
     }
 }
