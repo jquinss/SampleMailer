@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.jquinss.samplemailer.util.IntRangeStringConverter;
 import jakarta.mail.MessagingException;
 
 import javafx.scene.control.TextField;
@@ -108,10 +109,10 @@ public class SchedulerPaneController implements Observer {
 
 	private void initializeTimeTextFields() {
 		LocalTime time = LocalTime.now().plusMinutes(5);
-		StringConverter<Integer> minSecConverter = new IntRangeStringConverter(0, 59);
+		StringConverter<Integer> minSecConverter = new IntRangeStringConverter(0, 59, "%02d");
 		secondsTextField.setTextFormatter(new TextFormatter<>(minSecConverter, time.getSecond()));
 		minutesTextField.setTextFormatter(new TextFormatter<>(minSecConverter, time.getMinute()));
-		hoursTextField.setTextFormatter(new TextFormatter<>(new IntRangeStringConverter(0, 23), time.getHour()));
+		hoursTextField.setTextFormatter(new TextFormatter<>(new IntRangeStringConverter(0, 23, "%02d"), time.getHour()));
 	}
 
 	private LocalDateTime getScheduledLocalDateTime() {
@@ -132,32 +133,5 @@ public class SchedulerPaneController implements Observer {
 	private void initialize() {
 		schedulerTableView.setItems(scheduledEmailTasks);
 		initializeTimeTextFields();
-	}
-
-	class IntRangeStringConverter extends StringConverter<Integer> {
-
-		private final int min;
-		private final int max;
-
-		public IntRangeStringConverter(int min, int max) {
-			this.min = min;
-			this.max = max;
-		}
-
-		@Override
-		public Integer fromString(String string) {
-			int integer = Integer.parseInt(string);
-			if (integer > max)
-				return max;
-			if (integer < min)
-				return min;
-			return integer;
-		}
-
-		@Override
-		public String toString(Integer integer) {
-			return String.format("%02d", integer);
-		}
-
 	}
 }
