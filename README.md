@@ -38,11 +38,11 @@ Alternatively, you can directly use the samplemailer.jar located at the out/arti
 * Users can export the Status field logs
 * Users can exclude some headers when importing headers from file.
 * Add tooltips with information for some fields.
+* Users can use SMTP authentication
 
 ### To Do
 
 * Add option for importing and exporting templates.
-* Add option for SMTP authentication.
 * Add option for adding a DKIM signature.
 * Add option for editing HTML code manually.
 * Add documentation.
