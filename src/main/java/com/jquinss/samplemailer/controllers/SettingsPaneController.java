@@ -1,5 +1,6 @@
 package com.jquinss.samplemailer.controllers;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Properties;
 
@@ -85,8 +86,12 @@ public class SettingsPaneController {
     		alert.showAndWait();
     	}
     	else {
-    		saveSettings();
-    		stage.close();
+			try {
+				saveSettings();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			stage.close();
     	}
     }
 
@@ -258,7 +263,7 @@ public class SettingsPaneController {
     	return validationText.toString();
     }
     
-    private void saveSettings() {
+    private void saveSettings() throws IOException {
     	Properties settings = new Properties();
     	
     	settings.setProperty("mail.smtp.localhost", heloHostnameTextField.getText().trim());
