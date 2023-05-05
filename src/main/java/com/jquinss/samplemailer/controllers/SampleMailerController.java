@@ -472,7 +472,7 @@ public class SampleMailerController {
     	return this.stage;
     }
 
-	private void loadSettings() {
+	private void loadSettings() throws IOException, ClassNotFoundException {
 		SettingsManager.getInstance().loadSettings(getDefaultSettings());
 	}
 
