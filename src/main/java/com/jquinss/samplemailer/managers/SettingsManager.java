@@ -1,11 +1,9 @@
 package com.jquinss.samplemailer.managers;
 
 import com.jquinss.samplemailer.util.OSChecker;
-import com.jquinss.samplemailer.util.ObjectSerializer;
 
+import java.io.*;
 import java.util.Properties;
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -23,9 +21,8 @@ public class SettingsManager {
 	private static final String TEMPLATES_FILE_PATH = DATA_PATH + File.separator + TEMPLATES_FILE_NAME;
 	private static final String SMTP_AUTH_DATA_FILE_PATH = DATA_PATH + File.separator + SMTP_AUTH_DATA_FILE_NAME;
 	
-	private Properties settings;
+	private Properties customSettings;
 	private Properties defaultSettings;
-	private ObjectSerializer objectSerializer;
 	
 	private SettingsManager() { }
 	
@@ -48,7 +45,7 @@ public class SettingsManager {
 	}
 	
 	public Properties getSettings() {
-		return settings;
+		return customSettings;
 	}
 	
 	public Properties getDefaultSettings() {
@@ -56,52 +53,35 @@ public class SettingsManager {
 	}
 	
 	public void setSettings(Properties settings) {
-		this.settings = settings;
+		this.customSettings = settings;
 	}
 	
-	public void loadSettings(Properties defaultSettings) {
-		objectSerializer = new ObjectSerializer(SETTINGS_FILE_PATH);
-		
+	public void loadSettings(Properties defaultSettings) throws IOException, ClassNotFoundException {
 		this.defaultSettings = defaultSettings;
 		
-		if (!objectSerializer.fileExists()) {
-			settings = this.defaultSettings;
+		File settingsFilePath = new File(SETTINGS_FILE_PATH);
+		try (ObjectInputStream input = new ObjectInputStream(new FileInputStream(settingsFilePath))) {
+			customSettings = (Properties) input.readObject();
 		}
-		else {
-			try {
-				objectSerializer.openFileForRead();
-				settings = (Properties) objectSerializer.readObject();
-			}
-			catch (ClassNotFoundException | IOException e) {
-				settings = defaultSettings;
-			}
-			finally {
-				try {
-					objectSerializer.closeInput();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+		catch (FileNotFoundException e) {
+			// if the settings file is not found (first time application is started), set custom settings
+			// to be equal to the default settings
+			customSettings = this.defaultSettings;
+		}
+		catch (IOException | ClassNotFoundException e) {
+			// if any other exception, set custom settings to be equal to the default settings and rethrow the
+			// exception
+			customSettings = this.defaultSettings;
+			throw e;
 		}
 	}
 	
-	public void saveSettings() {
-		objectSerializer = new ObjectSerializer(SETTINGS_FILE_PATH);
-		
-		try {
-			Files.createDirectories(Paths.get(DATA_PATH));
-			objectSerializer.openFileForWrite();
-			objectSerializer.writeObject(settings);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		finally {
-			try {
-				objectSerializer.closeOutput();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+	public void saveSettings() throws IOException {
+		File settingsFilePath = new File(SETTINGS_FILE_PATH);
+
+		try(ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream(settingsFilePath))) {
+			Files.createDirectories(Paths.get(DATA_PATH)); // creates the data directory if it does not exist
+			output.writeObject(customSettings);
 		}
 	}
 }
