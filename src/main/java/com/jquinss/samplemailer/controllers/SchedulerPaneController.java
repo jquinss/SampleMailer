@@ -18,7 +18,6 @@ import javafx.scene.control.DatePicker;
 import com.jquinss.samplemailer.exceptions.InvalidDateTimeException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
@@ -55,7 +54,7 @@ public class SchedulerPaneController implements Observer {
 	private Logger logger;
 	
 	@FXML
-	private void cancelScheduledEmail(ActionEvent event) {
+	private void cancelScheduledEmail() {
 		ScheduledEmailTask scheduledEmailTask = schedulerTableView.getSelectionModel().getSelectedItem();
 		if (scheduledEmailTask != null) {
 			scheduledEmailTask.cancel(true);
@@ -63,7 +62,7 @@ public class SchedulerPaneController implements Observer {
 	}
 	
 	@FXML
-	private void scheduleEmail(ActionEvent event) {
+	private void scheduleEmail() {
 		try {
 			EmailTask emailTask = sampleMailerController.createEmailTask();
 			emailTask.setLogger(logger);
