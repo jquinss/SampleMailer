@@ -11,9 +11,9 @@
 		<ListView fx:id="templateListView" prefHeight="200.0" prefWidth="200.0" />
 		<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
         	<children>
-            	<Button mnemonicParsing="false" onAction="#addTemplate" prefHeight="25.0" prefWidth="51.0" text="Add" />
-            	<Button mnemonicParsing="false" onAction="#applyTemplate" text="Apply" />
-            	<Button mnemonicParsing="false" onAction="#removeTemplate" text="Remove" />
+            	<Button mnemonicParsing="false" onAction="#addEmailTemplate" prefHeight="25.0" prefWidth="51.0" text="Add" />
+            	<Button mnemonicParsing="false" onAction="#applyEmailTemplate" text="Apply" />
+            	<Button mnemonicParsing="false" onAction="#removeEmailTemplate" text="Remove" />
         	</children>
     	</HBox>
 	</children>
