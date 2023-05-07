@@ -166,7 +166,7 @@ public class SampleMailerController {
 
 	@FXML
 	private void addAttachment() {
-		FileChooser fileChooser = DialogBuilder.getFileChooser("Select one or multiple files");
+		FileChooser fileChooser = DialogBuilder.buildFileChooser("Select one or multiple files");
 		List<File> files = fileChooser.showOpenMultipleDialog(getStage());
 		if (files != null) {
 			attachmentManager.addItems(files);
