@@ -13,7 +13,7 @@ import javafx.scene.control.ButtonBar.ButtonData;
 public class DialogBuilder {
 	private DialogBuilder() {}
 	
-	public static TextInputDialog getSingleTextFieldInputDialog(String title, String headerText, 
+	public static TextInputDialog buildSingleTextFieldInputDialog(String title, String headerText,
 																String contentText, Alert alertDialog) {
 		
 		TextInputDialog dialog = new TextInputDialog();
@@ -34,7 +34,7 @@ public class DialogBuilder {
 		return dialog;
 	}
 	
-	public static Alert getAlertDialog(String title, String headerText, 
+	public static Alert buildAlertDialog(String title, String headerText,
 									String contentText, AlertType alertType) {
 		Alert alert = new Alert(alertType);
 		alert.setTitle(title);
@@ -44,7 +44,7 @@ public class DialogBuilder {
 		return alert;
 	}
 	
-	public static FileChooser getFileChooser(String title, ExtensionFilter... extFilters) {
+	public static FileChooser buildFileChooser(String title, ExtensionFilter... extFilters) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle(title);
 		fileChooser.getExtensionFilters().addAll(extFilters);

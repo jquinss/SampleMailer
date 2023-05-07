@@ -102,7 +102,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
                 smtpAuthenticationManager.removeServerProfile(serverProfile);
             }
             catch (ServerProfileInUseException e) {
-                Alert alert = DialogBuilder.getAlertDialog("Error", "Error removing server profile",
+                Alert alert = DialogBuilder.buildAlertDialog("Error", "Error removing server profile",
                         "The selected server profile is already in use",
                         Alert.AlertType.ERROR);
                 alert.getDialogPane().getStylesheets().add(getClass().getResource("/com/jquinss/samplemailer/styles/application.css").toString());
@@ -131,7 +131,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
     @FXML
     private void addAuthenticationProfile() {
         if (smtpAuthenticationManager.getServerProfileObservableList().isEmpty()) {
-            Alert alert = DialogBuilder.getAlertDialog("Information", "", "You must create at least 1 server profile",
+            Alert alert = DialogBuilder.buildAlertDialog("Information", "", "You must create at least 1 server profile",
                     Alert.AlertType.INFORMATION);
             alert.getDialogPane().getStylesheets().add(getClass().getResource("/com/jquinss/samplemailer/styles/application.css").toString());
             //stage.getIcons().add(new Image(getClass().getResource("/com/jquinss/samplemailer/images/question_mark.png").toString()));
@@ -206,7 +206,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
         }
 
         if (!validAuthenticationProfile) {
-            Alert alertDialog = DialogBuilder.getAlertDialog("Error", "Invalid authentication profile",
+            Alert alertDialog = DialogBuilder.buildAlertDialog("Error", "Invalid authentication profile",
                     validationMessage.toString(), Alert.AlertType.ERROR);
             alertDialog.showAndWait();
         }
@@ -254,7 +254,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
                     validationMessage.append("- SMTP port");
                 }
 
-                Alert alertDialog = DialogBuilder.getAlertDialog("Error", "Invalid server profile",
+                Alert alertDialog = DialogBuilder.buildAlertDialog("Error", "Invalid server profile",
                                                             validationMessage.toString(), Alert.AlertType.ERROR);
 
                 alertDialog.showAndWait();

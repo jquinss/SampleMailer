@@ -24,9 +24,9 @@ public class TemplatesPaneController {
 	
 	@FXML
 	void addEmailTemplate() {
-		Alert invalidInputAlert = DialogBuilder.getAlertDialog("Informational alert", "Invalid input",
+		Alert invalidInputAlert = DialogBuilder.buildAlertDialog("Informational alert", "Invalid input",
 				"The field cannot be empty", AlertType.ERROR);
-		TextInputDialog textInputDialog = DialogBuilder.getSingleTextFieldInputDialog("Template Creator",
+		TextInputDialog textInputDialog = DialogBuilder.buildSingleTextFieldInputDialog("Template Creator",
 				"Create a new template", "Template name:", invalidInputAlert);
 		setDialogPaneStyles(invalidInputAlert.getDialogPane());
 		setDialogPaneStyles(textInputDialog.getDialogPane());

@@ -433,7 +433,7 @@ public class SampleMailerController {
 	
 	@FXML
 	private void exportLogs() {
-		FileChooser fileChooser = DialogBuilder.getFileChooser("Export Logs", new ExtensionFilter("TXT files", "*.txt"));
+		FileChooser fileChooser = DialogBuilder.buildFileChooser("Export Logs", new ExtensionFilter("TXT files", "*.txt"));
     	fileChooser.setInitialFileName("logs.txt");
 
     	File file = fileChooser.showSaveDialog(stage);
@@ -767,7 +767,7 @@ public class SampleMailerController {
 	}
 	
 	void showAlertDialog(String title, String headerText, String contentText, AlertType alertType) {
-		Alert alert = DialogBuilder.getAlertDialog(title, headerText, contentText, alertType);
+		Alert alert = DialogBuilder.buildAlertDialog(title, headerText, contentText, alertType);
 		alert.getDialogPane().getStylesheets().add(getClass().getResource("/com/jquinss/samplemailer/styles/application.css").toString());
 		setDialogPaneWindowLogo(alert.getDialogPane());
 		alert.show();

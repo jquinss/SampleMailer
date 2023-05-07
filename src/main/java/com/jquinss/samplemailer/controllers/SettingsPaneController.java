@@ -78,7 +78,7 @@ public class SettingsPaneController {
     	String validationResult = validateInput();
     	
     	if (!validationResult.isEmpty()) {
-    		Alert alert = DialogBuilder.getAlertDialog("Error", "Invalid Input", validationResult, AlertType.ERROR);
+    		Alert alert = DialogBuilder.buildAlertDialog("Error", "Invalid Input", validationResult, AlertType.ERROR);
     		alert.getDialogPane().getStylesheets().add(getClass().getResource("/com/jquinss/samplemailer/styles/application.css").toString());
     		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
     		stage.getIcons().add(new Image(getClass().getResource("/com/jquinss/samplemailer/images/settings.png").toString()));
