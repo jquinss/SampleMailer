@@ -33,13 +33,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.util.converter.IntegerStringConverter;
 import javafx.scene.image.ImageView;
 import com.jquinss.samplemailer.managers.SettingsManager;
 import com.jquinss.samplemailer.managers.ListViewManager;
 import com.jquinss.samplemailer.util.DialogBuilder;
 import com.jquinss.samplemailer.util.Logger;
-import com.jquinss.samplemailer.util.OSChecker;
 
 import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
@@ -68,7 +66,6 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 
-import org.apache.poi.hslf.record.InteractiveInfoAtom;
 import org.xbill.DNS.TextParseException;
 
 public class SampleMailerController {
@@ -168,7 +165,7 @@ public class SampleMailerController {
 	private static final Pattern emailRecipientsPattern = Pattern.compile(EMAIL_RECIPIENTS_REGEX);
 
 	@FXML
-	void addAttachment(ActionEvent event) {
+	private void addAttachment() {
 		FileChooser fileChooser = DialogBuilder.getFileChooser("Select one or multiple files");
 		List<File> files = fileChooser.showOpenMultipleDialog(getStage());
 		if (files != null) {
@@ -177,11 +174,7 @@ public class SampleMailerController {
 	}
 	
 	@FXML
-	void switchEditor(ActionEvent event) {
-		switchEditor();
-	}
-	
-	void switchEditor() {
+	private void switchEditor() {
 		String selectedEditor = ((RadioMenuItem) editorTypeToggleGroup.getSelectedToggle()).getText();
 		if (selectedEditor.equals("HTML")) {
 			bodyHTMLEditor.setVisible(true);
@@ -233,7 +226,7 @@ public class SampleMailerController {
 		return template;
 	}
 
-	void applyTemplate(EmailTemplate template) {
+	void applyEmailTemplate(EmailTemplate template) {
 		toggleServerField.setSelected(template.isCustomServer());
 		if (toggleServerField.isSelected()) {
 			serverNameField.setText(template.getServer());
@@ -279,7 +272,7 @@ public class SampleMailerController {
 	}
 
 	@FXML
-	void cancelEmail(ActionEvent event) {
+	private void cancelEmail() {
 		if (futureSubmittedTask != null) {
 			if (futureSubmittedTask.cancel(true)) {
 				logger.logMessage("Email has been cancelled");
@@ -288,7 +281,7 @@ public class SampleMailerController {
 	}
 
 	@FXML
-	void clearEmail(ActionEvent event) {
+	private void clearEmail() {
 		serverNameField.clear();;
 		toggleFromField.setSelected(false);
 		mailFromField.clear();
@@ -306,7 +299,7 @@ public class SampleMailerController {
 	}
 	
 	private void handleStageClosure(WindowEvent e) {
-		if (!templatesPaneController.isTemplateListSaved().get()) {
+		if (!templatesPaneController.isDataSaved().get()) {
 			Dialog<ButtonType> dialog = DialogBuilder.buildConfirmationDialog("Save Changes", "Some templates have not been saved." , "Do you want to save your changes?");
 			dialog.getDialogPane().setPrefSize(420, 160);
 			dialog.getDialogPane().getStylesheets().add(getClass().getResource("/com/jquinss/samplemailer/styles/application.css").toString());
@@ -344,18 +337,18 @@ public class SampleMailerController {
 	}
 
 	@FXML
-	void saveTemplatesAndExit() {
+	private void saveTemplatesAndExit() {
 		saveTemplates();
 		exit();
 	}
 	
 	@FXML
-	void openAboutInfo(ActionEvent event) {
+	private void openAboutInfo(ActionEvent event) {
 		showAlertDialog("About", "", "SampleMailerv1.1\n\nCreated by Joaquin Sampedro", AlertType.INFORMATION);
 	}
 
 	@FXML
-	void openSettingsDialog(ActionEvent event) throws IOException {
+	private void openSettingsDialog() throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/jquinss/samplemailer/fxml/SettingsPane.fxml"));
 		Parent parent = fxmlLoader.load();
 		
@@ -376,7 +369,7 @@ public class SampleMailerController {
 	}
 
 	@FXML
-	void openSMTPAuthenticationDialog(ActionEvent event) throws IOException {
+	private void openSMTPAuthenticationDialog() throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/jquinss/samplemailer/fxml/SMTPAuthenticationPane.fxml"));
 		SMTPAuthenticationPaneController smtpAuthenticationPaneController = new SMTPAuthenticationPaneController(smtpAuthenticationManager);
 		fxmlLoader.setController(smtpAuthenticationPaneController);
@@ -395,7 +388,7 @@ public class SampleMailerController {
 	}
 
 	@FXML
-	void removeAttachment(ActionEvent event) {
+	private void removeAttachment() {
 		File attachment = attachmentManager.getSelectedItem();
 		
 		if (attachment != null) {
@@ -407,9 +400,12 @@ public class SampleMailerController {
 	}
 
 	@FXML
-	void saveTemplates() {
-		if (!templatesPaneController.isTemplateListSaved().get()) {
-			templatesPaneController.saveTemplates();
+	private void saveTemplates() {
+		try {
+			templatesPaneController.saveEmailTemplates(SettingsManager.getInstance().getTemplatesFilePath());
+		}
+		catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -418,7 +414,7 @@ public class SampleMailerController {
 	}
 
 	@FXML
-	void sendEmail(ActionEvent event) {
+	private void sendEmail() {
 		try {
 			EmailTask emailTask = createEmailTask();
 			executeEmailTask(emailTask);
@@ -431,12 +427,12 @@ public class SampleMailerController {
 	}
 	
 	@FXML
-	void clearLogs(ActionEvent event) {
+	private void clearLogs() {
 		logArea.clear();
 	}
 	
 	@FXML
-	void exportLogs(ActionEvent event) {
+	private void exportLogs() {
 		FileChooser fileChooser = DialogBuilder.getFileChooser("Export Logs", new ExtensionFilter("TXT files", "*.txt"));
     	fileChooser.setInitialFileName("logs.txt");
 
@@ -458,7 +454,6 @@ public class SampleMailerController {
 		initializeManagers();
 		initializeControls();
 		loadSettings();
-		loadTemplates();
 	}
 	
     public void setStage(Stage stage) {
@@ -494,10 +489,6 @@ public class SampleMailerController {
 		defaultSettings.setProperty("mail.debugurl", SettingsManager.getInstance().getDataPath() + File.separator + "Debug.log");
 
 		return defaultSettings;
-	}
-
-	private void loadTemplates() {
-		templatesPaneController.loadTemplates();
 	}
 	
 	private void initializeManagers() throws IOException, ClassNotFoundException {
@@ -548,8 +539,8 @@ public class SampleMailerController {
 	}
 	
 	private void setControlsBinding() {
-		saveTemplatesBtn.disableProperty().bind(templatesPaneController.isTemplateListSaved());
-		saveTemplatesAndExitBtn.disableProperty().bind(templatesPaneController.isTemplateListSaved());
+		saveTemplatesBtn.disableProperty().bind(templatesPaneController.isDataSaved());
+		saveTemplatesAndExitBtn.disableProperty().bind(templatesPaneController.isDataSaved());
 		fromField.textProperty().bind(mailFromField.textProperty());
 	}
 
