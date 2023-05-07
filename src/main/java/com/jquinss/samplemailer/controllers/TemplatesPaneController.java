@@ -1,18 +1,12 @@
 package com.jquinss.samplemailer.controllers;
 
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.jquinss.samplemailer.managers.SettingsManager;
+import com.jquinss.samplemailer.managers.TemplatesManager;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ListView;
@@ -21,42 +15,36 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.DialogPane;
 import com.jquinss.samplemailer.mail.EmailTemplate;
 import com.jquinss.samplemailer.util.DialogBuilder;
-import com.jquinss.samplemailer.util.OSChecker;
-import com.jquinss.samplemailer.util.ObjectSerializer;
 
 public class TemplatesPaneController {
 	@FXML
 	private ListView<EmailTemplate> templateListView;
-	private final ObservableList<EmailTemplate> emailTemplateObsList = FXCollections.observableArrayList();
-	private SimpleBooleanProperty templateListSaved = new SimpleBooleanProperty(true);
-	private ObjectSerializer objectSerializer;
+	private final TemplatesManager templatesManager = new TemplatesManager();
 	private SampleMailerController sampleMailerController;
 	
 	@FXML
-	void addTemplate(ActionEvent event) {
+	void addEmailTemplate() {
 		Alert invalidInputAlert = DialogBuilder.getAlertDialog("Informational alert", "Invalid input",
 				"The field cannot be empty", AlertType.ERROR);
 		TextInputDialog textInputDialog = DialogBuilder.getSingleTextFieldInputDialog("Template Creator",
 				"Create a new template", "Template name:", invalidInputAlert);
 		setDialogPaneStyles(invalidInputAlert.getDialogPane());
 		setDialogPaneStyles(textInputDialog.getDialogPane());
-		
+
 		Optional<String> templateName = textInputDialog.showAndWait();
 
 		if (templateName.isPresent()) {
-			System.out.println("Creating template");
-			EmailTemplate template = sampleMailerController.createEmailTemplate(templateName.get());
-			emailTemplateObsList.add(template);
-			templateListSaved.set(false);
+			EmailTemplate emailTemplate = sampleMailerController.createEmailTemplate(templateName.get());
+			templatesManager.addEmailTemplate(emailTemplate);
 		}
 	}
 	
 	@FXML
-	void applyTemplate(ActionEvent event) {
-		EmailTemplate template = templateListView.getSelectionModel().getSelectedItem();
+	void applyEmailTemplate() {
+		EmailTemplate emailTemplate = templateListView.getSelectionModel().getSelectedItem();
 
-		if (template != null) {
-			sampleMailerController.applyTemplate(template);
+		if (emailTemplate != null) {
+			sampleMailerController.applyEmailTemplate(emailTemplate);
 		}
 		else {
 			sampleMailerController.showAlertDialog("Error", "Error applying template", "No templates have been selected", AlertType.WARNING);
@@ -64,12 +52,11 @@ public class TemplatesPaneController {
 	}
 	
 	@FXML
-	void removeTemplate(ActionEvent event) {
-		EmailTemplate template = templateListView.getSelectionModel().getSelectedItem();
+	void removeEmailTemplate() {
+		EmailTemplate emailTemplate = templateListView.getSelectionModel().getSelectedItem();
 
-		if (template != null) {
-			emailTemplateObsList.remove(template);
-			templateListSaved.set(false);
+		if (emailTemplate != null) {
+			templatesManager.removeEmailTemplate(emailTemplate);
 		}
 		else {
 			sampleMailerController.showAlertDialog("Error", "Error removing template", "No templates have been selected", AlertType.WARNING);
@@ -80,54 +67,16 @@ public class TemplatesPaneController {
 		this.sampleMailerController = sampleMailerController;
 	}
 	
-	void loadTemplates() {
-		objectSerializer = new ObjectSerializer(SettingsManager.getInstance().getTemplatesFilePath());
-		
-		if (objectSerializer.fileExists()) {
-			try {
-				objectSerializer.openFileForRead();
-				@SuppressWarnings("unchecked")
-				List<EmailTemplate> templateList = (List<EmailTemplate>) objectSerializer.readObject();
-				emailTemplateObsList.setAll(templateList);
-			}
-			catch (ClassNotFoundException | IOException e) {
-				e.printStackTrace();
-			}
-			finally {
-				try {
-					objectSerializer.closeInput();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+	void loadEmailTemplates(String fileName) throws IOException, ClassNotFoundException {
+			templatesManager.loadEmailTemplates(fileName, false, true);
 	}
 	
-	void saveTemplates() {
-		objectSerializer = new ObjectSerializer(SettingsManager.getInstance().getTemplatesFilePath());
-		
-		try {
-			Files.createDirectories(Paths.get(SettingsManager.getInstance().getDataPath()));
-			objectSerializer.openFileForWrite();
-			List<EmailTemplate> emailTemplateList = emailTemplateObsList.stream().collect(Collectors.toList());
-			objectSerializer.writeObject(emailTemplateList);
-			templateListSaved.set(true);
-		}
-		catch (IOException e) {
-			templateListSaved.set(false);
-			e.printStackTrace();
-		}
-		finally {
-			try {
-				objectSerializer.closeOutput();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+	void saveEmailTemplates(String fileName) throws IOException {
+		templatesManager.saveEmailTemplates(fileName);
 	}
 	
-	SimpleBooleanProperty isTemplateListSaved() {
-		return templateListSaved;
+	SimpleBooleanProperty isDataSaved() {
+		return templatesManager.IsDataSaved();
 	}
 	
 	private void setDialogPaneStyles(DialogPane dialogPane) {
@@ -137,6 +86,14 @@ public class TemplatesPaneController {
 	
 	@FXML
 	private void initialize() {
-		templateListView.setItems(emailTemplateObsList);
+		try {
+			loadEmailTemplates(SettingsManager.getInstance().getTemplatesFilePath());
+		} catch (FileNotFoundException e) {
+			// ignore exception if there is no file, the first time templates are loaded
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		templateListView.setItems(templatesManager.getEmailTemplateObservableList());
 	}
 }
