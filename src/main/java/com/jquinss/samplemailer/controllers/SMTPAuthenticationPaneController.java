@@ -7,7 +7,6 @@ import com.jquinss.samplemailer.managers.SMTPAuthenticationManager;
 import com.jquinss.samplemailer.util.DialogBuilder;
 import com.jquinss.samplemailer.util.IntRangeStringConverter;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -85,7 +84,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
     }
 
     @FXML
-    private void addServerProfile(ActionEvent event) {
+    private void addServerProfile() {
         try {
             isAddServerProfileMode = true;
             openServerProfileDialog();
@@ -96,7 +95,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
     }
 
     @FXML
-    private void removeServerProfile(ActionEvent event) {
+    private void removeServerProfile() {
         ServerProfile serverProfile = serverProfilesListView.getSelectionModel().getSelectedItem();
         if (serverProfile != null) {
             try {
@@ -115,7 +114,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
     }
 
     @FXML
-    private void editServerProfile(ActionEvent event) {
+    private void editServerProfile() {
         ServerProfile serverProfile = serverProfilesListView.getSelectionModel().getSelectedItem();
         if (serverProfile != null) {
             try {
@@ -130,7 +129,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
     }
 
     @FXML
-    private void addAuthenticationProfile(ActionEvent event) {
+    private void addAuthenticationProfile() {
         if (smtpAuthenticationManager.getServerProfileObservableList().isEmpty()) {
             Alert alert = DialogBuilder.getAlertDialog("Information", "", "You must create at least 1 server profile",
                     Alert.AlertType.INFORMATION);
@@ -150,7 +149,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
     }
 
     @FXML
-    private void removeAuthenticationProfile(ActionEvent event) {
+    private void removeAuthenticationProfile() {
         SMTPAuthenticationProfile smtpAuthenticationProfile = authenticationProfilesTableView.getSelectionModel().getSelectedItem();
         if (smtpAuthenticationProfile != null) {
             smtpAuthenticationManager.removeSMTPAuthenticationProfile(smtpAuthenticationProfile);
@@ -158,7 +157,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
     }
 
     @FXML
-    private void editAuthenticationProfile(ActionEvent event) {
+    private void editAuthenticationProfile() {
         SMTPAuthenticationProfile authenticationProfile = authenticationProfilesTableView.getSelectionModel().getSelectedItem();
         if (authenticationProfile != null) {
             try {
@@ -173,7 +172,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
     }
 
     @FXML
-    private void saveAuthenticationProfile(ActionEvent event) {
+    private void saveAuthenticationProfile() {
         String emailAddress = emailAddressField.getText().trim();
         ServerProfile serverProfile = serverProfilesComboBox.getSelectionModel().getSelectedItem();
         boolean enableProfile = enableProfileCheckBox.isSelected();
@@ -214,12 +213,12 @@ public class SMTPAuthenticationPaneController implements Initializable {
     }
 
     @FXML
-    private void cancelAuthenticationProfileDialog(ActionEvent event) {
+    private void cancelAuthenticationProfileDialog() {
         closeAuthenticationProfileDialogStage();
     }
 
     @FXML
-    private void saveServerProfile(ActionEvent event) {
+    private void saveServerProfile() {
         String profileName = serverProfileNameField.getText().trim();
         String hostname = serverNameOrIPField.getText().trim();
         String port = smtpPortField.getText().trim();
@@ -268,7 +267,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
     }
 
     @FXML
-    private void cancelServerProfileDialog(ActionEvent event) {
+    private void cancelServerProfileDialog() {
         closeServerProfileDialogStage();
     }
 
