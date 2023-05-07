@@ -9,7 +9,6 @@ import com.jquinss.samplemailer.enums.ContentType;
 import com.jquinss.samplemailer.enums.SSLProtocol;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -75,7 +74,7 @@ public class SettingsPaneController {
     private final ObservableList<ContentType> contentTypeObsList = FXCollections.observableArrayList();
 
     @FXML
-    void applySettings(ActionEvent event) {
+    void applySettings() {
     	String validationResult = validateInput();
     	
     	if (!validationResult.isEmpty()) {
@@ -96,12 +95,12 @@ public class SettingsPaneController {
     }
 
     @FXML
-    void cancelSettings(ActionEvent event) {
+    void cancelSettings() {
     	stage.close();
     }
 
     @FXML
-    void resetSettings(ActionEvent event) {
+    void resetSettings() {
     	clearTLSSetting();
     	Properties defaultSettings = SettingsManager.getInstance().getDefaultSettings();
     	loadSettings(defaultSettings);
@@ -158,8 +157,11 @@ public class SettingsPaneController {
     
     private void setTooltips() {
 		connTimeoutTextFieldQuestionMark.setImage(new Image(getClass().getResource("/com/jquinss/samplemailer/images/question_mark.png").toString()));
-		Tooltip.install(connTimeoutTextFieldQuestionMark, new Tooltip("Socket connection time-out value in milliseconds.\nThe default value is -1. If the time-out value\nis "
-																		+ "0 or the default value, then it is interpreted\nas an infinite time-out. Range: -1 to 2147483647"));
+		Tooltip.install(connTimeoutTextFieldQuestionMark, new Tooltip("""
+				Socket connection time-out value in milliseconds.
+				The default value is -1. If the time-out value
+				is 0 or the default value, then it is interpreted
+				as an infinite time-out. Range: -1 to 2147483647"""));
 	}
     
     private void clearTLSSetting() {
@@ -200,15 +202,13 @@ public class SettingsPaneController {
     
     private void initializeCharsetComboBoxCell() {
     	charEncodingComboBox.setCellFactory(new Callback<ListView<Charset>, ListCell<Charset>>() {
-    		 
             @Override
             public ListCell<Charset> call(ListView<Charset> param) {
-                final ListCell<Charset> cell = new ListCell<Charset>() {
- 
+                return new ListCell<Charset>() {
                     @Override
                     protected void updateItem(Charset item, boolean empty) {
                         super.updateItem(item, empty);
-                        
+
                         if (item != null) {
                             setText(item.getDescription());
                         } else {
@@ -216,12 +216,10 @@ public class SettingsPaneController {
                         }
                     }
                 };
-                return cell;
             }
         });;
         
         charEncodingComboBox.setButtonCell(new ListCell<Charset>() {
-       	 
             @Override
             protected void updateItem(Charset item, boolean empty) {
                 super.updateItem(item, empty);
@@ -287,15 +285,15 @@ public class SettingsPaneController {
     	StringBuilder protocols = new StringBuilder();
     	
     	if (sslv3CheckBox.isSelected()) {
-    		protocols.append(SSLProtocol.SSLv3.toString() + " ");
+    		protocols.append(SSLProtocol.SSLv3.toString()).append(" ");
     	}
     	
     	if (tlsv1CheckBox.isSelected()) {
-    		protocols.append(SSLProtocol.TLSv1.toString() + " ");
+    		protocols.append(SSLProtocol.TLSv1.toString()).append(" ");
     	}
     	
     	if (tlsv1_1CheckBox.isSelected()) {
-    		protocols.append(SSLProtocol.TLSv1_1.toString() + " ");
+    		protocols.append(SSLProtocol.TLSv1_1.toString()).append(" ");
     	}
     	
     	if (tlsv1_2CheckBox.isSelected()) {
