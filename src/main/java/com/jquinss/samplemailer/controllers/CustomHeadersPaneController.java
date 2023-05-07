@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -17,7 +16,6 @@ import com.jquinss.samplemailer.mail.MailConverter;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
@@ -81,12 +79,12 @@ public class CustomHeadersPaneController {
 	static final String ADD_MANUALLY_TEXT = "Add manually";
 	
 	@FXML
-	private void switchHeadersImportType(ActionEvent event) {
+	private void switchHeadersImportType() {
 		toggleAddHeadersPanes();
 	}
 	
 	@FXML
-	private void selectHeadersFile(ActionEvent event) {
+	private void selectHeadersFile() {
 		FileChooser fileChooser = DialogBuilder.getFileChooser("Select the file containing headers");
 		File file = fileChooser.showOpenDialog(stage);
 		if (file != null) {
@@ -95,12 +93,12 @@ public class CustomHeadersPaneController {
 	}
 	
 	@FXML
-	private void clearHeadersFileSelection(ActionEvent event) {
+	private void clearHeadersFileSelection() {
 		headersFilePath.clear();
 	}
 
 	@FXML
-	private void addHeader(ActionEvent event) {
+	private void addHeader() {
 		String headerName = headerNameField.getText().trim();
 		String headerValue = headerValueField.getText().trim();
 		
@@ -116,7 +114,7 @@ public class CustomHeadersPaneController {
 	}
 	
 	@FXML
-	private void modifyHeader(ActionEvent event) {
+	private void modifyHeader() {
 		EmailHeader selectedHeader = headerTableView.getSelectionModel().getSelectedItem();
 		
 		if (selectedHeader != null) {
@@ -130,7 +128,7 @@ public class CustomHeadersPaneController {
 	}
 	
 	@FXML
-	private void removeHeader(ActionEvent event) {
+	private void removeHeader() {
 		EmailHeader header = headerTableView.getSelectionModel().getSelectedItem();
 		
 		if (header != null) {
@@ -142,7 +140,7 @@ public class CustomHeadersPaneController {
 	}
 	
 	@FXML
-	private void addHeaderToExcludedHeadersList(ActionEvent event) {
+	private void addHeaderToExcludedHeadersList() {
 		String excludedHeaderName = excludedHeaderNameField.getText().trim();
 		
 		if (!excludedHeaderName.isEmpty()) {
@@ -152,7 +150,7 @@ public class CustomHeadersPaneController {
 	}
 	
 	@FXML
-	private void removeHeaderFromExcludedHeadersList(ActionEvent event) {
+	private void removeHeaderFromExcludedHeadersList() {
 		String excludedHeaderName = excludedHeaderNamesTableView.getSelectionModel().getSelectedItem();
 		
 		if (!excludedHeaderName.isEmpty()) {
@@ -181,9 +179,10 @@ public class CustomHeadersPaneController {
 	
 	private void setTooltips() {
 		addHeadersFromFileQuestionMark.setImage(new Image(getClass().getResource("/com/jquinss/samplemailer/images/question_mark.png").toString()));
-		Tooltip.install(addHeadersFromFileQuestionMark, new Tooltip("Select a file to import the headers from. This can be an .eml"
-																	+ "\nor an Outlook .msg file or a text file containing key-value"
-																	+ "\nentities separated by a colon (e.g. test: 1234)"));
+		Tooltip.install(addHeadersFromFileQuestionMark, new Tooltip("""
+				Select a file to import the headers from. This can be an .eml
+				or an Outlook .msg file or a text file containing key-value
+				entities separated by a colon (e.g. test: 1234)"""));
 
 	}
 	
@@ -195,7 +194,7 @@ public class CustomHeadersPaneController {
 		List<EmailHeader> emailHeaders = new ArrayList<EmailHeader>();
 		String selectedHeadersImportType = ((RadioButton) headersImportTypeToggleGroup.getSelectedToggle()).getText();
 		if (selectedHeadersImportType.equals("Add manually")) {
-			emailHeaders = headersObsList.stream().collect(Collectors.toList());
+			emailHeaders = new ArrayList<>(headersObsList);
 		}
 		else {
 			String file = headersFilePath.getText();
@@ -214,7 +213,7 @@ public class CustomHeadersPaneController {
 	}
 	
 	List<String> getExcludedHeaderNames() {
-		return excludedHeaderNamesObsList.stream().collect(Collectors.toList());
+		return new ArrayList<>(excludedHeaderNamesObsList);
 	}
 	
 	String getHeadersFilePath() {
@@ -264,7 +263,7 @@ public class CustomHeadersPaneController {
 			emailHeaders = HeaderExtractor.extractHeaders(file.toString());
 		}
 		
-		emailHeaders = HeaderExtractor.getNotMatchingHeaders(emailHeaders, excludedHeaderNamesObsList.stream().collect(Collectors.toList()));
+		emailHeaders = HeaderExtractor.getNotMatchingHeaders(emailHeaders, new ArrayList<>(excludedHeaderNamesObsList));
 		
 		return emailHeaders;
 	}
