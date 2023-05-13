@@ -42,7 +42,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
     private TableColumn<SMTPAuthenticationProfile, String> authenticationProfileStateTableColumn;
 
     @FXML
-    private TextField emailAddressField;
+    private TextField emailAddressTextField;
 
     @FXML
     private ComboBox<ServerProfile> serverProfilesComboBox;
@@ -51,13 +51,13 @@ public class SMTPAuthenticationPaneController implements Initializable {
     private CheckBox enableProfileCheckBox;
 
     @FXML
-    private TextField serverProfileNameField;
+    private TextField serverProfileNameTextField;
 
     @FXML
-    private TextField serverNameOrIPField;
+    private TextField serverNameOrIPTextField;
 
     @FXML
-    private TextField smtpPortField;
+    private TextField smtpPortTextField;
 
     @FXML
     private CheckBox useTLSCheckBox;
@@ -178,7 +178,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
 
     @FXML
     private void saveAuthenticationProfile() {
-        String emailAddress = emailAddressField.getText().trim();
+        String emailAddress = emailAddressTextField.getText().trim();
         ServerProfile serverProfile = serverProfilesComboBox.getSelectionModel().getSelectedItem();
         boolean enableProfile = enableProfileCheckBox.isSelected();
 
@@ -230,9 +230,9 @@ public class SMTPAuthenticationPaneController implements Initializable {
 
     @FXML
     private void saveServerProfile() {
-        String profileName = serverProfileNameField.getText().trim();
-        String hostname = serverNameOrIPField.getText().trim();
-        String port = smtpPortField.getText().trim();
+        String profileName = serverProfileNameTextField.getText().trim();
+        String hostname = serverNameOrIPTextField.getText().trim();
+        String port = smtpPortTextField.getText().trim();
         boolean isTLSEnabled = useTLSCheckBox.isSelected();
 
         if (isEditServerProfileMode && isValidServerProfile(profileName, hostname, port)) {
@@ -314,14 +314,14 @@ public class SMTPAuthenticationPaneController implements Initializable {
     }
 
     private void loadCurrentlyEditedServerProfileInfo() {
-        serverProfileNameField.setText(editedServerProfile.getProfileName());
-        serverNameOrIPField.setText(editedServerProfile.getServerHostName());
-        smtpPortField.setText(editedServerProfile.getPort());
+        serverProfileNameTextField.setText(editedServerProfile.getProfileName());
+        serverNameOrIPTextField.setText(editedServerProfile.getServerHostName());
+        smtpPortTextField.setText(editedServerProfile.getPort());
         useTLSCheckBox.setSelected(editedServerProfile.isTLSEnabled());
     }
 
     private void loadCurrentlyEditedAuthenticationProfileInfo() {
-        emailAddressField.setText(editedAuthenticationProfile.getEmailAddress());
+        emailAddressTextField.setText(editedAuthenticationProfile.getEmailAddress());
         serverProfilesComboBox.getSelectionModel().select(editedAuthenticationProfile.getServerProfile());
         enableProfileCheckBox.setSelected(editedAuthenticationProfile.isEnabled());
     }
@@ -409,6 +409,6 @@ public class SMTPAuthenticationPaneController implements Initializable {
     }
 
     private void initializeServerProfileTextFormatters() {
-        smtpPortField.setTextFormatter(new TextFormatter<>(new IntRangeStringConverter(0, 65536), 25));
+        smtpPortTextField.setTextFormatter(new TextFormatter<>(new IntRangeStringConverter(0, 65536), 25));
     }
 }

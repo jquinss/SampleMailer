@@ -42,13 +42,13 @@ public class CustomHeadersPaneController {
 	private TableView<EmailHeader> headerTableView;
 
 	@FXML
-	private TextField headerNameField;
+	private TextField headerNameTextField;
 
 	@FXML
-	private TextField headerValueField;
+	private TextField headerValueTextField;
 	
 	@FXML
-	private TextField excludedHeaderNameField;
+	private TextField excludedHeaderNameTextField;
 	
 	@FXML
 	private TableView<String> excludedHeaderNamesTableView;
@@ -66,7 +66,7 @@ public class CustomHeadersPaneController {
 	private VBox addHeadersFromFilePane;
 	
 	@FXML
-	private TextField headersFilePath;
+	private TextField headersFilePathTextField;
 	
 	private Stage stage;
 	
@@ -88,25 +88,25 @@ public class CustomHeadersPaneController {
 		FileChooser fileChooser = DialogBuilder.buildFileChooser("Select the file containing headers");
 		File file = fileChooser.showOpenDialog(stage);
 		if (file != null) {
-			headersFilePath.setText(file.getPath());
+			headersFilePathTextField.setText(file.getPath());
 		}
 	}
 	
 	@FXML
 	private void clearHeadersFileSelection() {
-		headersFilePath.clear();
+		headersFilePathTextField.clear();
 	}
 
 	@FXML
 	private void addHeader() {
-		String headerName = headerNameField.getText().trim();
-		String headerValue = headerValueField.getText().trim();
+		String headerName = headerNameTextField.getText().trim();
+		String headerValue = headerValueTextField.getText().trim();
 		
 		
 		if (!headerName.isEmpty() && !headerValue.isEmpty()) {
 			headersObsList.add(new EmailHeader(headerName, headerValue));
-			headerNameField.clear();
-			headerValueField.clear();
+			headerNameTextField.clear();
+			headerValueTextField.clear();
 		}
 		else {
 			sampleMailerController.showAlertDialog("Error", "Error creating header", "You must enter a name and value for the header", AlertType.WARNING);
@@ -118,8 +118,8 @@ public class CustomHeadersPaneController {
 		EmailHeader selectedHeader = headerTableView.getSelectionModel().getSelectedItem();
 		
 		if (selectedHeader != null) {
-			String headerName = headerNameField.getText().trim();
-			String headerValue = headerValueField.getText().trim();
+			String headerName = headerNameTextField.getText().trim();
+			String headerValue = headerValueTextField.getText().trim();
 			replaceHeader(selectedHeader, new EmailHeader(headerName, headerValue));
 		}
 		else {
@@ -141,11 +141,11 @@ public class CustomHeadersPaneController {
 	
 	@FXML
 	private void addHeaderToExcludedHeadersList() {
-		String excludedHeaderName = excludedHeaderNameField.getText().trim();
+		String excludedHeaderName = excludedHeaderNameTextField.getText().trim();
 		
 		if (!excludedHeaderName.isEmpty()) {
 			excludedHeaderNamesObsList.add(excludedHeaderName);
-			excludedHeaderNameField.clear();
+			excludedHeaderNameTextField.clear();
 		}
 	}
 	
@@ -196,7 +196,7 @@ public class CustomHeadersPaneController {
 			emailHeaders = new ArrayList<>(headersObsList);
 		}
 		else {
-			String file = headersFilePath.getText();
+			String file = headersFilePathTextField.getText();
 			if (!file.isEmpty()) {
 				try {
 					emailHeaders = importHeadersFromFile(new File(file));
@@ -216,7 +216,7 @@ public class CustomHeadersPaneController {
 	}
 	
 	String getHeadersFilePath() {
-		return headersFilePath.getText();
+		return headersFilePathTextField.getText();
 	}
 	
 	void setHeaders(List<EmailHeader> items) {
@@ -228,12 +228,12 @@ public class CustomHeadersPaneController {
 	}
 	
 	void setHeadersFilePath(String path) {
-		headersFilePath.setText(path);
+		headersFilePathTextField.setText(path);
 	}
 	
 	void clearData() {
 		headersObsList.clear();
-		headersFilePath.clear();
+		headersFilePathTextField.clear();
 		excludedHeaderNamesObsList.clear();
 	}
 	

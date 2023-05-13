@@ -32,7 +32,7 @@
          <children>
             <Label text="Email address:" />
             <Label text="Server profile:" GridPane.rowIndex="1" />
-            <TextField fx:id="emailAddressField" GridPane.columnIndex="1" />
+            <TextField fx:id="emailAddressTextField" GridPane.columnIndex="1" />
             <ComboBox fx:id="serverProfilesComboBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label text="Enabled:" GridPane.rowIndex="2" />
             <CheckBox fx:id="enableProfileCheckBox" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />

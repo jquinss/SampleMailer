@@ -35,9 +35,9 @@
             <Label text="Server name/IP address:" GridPane.rowIndex="1" />
             <Label text="SMTP port:" GridPane.rowIndex="2" />
             <Label text="Use TLS:" GridPane.rowIndex="3" />
-            <TextField fx:id="serverProfileNameField" GridPane.columnIndex="1" />
-            <TextField fx:id="serverNameOrIPField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="smtpPortField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="serverProfileNameTextField" GridPane.columnIndex="1" />
+            <TextField fx:id="serverNameOrIPTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="smtpPortTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <CheckBox fx:id="useTLSCheckBox" mnemonicParsing="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
