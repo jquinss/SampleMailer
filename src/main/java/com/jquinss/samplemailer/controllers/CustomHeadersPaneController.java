@@ -57,7 +57,7 @@ public class CustomHeadersPaneController {
 	private TableColumn<String, String> excludedHeaderNameTableColumn;
 	
 	@FXML
-	private ImageView addHeadersFromFileQuestionMark;
+	private ImageView addHeadersFromFileTooltip;
 
 	@FXML
 	private VBox addHeadersManuallyPane;
@@ -178,7 +178,7 @@ public class CustomHeadersPaneController {
 	}
 	
 	private void setTooltips() {
-		AppStyler.setTooltip(addHeadersFromFileQuestionMark, this,
+		AppStyler.setTooltip(addHeadersFromFileTooltip, this,
 				SettingsManager.getInstance().getDialogLogoImage(), """
 				Select a file to import the headers from. This can be an .eml
 				or an Outlook .msg file or a text file containing key-value

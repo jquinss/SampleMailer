@@ -64,7 +64,7 @@ public class SettingsPaneController {
     private TextField debugLogDirTextField;
     
     @FXML
-    private ImageView connTimeoutTextFieldQuestionMark;
+    private ImageView connTimeoutTextFieldTooltip;
     
     private Stage stage;
     
@@ -157,7 +157,7 @@ public class SettingsPaneController {
     }
     
     private void setTooltips() {
-		AppStyler.setTooltip(connTimeoutTextFieldQuestionMark, this, SettingsManager.getInstance().getDialogLogoImage(), """
+		AppStyler.setTooltip(connTimeoutTextFieldTooltip, this, SettingsManager.getInstance().getDialogLogoImage(), """
 				Socket connection time-out value in milliseconds.
 				The default value is -1. If the time-out value
 				is 0 or the default value, then it is interpreted

@@ -51,7 +51,7 @@
                                <CheckBox fx:id="tlsv1_3CheckBox" mnemonicParsing="false" text="TLSv1.3" />
                            </children>
                         </HBox>
-                        <ImageView fx:id="connTimeoutTextFieldQuestionMark" fitHeight="12.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                        <ImageView fx:id="connTimeoutTextFieldTooltip" fitHeight="12.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
                      </children>
                      <padding>
                         <Insets left="40.0" right="50.0" top="20.0" />
