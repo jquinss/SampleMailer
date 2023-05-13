@@ -191,13 +191,13 @@ public class SMTPAuthenticationPaneController implements Initializable {
             editedAuthenticationProfile.setEnabled(enableProfile);
             smtpAuthenticationManager.replaceAuthenticationProfile(editedAuthenticationProfile, editedAuthenticationProfile);
             authenticationProfilesTableView.getSelectionModel().select(editedAuthenticationProfile);
-            closeAuthenticationProfileDialogStage();
+            cancelAuthenticationProfileDialog();
         }
         else if (isAddAuthenticationProfileMode && !emailAddress.isEmpty() &&
                 !smtpAuthenticationManager.existsSMTPAuthenticationProfile(emailAddress)) {
             validAuthenticationProfile = true;
             smtpAuthenticationManager.addSMTPAuthenticationProfile(new SMTPAuthenticationProfile(emailAddress, serverProfile, enableProfile));
-            closeAuthenticationProfileDialogStage();
+            cancelAuthenticationProfileDialog();
         }
 
         StringBuilder validationMessage = new StringBuilder();
@@ -223,7 +223,9 @@ public class SMTPAuthenticationPaneController implements Initializable {
 
     @FXML
     private void cancelAuthenticationProfileDialog() {
-        closeAuthenticationProfileDialogStage();
+        isEditAuthenticationProfileMode = false;
+        isAddAuthenticationProfileMode = false;
+        authenticationProfileDialogStage.close();
     }
 
     @FXML
@@ -240,12 +242,12 @@ public class SMTPAuthenticationPaneController implements Initializable {
             editedServerProfile.setTLSEnabled(isTLSEnabled);
             smtpAuthenticationManager.replaceServerProfile(editedServerProfile, editedServerProfile);
             serverProfilesListView.getSelectionModel().select(editedServerProfile);
-            closeServerProfileDialogStage();
+            cancelServerProfileDialog();
         }
         else {
             if (isValidServerProfile(profileName, hostname, port)) {
                 smtpAuthenticationManager.addServerProfile(new ServerProfile(profileName, hostname, port, isTLSEnabled));
-                closeServerProfileDialogStage();
+                cancelServerProfileDialog();
             }
             else {
                 StringBuilder validationMessage = new StringBuilder();
@@ -280,7 +282,9 @@ public class SMTPAuthenticationPaneController implements Initializable {
 
     @FXML
     private void cancelServerProfileDialog() {
-        closeServerProfileDialogStage();
+        isAddServerProfileMode = false;
+        isEditServerProfileMode = false;
+        serverProfileDialogStage.close();
     }
 
     @Override
@@ -309,18 +313,6 @@ public class SMTPAuthenticationPaneController implements Initializable {
         }
     }
 
-    private void closeServerProfileDialogStage() {
-        isAddServerProfileMode = false;
-        isEditServerProfileMode = false;
-        serverProfileDialogStage.close();
-    }
-
-    private void closeAuthenticationProfileDialogStage() {
-        isEditAuthenticationProfileMode = false;
-        isAddAuthenticationProfileMode = false;
-        authenticationProfileDialogStage.close();
-    }
-
     private void loadCurrentlyEditedServerProfileInfo() {
         serverProfileNameField.setText(editedServerProfile.getProfileName());
         serverNameOrIPField.setText(editedServerProfile.getServerHostName());
@@ -346,7 +338,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
         serverProfileDialogStage.initModality(Modality.APPLICATION_MODAL);
         serverProfileDialogStage.setScene(scene);
         serverProfileDialogStage.setOnCloseRequest(e -> {
-            closeServerProfileDialogStage();
+            cancelServerProfileDialog();
         });
 
         setStyles(scene);
@@ -367,7 +359,7 @@ public class SMTPAuthenticationPaneController implements Initializable {
         authenticationProfileDialogStage.initModality(Modality.APPLICATION_MODAL);
         authenticationProfileDialogStage.setScene(scene);
         authenticationProfileDialogStage.setOnCloseRequest(e -> {
-            closeAuthenticationProfileDialogStage();
+            cancelServerProfileDialog();
         });
 
         setStyles(scene);

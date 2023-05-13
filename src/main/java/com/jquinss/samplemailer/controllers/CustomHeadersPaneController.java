@@ -10,7 +10,6 @@ import com.jquinss.samplemailer.util.AppStyler;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
-import javafx.scene.image.Image;
 import org.apache.poi.hsmf.MAPIMessage;
 import org.apache.poi.hsmf.exceptions.ChunkNotFoundException;
 

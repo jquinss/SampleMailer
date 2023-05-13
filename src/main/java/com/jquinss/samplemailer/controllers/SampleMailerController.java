@@ -15,7 +15,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
-import javafx.scene.image.Image;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
@@ -39,7 +38,6 @@ import com.jquinss.samplemailer.managers.ListViewManager;
 import com.jquinss.samplemailer.util.DialogBuilder;
 import com.jquinss.samplemailer.util.Logger;
 
-import java.util.function.UnaryOperator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.BufferedWriter;
@@ -338,7 +336,7 @@ public class SampleMailerController {
 	}
 	
 	@FXML
-	private void openAboutInfo(ActionEvent event) {
+	private void openAboutInfo() {
 		showAlertDialog("About", "", "SampleMailerv1.1\n\nCreated by Joaquin Sampedro", AlertType.INFORMATION);
 	}
 
@@ -539,30 +537,12 @@ public class SampleMailerController {
 		saveTemplatesAndExitBtn.disableProperty().bind(templatesPaneController.isDataSaved());
 		fromField.textProperty().bind(mailFromField.textProperty());
 	}
-
-	private UnaryOperator<TextFormatter.Change> createInputFilter(String validInputRegEx, String defaultText) {
-		UnaryOperator<TextFormatter.Change> filter = change -> {
-			String newText = change.getControlNewText();
-			if (newText.matches(validInputRegEx)) {
-				return change;
-			} else if (newText.matches("")) {
-				change.setText(defaultText);
-				change.setCaretPosition(change.getCaretPosition() + 1);
-
-				return change;
-			}
-
-			return null;
-		};
-
-		return filter;
-	}
 	
 	private void setTooltips() {
 		AppStyler.setTooltip(serverNameFieldQuestionMark, this, SettingsManager.getInstance().getDialogLogoImage(), """
-         					Disable this option, if you want the server
-         					name to be automatically resolved using
-         					the MX records of the recipient domain""");
+														Disable this option, if you want the server
+														name to be automatically resolved using
+														the MX records of the recipient domain""");
 		AppStyler.setTooltip(fromFieldQuestionMark, this, SettingsManager.getInstance().getDialogLogoImage(), """
 				By default, the "From" field will get the
 				same value as the "Mail From". To be
@@ -771,9 +751,8 @@ public class SampleMailerController {
 		List<MimeMessage> mimeMessages = createMimeMessages();
 		int numEmails = Integer.parseInt(numEmailsField.getText());
 		int delay = Integer.parseInt(numEmailsField.getText());
-		EmailTask emailTask = new EmailTask(mimeMessages, numEmails, delay);
-		
-		return emailTask;
+
+		return new EmailTask(mimeMessages, numEmails, delay);
 	}
 	
 	private void executeEmailTask(EmailTask emailTask) {
