@@ -69,64 +69,64 @@ import org.xbill.DNS.TextParseException;
 public class SampleMailerController {
 
 	@FXML
-	private MenuItem saveTemplatesBtn;
+	private MenuItem saveTemplatesMenuItem;
 	
 	@FXML
-	private MenuItem saveTemplatesAndExitBtn;
+	private MenuItem saveTemplatesAndExitMenuItem;
 	
 	@FXML
 	private ToggleGroup editorTypeToggleGroup;
 
 	@FXML
-	private TextField serverNameField;
+	private TextField serverNameTextField;
 
 	@FXML
-	private TextField fromField;
+	private TextField fromTextField;
 
 	@FXML
-	private TextField mailFromField;
+	private TextField mailFromTextField;
 	
 	@FXML
-	private ImageView serverNameFieldQuestionMark;
+	private ImageView serverNameTextFieldTooltip;
 	
 	@FXML
-	private ImageView fromFieldQuestionMark;
+	private ImageView fromTextFieldTooltip;
 
 	@FXML
-	private CheckBox toggleFromField;
+	private CheckBox toggleFromTextFieldCheckBox;
 	
 	@FXML
-	private CheckBox toggleServerField;
+	private CheckBox toggleServerTextFieldCheckBox;
 
 	@FXML
-	private TextField toField;
+	private TextField toTextField;
 	
 	@FXML
-	private TextField ccField;
+	private TextField ccTextField;
 
 	@FXML
-	private TextField bccField;
+	private TextField bccTextField;
 
 	@FXML
 	private ListView<File> attachmentListView;
 
 	@FXML
-	private TextField subjectField;
+	private TextField subjectTextField;
 
 	@FXML
 	private TextArea bodyTextArea;
 
 	@FXML
-	private TextField numEmailsField;
+	private TextField numEmailsTextField;
 
 	@FXML
-	private TextField delayField;
+	private TextField delayTextField;
 
 	@FXML
-	private ToggleButton toggleTLSBtn;
+	private ToggleButton tlsToggleBtn;
 
 	@FXML
-	private TextArea logArea;
+	private TextArea logTextArea;
 	
 	@FXML
 	private HTMLEditor bodyHTMLEditor;
@@ -192,17 +192,17 @@ public class SampleMailerController {
 	EmailTemplate createEmailTemplate(String name) {
 		EmailTemplate template = new EmailTemplate(name);
 		
-		template.setServer(serverNameField.getText());
-		template.setMailFrom(mailFromField.getText());
-		template.setFrom(fromField.getText());
-		template.setCustomFrom(toggleFromField.isSelected());
-		template.setCustomServer(toggleServerField.isSelected());
-		template.setTo(toField.getText());
-		template.setCC(ccField.getText());
-		template.setBCC(bccField.getText());
-		template.setSubject(subjectField.getText());
+		template.setServer(serverNameTextField.getText());
+		template.setMailFrom(mailFromTextField.getText());
+		template.setFrom(fromTextField.getText());
+		template.setCustomFrom(toggleFromTextFieldCheckBox.isSelected());
+		template.setCustomServer(toggleServerTextFieldCheckBox.isSelected());
+		template.setTo(toTextField.getText());
+		template.setCC(ccTextField.getText());
+		template.setBCC(bccTextField.getText());
+		template.setSubject(subjectTextField.getText());
 		template.setBody(getBodyText());
-		template.setTLSEnabled(toggleTLSBtn.isSelected());
+		template.setTLSEnabled(tlsToggleBtn.isSelected());
 		template.setHTMLText(((RadioMenuItem) editorTypeToggleGroup.getSelectedToggle()).getText().equals("HTML"));
 		template.setAttachments(attachmentManager.getItems());
 		if (customHeadersPaneController.isAddFromFileSelected() && !customHeadersPaneController.getHeadersFilePath().isEmpty()) {
@@ -213,28 +213,28 @@ public class SampleMailerController {
 		else {
 			template.setHeaders(customHeadersPaneController.getHeaders());
 		}
-		template.setNumEmails(Integer.parseInt(numEmailsField.getText()));
-		template.setDelay(Integer.parseInt(delayField.getText()));
+		template.setNumEmails(Integer.parseInt(numEmailsTextField.getText()));
+		template.setDelay(Integer.parseInt(delayTextField.getText()));
 		
 		return template;
 	}
 
 	void applyEmailTemplate(EmailTemplate template) {
-		toggleServerField.setSelected(template.isCustomServer());
-		if (toggleServerField.isSelected()) {
-			serverNameField.setText(template.getServer());
+		toggleServerTextFieldCheckBox.setSelected(template.isCustomServer());
+		if (toggleServerTextFieldCheckBox.isSelected()) {
+			serverNameTextField.setText(template.getServer());
 		}
 			
-		toggleFromField.setSelected(template.isCustomFrom());
-		if (toggleFromField.isSelected()) {
-			fromField.setText(template.getFrom());
+		toggleFromTextFieldCheckBox.setSelected(template.isCustomFrom());
+		if (toggleFromTextFieldCheckBox.isSelected()) {
+			fromTextField.setText(template.getFrom());
 		}
 			
-		mailFromField.setText(template.getMailFrom());
-		toField.setText(template.getTo());
-		ccField.setText(template.getCC());
-		bccField.setText(template.getBCC());
-		subjectField.setText(template.getSubject());
+		mailFromTextField.setText(template.getMailFrom());
+		toTextField.setText(template.getTo());
+		ccTextField.setText(template.getCC());
+		bccTextField.setText(template.getBCC());
+		subjectTextField.setText(template.getSubject());
 			
 		if (template.isHTMLText()) {
 			hmtlEditorRadioMenuItem.setSelected(true);
@@ -247,7 +247,7 @@ public class SampleMailerController {
 			
 		switchEditor();
 		bodyTextArea.setText(getBodyText());
-		toggleTLSBtn.setSelected(template.isTLSEnabled());
+		tlsToggleBtn.setSelected(template.isTLSEnabled());
 		attachmentManager.setItems(template.getAttachments());
 			
 		if (template.isAddHeadersFromFile()) {
@@ -260,8 +260,8 @@ public class SampleMailerController {
 			customHeadersPaneController.setHeaders(template.getHeaders());
 		}
 			
-		numEmailsField.setText(Integer.toString(template.getNumEmails()));
-		delayField.setText(Integer.toString(template.getDelay()));
+		numEmailsTextField.setText(Integer.toString(template.getNumEmails()));
+		delayTextField.setText(Integer.toString(template.getDelay()));
 	}
 
 	@FXML
@@ -275,20 +275,20 @@ public class SampleMailerController {
 
 	@FXML
 	private void clearEmail() {
-		serverNameField.clear();;
-		toggleFromField.setSelected(false);
-		mailFromField.clear();
-		toField.clear();
-		ccField.clear();
-		bccField.clear();;
-		subjectField.clear();
+		serverNameTextField.clear();;
+		toggleFromTextFieldCheckBox.setSelected(false);
+		mailFromTextField.clear();
+		toTextField.clear();
+		ccTextField.clear();
+		bccTextField.clear();;
+		subjectTextField.clear();
 		bodyTextArea.clear();
 		bodyHTMLEditor.setHtmlText("");
-		toggleTLSBtn.setSelected(false);
+		tlsToggleBtn.setSelected(false);
 		attachmentManager.removeAllItems();
 		customHeadersPaneController.clearData();
-		numEmailsField.clear();
-		delayField.clear();
+		numEmailsTextField.clear();
+		delayTextField.clear();
 	}
 	
 	private void handleStageClosure(WindowEvent e) {
@@ -422,7 +422,7 @@ public class SampleMailerController {
 	
 	@FXML
 	private void clearLogs() {
-		logArea.clear();
+		logTextArea.clear();
 	}
 	
 	@FXML
@@ -434,7 +434,7 @@ public class SampleMailerController {
 
     	if (file != null) {
     		try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-    			writer.write(logArea.getText(), 0, logArea.getText().length());
+    			writer.write(logTextArea.getText(), 0, logTextArea.getText().length());
     		}
     		catch (IOException e) {
     			e.printStackTrace();
@@ -444,7 +444,7 @@ public class SampleMailerController {
 
 	@FXML
 	public void initialize() throws IOException, ClassNotFoundException {
-		logger = new Logger(logArea);
+		logger = new Logger(logTextArea);
 		initializeManagers();
 		initializeControls();
 		loadSettings();
@@ -507,43 +507,43 @@ public class SampleMailerController {
 	}
 	
 	private void setTextFieldsFormatters() {
-		numEmailsField.setTextFormatter(new TextFormatter<>(new IntRangeStringConverter(1, 1000), 1));
-		delayField.setTextFormatter(new TextFormatter<>(new IntRangeStringConverter(0, 1000000), 0));
+		numEmailsTextField.setTextFormatter(new TextFormatter<>(new IntRangeStringConverter(1, 1000), 1));
+		delayTextField.setTextFormatter(new TextFormatter<>(new IntRangeStringConverter(0, 1000000), 0));
 	}
 	
 	private void setControlsListeners() {
-		toggleFromField.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
+		toggleFromTextFieldCheckBox.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
 		    if (isNowSelected) {
-		    	fromField.setDisable(false);
-		    	fromField.textProperty().unbind();
+		    	fromTextField.setDisable(false);
+		    	fromTextField.textProperty().unbind();
 		    } else {
-		    	fromField.setDisable(true);
-		    	fromField.textProperty().bind(mailFromField.textProperty());
+		    	fromTextField.setDisable(true);
+		    	fromTextField.textProperty().bind(mailFromTextField.textProperty());
 		    } 
 		});
 		
-		toggleServerField.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
+		toggleServerTextFieldCheckBox.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
 			if (isNowSelected) {
-		    	serverNameField.setDisable(false);
+		    	serverNameTextField.setDisable(false);
 		    } else {
-		    	serverNameField.setDisable(true);
-		    	serverNameField.clear();
+		    	serverNameTextField.setDisable(true);
+		    	serverNameTextField.clear();
 		    } 
 		});
 	}
 	
 	private void setControlsBinding() {
-		saveTemplatesBtn.disableProperty().bind(templatesPaneController.isDataSaved());
-		saveTemplatesAndExitBtn.disableProperty().bind(templatesPaneController.isDataSaved());
-		fromField.textProperty().bind(mailFromField.textProperty());
+		saveTemplatesMenuItem.disableProperty().bind(templatesPaneController.isDataSaved());
+		saveTemplatesAndExitMenuItem.disableProperty().bind(templatesPaneController.isDataSaved());
+		fromTextField.textProperty().bind(mailFromTextField.textProperty());
 	}
 	
 	private void setTooltips() {
-		AppStyler.setTooltip(serverNameFieldQuestionMark, this, SettingsManager.getInstance().getDialogLogoImage(), """
+		AppStyler.setTooltip(serverNameTextFieldTooltip, this, SettingsManager.getInstance().getDialogLogoImage(), """
 														Disable this option, if you want the server
 														name to be automatically resolved using
 														the MX records of the recipient domain""");
-		AppStyler.setTooltip(fromFieldQuestionMark, this, SettingsManager.getInstance().getDialogLogoImage(), """
+		AppStyler.setTooltip(fromTextFieldTooltip, this, SettingsManager.getInstance().getDialogLogoImage(), """
 				By default, the "From" field will get the
 				same value as the "Mail From". To be
 				able to customize it, select this option""");
@@ -571,10 +571,10 @@ public class SampleMailerController {
 		Properties settings = getSettings();
 		String debugURL = settings.getProperty("mail.debugurl");
 		
-		String sender = fromField.getText().trim();
-		String toRecipients = toField.getText().trim();
-		String ccRecipients = ccField.getText().trim();
-		String bccRecipients = bccField.getText().trim();
+		String sender = fromTextField.getText().trim();
+		String toRecipients = toTextField.getText().trim();
+		String ccRecipients = ccTextField.getText().trim();
+		String bccRecipients = bccTextField.getText().trim();
 
 		SMTPAuthenticationProfile smtpAuthenticationProfile = smtpAuthenticationManager.getSMTPAuthenticationProfile(settings.getProperty("mail.smtp.from"));
 
@@ -675,8 +675,8 @@ public class SampleMailerController {
 			mimeMessageBuilder.setHeaders(customHeadersPaneController.getHeaders());
 		}
 
-		if (!subjectField.getText().isEmpty()) {
-			mimeMessageBuilder.setSubject(subjectField.getText());
+		if (!subjectTextField.getText().isEmpty()) {
+			mimeMessageBuilder.setSubject(subjectTextField.getText());
 		}
 
 		if (!attachmentManager.getItems().isEmpty()) {
@@ -700,14 +700,14 @@ public class SampleMailerController {
 	private Properties getSettings() {
 		Properties settings = SettingsManager.getInstance().getSettings();
 		
-		if (!toggleFromField.isDisabled()) {
-			settings.setProperty("mail.smtp.from", mailFromField.getText().trim());
+		if (!toggleFromTextFieldCheckBox.isDisabled()) {
+			settings.setProperty("mail.smtp.from", mailFromTextField.getText().trim());
 		}
 		else {
-			settings.setProperty("mail.smtp.from", fromField.getText().trim());
+			settings.setProperty("mail.smtp.from", fromTextField.getText().trim());
 		}
 		
-		if (toggleTLSBtn.isSelected()) {
+		if (tlsToggleBtn.isSelected()) {
 			settings.setProperty("mail.smtp.starttls.enable", "true");
 		}
 		else {
@@ -726,8 +726,8 @@ public class SampleMailerController {
 		addRecipientsToRecipientTypeToRecipientMap(rcptTypeToRcptMap, ccRecipients, RecipientType.CC);
 		addRecipientsToRecipientTypeToRecipientMap(rcptTypeToRcptMap, bccRecipients, RecipientType.BCC);
 		
-		if (toggleServerField.isSelected()) {
-			String server = serverNameField.getText().trim();
+		if (toggleServerTextFieldCheckBox.isSelected()) {
+			String server = serverNameTextField.getText().trim();
 			serverToRecipientsMap.put(server, rcptTypeToRcptMap);
 		}
 		else {
@@ -749,8 +749,8 @@ public class SampleMailerController {
 	
 	EmailTask createEmailTask() throws MessagingException, TextParseException {
 		List<MimeMessage> mimeMessages = createMimeMessages();
-		int numEmails = Integer.parseInt(numEmailsField.getText());
-		int delay = Integer.parseInt(numEmailsField.getText());
+		int numEmails = Integer.parseInt(numEmailsTextField.getText());
+		int delay = Integer.parseInt(delayTextField.getText());
 
 		return new EmailTask(mimeMessages, numEmails, delay);
 	}

@@ -31,8 +31,8 @@
       <menus>
         <Menu mnemonicParsing="false" text="File">
                <items>
-                  <MenuItem mnemonicParsing="false" fx:id="saveTemplatesBtn" onAction="#saveTemplates" text="Save Templates" accelerator="Shortcut+S" />
-                  <MenuItem mnemonicParsing="false" fx:id="saveTemplatesAndExitBtn" onAction="#saveTemplatesAndExit" text="Save Templates and Exit" accelerator="Shortcut+Shift+X" />
+                  <MenuItem mnemonicParsing="false" fx:id="saveTemplatesMenuItem" onAction="#saveTemplates" text="Save Templates" accelerator="Shortcut+S" />
+                  <MenuItem mnemonicParsing="false" fx:id="saveTemplatesAndMenuItem" onAction="#saveTemplatesAndExit" text="Save Templates and Exit" accelerator="Shortcut+Shift+X" />
                   <MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" accelerator="Shortcut+X" />
                </items>
         </Menu>
@@ -80,13 +80,13 @@
                               <Label text="Server:" />
                               <Label text="Mail From:" GridPane.rowIndex="1" />
                               <Label text="From:" GridPane.rowIndex="2" />
-                              <TextField fx:id="serverNameField" GridPane.columnIndex="1" />
-                              <TextField fx:id="mailFromField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <TextField fx:id="fromField" GridPane.columnIndex="1" GridPane.rowIndex="2" disable="true" />
-                              <CheckBox fx:id="toggleFromField" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                              <CheckBox fx:id="toggleServerField" mnemonicParsing="false" GridPane.columnIndex="2" selected="true" />
-                               <ImageView fx:id="serverNameFieldQuestionMark" fitHeight="12.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3"/>
-                               <ImageView fx:id="fromFieldQuestionMark" fitHeight="12.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
+                              <TextField fx:id="serverNameTextField" GridPane.columnIndex="1" />
+                              <TextField fx:id="mailFromTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="fromTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" disable="true" />
+                              <CheckBox fx:id="toggleFromTextFieldCheckBox" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <CheckBox fx:id="toggleServerTextFieldCheckBox" mnemonicParsing="false" GridPane.columnIndex="2" selected="true" />
+                               <ImageView fx:id="serverNameTextFieldTooltip" fitHeight="12.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3"/>
+                               <ImageView fx:id="fromTextFieldTooltip" fitHeight="12.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
                            </children>
                         </GridPane>
                      </children>
@@ -110,9 +110,9 @@
                               <Label text="To:" />
                               <Label text="CC:" GridPane.rowIndex="1" />
                               <Label text="BCC:" GridPane.rowIndex="2" />
-                              <TextField fx:id="toField" GridPane.columnIndex="1" />
-                              <TextField fx:id="ccField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <TextField fx:id="bccField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField fx:id="toTextField" GridPane.columnIndex="1" />
+                              <TextField fx:id="ccTextField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="bccTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                            </children>
                         </GridPane>
                      </children>
@@ -191,7 +191,7 @@
                            <children>
                               <Label text="Subject:" />
                               <Label text="Body:" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-                              <TextField fx:id="subjectField" GridPane.columnIndex="1" />
+                              <TextField fx:id="subjectTextField" GridPane.columnIndex="1" />
                               <StackPane prefHeight="150.0" prefWidth="825.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <children>
                                     <TextArea fx:id="bodyTextArea" prefHeight="200.0" prefWidth="200.0" />
@@ -205,16 +205,16 @@
                               <HBox alignment="CENTER" prefHeight="33.0" prefWidth="208.0" spacing="5.0">
                                  <children>
                                     <Label text="Number of emails:" />
-                                    <TextField fx:id="numEmailsField" layoutX="38.0" layoutY="10.0" prefHeight="25.0" prefWidth="52.0" />
+                                    <TextField fx:id="numEmailsTextField" layoutX="38.0" layoutY="10.0" prefHeight="25.0" prefWidth="52.0" />
                                  </children>
                               </HBox>
                               <HBox alignment="CENTER" prefHeight="33.0" prefWidth="186.0" spacing="5.0">
                                  <children>
                                     <Label text="Delay (seconds):" />
-                                    <TextField fx:id="delayField" prefHeight="25.0" prefWidth="58.0" />
+                                    <TextField fx:id="delayTextField" prefHeight="25.0" prefWidth="58.0" />
                                  </children>
                               </HBox>
-                              <ToggleButton fx:id="toggleTLSBtn" mnemonicParsing="false" text="Use TLS" />
+                              <ToggleButton fx:id="tlsToggleBtn" mnemonicParsing="false" text="Use TLS" />
                            </children>
                         </HBox>
                         <HBox alignment="CENTER" layoutX="10.0" layoutY="168.0" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
@@ -234,7 +234,7 @@
             <HBox alignment="TOP_CENTER" prefHeight="106.0" prefWidth="900.0" spacing="10.0">
                <children>
                   <Label text="Status:" />
-                  <TextArea fx:id="logArea" editable="false" prefHeight="74.0" prefWidth="687.0" />
+                  <TextArea fx:id="logTextArea" editable="false" prefHeight="74.0" prefWidth="687.0" />
                   <VBox spacing="15.0" alignment="CENTER">
                   	<children>
 						<Button mnemonicParsing="false" onAction="#clearLogs" text="Clear logs" />
