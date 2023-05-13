@@ -4,6 +4,8 @@ import com.jquinss.samplemailer.exceptions.ServerProfileInUseException;
 import com.jquinss.samplemailer.mail.SMTPAuthenticationProfile;
 import com.jquinss.samplemailer.mail.ServerProfile;
 import com.jquinss.samplemailer.managers.SMTPAuthenticationManager;
+import com.jquinss.samplemailer.managers.SettingsManager;
+import com.jquinss.samplemailer.util.AppStyler;
 import com.jquinss.samplemailer.util.DialogBuilder;
 import com.jquinss.samplemailer.util.IntRangeStringConverter;
 import javafx.beans.property.SimpleStringProperty;
@@ -13,7 +15,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -105,8 +106,10 @@ public class SMTPAuthenticationPaneController implements Initializable {
                 Alert alert = DialogBuilder.buildAlertDialog("Error", "Error removing server profile",
                         "The selected server profile is already in use",
                         Alert.AlertType.ERROR);
-                alert.getDialogPane().getStylesheets().add(getClass().getResource("/com/jquinss/samplemailer/styles/application.css").toString());
-                //stage.getIcons().add(new Image(getClass().getResource("/com/jquinss/samplemailer/images/question_mark.png").toString()));
+
+                setStyles(alert.getDialogPane());
+                setWindowLogo(alert.getDialogPane(), SettingsManager.getInstance().getDialogLogoImage());
+
                 alert.show();
                 smtpAuthenticationPaneTabPane.getSelectionModel().select(smtpAuthenticationPaneServerProfilesTab);
             }
@@ -133,8 +136,10 @@ public class SMTPAuthenticationPaneController implements Initializable {
         if (smtpAuthenticationManager.getServerProfileObservableList().isEmpty()) {
             Alert alert = DialogBuilder.buildAlertDialog("Information", "", "You must create at least 1 server profile",
                     Alert.AlertType.INFORMATION);
-            alert.getDialogPane().getStylesheets().add(getClass().getResource("/com/jquinss/samplemailer/styles/application.css").toString());
-            //stage.getIcons().add(new Image(getClass().getResource("/com/jquinss/samplemailer/images/question_mark.png").toString()));
+
+            setStyles(alert.getDialogPane());
+            setWindowLogo(alert.getDialogPane(), SettingsManager.getInstance().getDialogLogoImage());
+
             alert.show();
             smtpAuthenticationPaneTabPane.getSelectionModel().select(smtpAuthenticationPaneServerProfilesTab);
         }
@@ -208,6 +213,10 @@ public class SMTPAuthenticationPaneController implements Initializable {
         if (!validAuthenticationProfile) {
             Alert alertDialog = DialogBuilder.buildAlertDialog("Error", "Invalid authentication profile",
                     validationMessage.toString(), Alert.AlertType.ERROR);
+
+            setStyles(alertDialog.getDialogPane());
+            setWindowLogo(alertDialog.getDialogPane(), SettingsManager.getInstance().getDialogLogoImage());
+
             alertDialog.showAndWait();
         }
     }
@@ -256,6 +265,9 @@ public class SMTPAuthenticationPaneController implements Initializable {
 
                 Alert alertDialog = DialogBuilder.buildAlertDialog("Error", "Invalid server profile",
                                                             validationMessage.toString(), Alert.AlertType.ERROR);
+
+                setStyles(alertDialog.getDialogPane());
+                setWindowLogo(alertDialog.getDialogPane(), SettingsManager.getInstance().getDialogLogoImage());
 
                 alertDialog.showAndWait();
             }
@@ -328,16 +340,18 @@ public class SMTPAuthenticationPaneController implements Initializable {
         fxmlLoader.setController(this);
         Parent parent = fxmlLoader.load();
         Scene scene = new Scene(parent, 460, 228);
-        scene.getStylesheets().add(getClass().getResource("/com/jquinss/samplemailer/styles/application.css").toString());
         serverProfileDialogStage = new Stage();
         serverProfileDialogStage.setResizable(false);
         serverProfileDialogStage.setTitle("Server Profiles");
-        serverProfileDialogStage.getIcons().add(new Image(getClass().getResource("/com/jquinss/samplemailer/images/logo.png").toString()));
         serverProfileDialogStage.initModality(Modality.APPLICATION_MODAL);
         serverProfileDialogStage.setScene(scene);
         serverProfileDialogStage.setOnCloseRequest(e -> {
             closeServerProfileDialogStage();
         });
+
+        setStyles(scene);
+        setWindowLogo(serverProfileDialogStage, SettingsManager.getInstance().getMainLogoImage());
+
         serverProfileDialogStage.showAndWait();
     }
 
@@ -347,17 +361,35 @@ public class SMTPAuthenticationPaneController implements Initializable {
         fxmlLoader.setController(this);
         Parent parent = fxmlLoader.load();
         Scene scene = new Scene(parent, 335, 217);
-        scene.getStylesheets().add(getClass().getResource("/com/jquinss/samplemailer/styles/application.css").toString());
         authenticationProfileDialogStage = new Stage();
         authenticationProfileDialogStage.setResizable(false);
         authenticationProfileDialogStage.setTitle("Authentication Profiles");
-        authenticationProfileDialogStage.getIcons().add(new Image(getClass().getResource("/com/jquinss/samplemailer/images/logo.png").toString()));
         authenticationProfileDialogStage.initModality(Modality.APPLICATION_MODAL);
         authenticationProfileDialogStage.setScene(scene);
         authenticationProfileDialogStage.setOnCloseRequest(e -> {
             closeAuthenticationProfileDialogStage();
         });
+
+        setStyles(scene);
+        setWindowLogo(authenticationProfileDialogStage, SettingsManager.getInstance().getMainLogoImage());
+
         authenticationProfileDialogStage.showAndWait();
+    }
+
+    private void setStyles(DialogPane dialogPane) {
+        AppStyler.setStyles(dialogPane, this, SettingsManager.getInstance().getCSS());
+    }
+
+    private void setStyles(Scene scene) {
+        AppStyler.setStyles(scene, this, SettingsManager.getInstance().getCSS());
+    }
+
+    private void setWindowLogo(DialogPane dialogPane, String logo) {
+        AppStyler.setWindowLogo(dialogPane, this, logo);
+    }
+
+    private void setWindowLogo(Stage stage, String logo) {
+        AppStyler.setWindowLogo(stage, this, logo);
     }
 
     private void initializeServerProfilesListView() {

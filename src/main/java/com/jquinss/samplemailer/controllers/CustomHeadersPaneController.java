@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jquinss.samplemailer.managers.SettingsManager;
+import com.jquinss.samplemailer.util.AppStyler;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
@@ -85,7 +87,7 @@ public class CustomHeadersPaneController {
 	
 	@FXML
 	private void selectHeadersFile() {
-		FileChooser fileChooser = DialogBuilder.getFileChooser("Select the file containing headers");
+		FileChooser fileChooser = DialogBuilder.buildFileChooser("Select the file containing headers");
 		File file = fileChooser.showOpenDialog(stage);
 		if (file != null) {
 			headersFilePath.setText(file.getPath());
@@ -178,12 +180,11 @@ public class CustomHeadersPaneController {
 	}
 	
 	private void setTooltips() {
-		addHeadersFromFileQuestionMark.setImage(new Image(getClass().getResource("/com/jquinss/samplemailer/images/question_mark.png").toString()));
-		Tooltip.install(addHeadersFromFileQuestionMark, new Tooltip("""
+		AppStyler.setTooltip(addHeadersFromFileQuestionMark, this,
+				SettingsManager.getInstance().getDialogLogoImage(), """
 				Select a file to import the headers from. This can be an .eml
 				or an Outlook .msg file or a text file containing key-value
-				entities separated by a colon (e.g. test: 1234)"""));
-
+				entities separated by a colon (e.g. test: 1234)""");
 	}
 	
 	void setMainController(SampleMailerController sampleMailerController) {

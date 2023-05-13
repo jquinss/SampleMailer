@@ -7,6 +7,7 @@ import java.util.Properties;
 import com.jquinss.samplemailer.enums.Charset;
 import com.jquinss.samplemailer.enums.ContentType;
 import com.jquinss.samplemailer.enums.SSLProtocol;
+import com.jquinss.samplemailer.util.AppStyler;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -79,9 +80,11 @@ public class SettingsPaneController {
     	
     	if (!validationResult.isEmpty()) {
     		Alert alert = DialogBuilder.buildAlertDialog("Error", "Invalid Input", validationResult, AlertType.ERROR);
-    		alert.getDialogPane().getStylesheets().add(getClass().getResource("/com/jquinss/samplemailer/styles/application.css").toString());
     		Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-    		stage.getIcons().add(new Image(getClass().getResource("/com/jquinss/samplemailer/images/settings.png").toString()));
+
+			AppStyler.setStyles(alert.getDialogPane(), this, SettingsManager.getInstance().getCSS());
+			AppStyler.setWindowLogo(stage, this, SettingsManager.getInstance().getSettingsLogoImage());
+
     		alert.showAndWait();
     	}
     	else {
@@ -156,12 +159,11 @@ public class SettingsPaneController {
     }
     
     private void setTooltips() {
-		connTimeoutTextFieldQuestionMark.setImage(new Image(getClass().getResource("/com/jquinss/samplemailer/images/question_mark.png").toString()));
-		Tooltip.install(connTimeoutTextFieldQuestionMark, new Tooltip("""
+		AppStyler.setTooltip(connTimeoutTextFieldQuestionMark, this, SettingsManager.getInstance().getDialogLogoImage(), """
 				Socket connection time-out value in milliseconds.
 				The default value is -1. If the time-out value
 				is 0 or the default value, then it is interpreted
-				as an infinite time-out. Range: -1 to 2147483647"""));
+				as an infinite time-out. Range: -1 to 2147483647""");
 	}
     
     private void clearTLSSetting() {

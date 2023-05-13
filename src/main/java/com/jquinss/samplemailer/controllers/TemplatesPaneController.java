@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.jquinss.samplemailer.managers.SettingsManager;
 import com.jquinss.samplemailer.managers.TemplatesManager;
+import com.jquinss.samplemailer.util.AppStyler;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -28,8 +29,11 @@ public class TemplatesPaneController {
 				"The field cannot be empty", AlertType.ERROR);
 		TextInputDialog textInputDialog = DialogBuilder.buildSingleTextFieldInputDialog("Template Creator",
 				"Create a new template", "Template name:", invalidInputAlert);
-		setDialogPaneStyles(invalidInputAlert.getDialogPane());
-		setDialogPaneStyles(textInputDialog.getDialogPane());
+
+		setStyles(invalidInputAlert.getDialogPane());
+		setStyles(textInputDialog.getDialogPane());
+		setWindowLogo(invalidInputAlert.getDialogPane(), SettingsManager.getInstance().getDialogLogoImage());
+		setWindowLogo(textInputDialog.getDialogPane(), SettingsManager.getInstance().getMainLogoImage());
 
 		Optional<String> templateName = textInputDialog.showAndWait();
 
@@ -78,10 +82,13 @@ public class TemplatesPaneController {
 	SimpleBooleanProperty isDataSaved() {
 		return templatesManager.IsDataSaved();
 	}
-	
-	private void setDialogPaneStyles(DialogPane dialogPane) {
-		dialogPane.getStylesheets().add(getClass().getResource("/com/jquinss/samplemailer/styles/application.css").toString());
-		sampleMailerController.setDialogPaneWindowLogo(dialogPane);
+
+	private void setStyles(DialogPane dialogPane) {
+		AppStyler.setStyles(dialogPane, this, SettingsManager.getInstance().getCSS());
+	}
+
+	private void setWindowLogo(DialogPane dialogPane, String logo) {
+		AppStyler.setWindowLogo(dialogPane, this, logo);
 	}
 	
 	@FXML

@@ -2,6 +2,7 @@ package com.jquinss.samplemailer.controllers;
 
 import com.jquinss.samplemailer.mail.*;
 import com.jquinss.samplemailer.managers.SMTPAuthenticationManager;
+import com.jquinss.samplemailer.util.AppStyler;
 import com.jquinss.samplemailer.util.IntRangeStringConverter;
 import jakarta.mail.Authenticator;
 import jakarta.mail.PasswordAuthentication;
@@ -25,7 +26,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.web.HTMLEditor;
 import javafx.stage.FileChooser;
@@ -188,12 +188,7 @@ public class SampleMailerController {
 	
 	private String getBodyText() {
 		String selectedEditor = ((RadioMenuItem) editorTypeToggleGroup.getSelectedToggle()).getText();
-		if (selectedEditor.equals("HTML")) {
-			return bodyHTMLEditor.getHtmlText();
-		}
-		else {
-			return bodyTextArea.getText();
-		}
+		return selectedEditor.equals("HTML") ? bodyHTMLEditor.getHtmlText() : bodyTextArea.getText();
 	}
 	
 	EmailTemplate createEmailTemplate(String name) {
@@ -302,8 +297,8 @@ public class SampleMailerController {
 		if (!templatesPaneController.isDataSaved().get()) {
 			Dialog<ButtonType> dialog = DialogBuilder.buildConfirmationDialog("Save Changes", "Some templates have not been saved." , "Do you want to save your changes?");
 			dialog.getDialogPane().setPrefSize(420, 160);
-			dialog.getDialogPane().getStylesheets().add(getClass().getResource("/com/jquinss/samplemailer/styles/application.css").toString());
-			setDialogPaneWindowLogo(dialog.getDialogPane());
+			setStyles(dialog.getDialogPane());
+			setWindowLogo(dialog.getDialogPane(), SettingsManager.getInstance().getDialogLogoImage());
 			
 			Optional<ButtonType> result = dialog.showAndWait();
 			if (result.isPresent()) {
@@ -351,18 +346,18 @@ public class SampleMailerController {
 	private void openSettingsDialog() throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/jquinss/samplemailer/fxml/SettingsPane.fxml"));
 		Parent parent = fxmlLoader.load();
-		
 		SettingsPaneController settingsPaneController = fxmlLoader.getController();
 		
 		Scene scene = new Scene(parent, 710, 300);
-		scene.getStylesheets().add(getClass().getResource("/com/jquinss/samplemailer/styles/application.css").toString());
         Stage stage = new Stage();
         stage.setResizable(false);
         stage.setTitle("Settings");
-        stage.getIcons().add(new Image(getClass().getResource("/com/jquinss/samplemailer/images/settings.png").toString()));
+
+		setStyles(scene);
+		setWindowLogo(stage, SettingsManager.getInstance().getSettingsLogoImage());
         
         settingsPaneController.setStage(stage);
-        
+
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(scene);
         stage.showAndWait();
@@ -376,11 +371,13 @@ public class SampleMailerController {
 
 		Parent parent = fxmlLoader.load();
 		Scene scene = new Scene(parent, 415, 345);
-		scene.getStylesheets().add(getClass().getResource("/com/jquinss/samplemailer/styles/application.css").toString());
 		Stage stage = new Stage();
 		stage.setResizable(false);
 		stage.setTitle("SMTP Authentication Manager");
 		stage.getIcons().add(new Image(getClass().getResource("/com/jquinss/samplemailer/images/logo.png").toString()));
+
+		setStyles(scene);
+		setWindowLogo(stage, SettingsManager.getInstance().getMainLogoImage());
 
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
@@ -563,15 +560,30 @@ public class SampleMailerController {
 	}
 	
 	private void setTooltips() {
-		serverNameFieldQuestionMark.setImage(new Image(getClass().getResource("/com/jquinss/samplemailer/images/question_mark.png").toString()));
-		fromFieldQuestionMark.setImage(new Image(getClass().getResource("/com/jquinss/samplemailer/images/question_mark.png").toString()));
-		Tooltip.install(serverNameFieldQuestionMark, new Tooltip("Disable this option, if you want the server\nname to be automatically resolved using\n the MX records of the recipient domain"));
-		Tooltip.install(fromFieldQuestionMark, new Tooltip("By default, the \"From\" field will get the\nsame value as the \"Mail From\". To be\nable to customize it, select this option"));
+		AppStyler.setTooltip(serverNameFieldQuestionMark, this, SettingsManager.getInstance().getDialogLogoImage(), """
+         					Disable this option, if you want the server
+         					name to be automatically resolved using
+         					the MX records of the recipient domain""");
+		AppStyler.setTooltip(fromFieldQuestionMark, this, SettingsManager.getInstance().getDialogLogoImage(), """
+				By default, the "From" field will get the
+				same value as the "Mail From". To be
+				able to customize it, select this option""");
 	}
 	
-	void setDialogPaneWindowLogo(DialogPane dialogPane) {
-		Stage stage = (Stage) dialogPane.getScene().getWindow();
-		stage.getIcons().add(new Image(getClass().getResource("/com/jquinss/samplemailer/images/question_mark.png").toString()));
+	private void setWindowLogo(DialogPane dialogPane, String logo) {
+		AppStyler.setWindowLogo(dialogPane, this, logo);
+	}
+
+	private void setWindowLogo(Stage stage, String logo) {
+		AppStyler.setWindowLogo(stage, this, logo);
+	}
+
+	private void setStyles(DialogPane dialogPane) {
+		AppStyler.setStyles(dialogPane, this, SettingsManager.getInstance().getCSS());
+	}
+
+	private void setStyles(Scene scene) {
+		AppStyler.setStyles(scene, this, SettingsManager.getInstance().getCSS());
 	}
 	
 	private List<MimeMessage> createMimeMessages() throws MessagingException, TextParseException {
@@ -768,8 +780,10 @@ public class SampleMailerController {
 	
 	void showAlertDialog(String title, String headerText, String contentText, AlertType alertType) {
 		Alert alert = DialogBuilder.buildAlertDialog(title, headerText, contentText, alertType);
-		alert.getDialogPane().getStylesheets().add(getClass().getResource("/com/jquinss/samplemailer/styles/application.css").toString());
-		setDialogPaneWindowLogo(alert.getDialogPane());
+
+		setStyles(alert.getDialogPane());
+		setWindowLogo(alert.getDialogPane(), SettingsManager.getInstance().getDialogLogoImage());
+
 		alert.show();
 	}
 	
