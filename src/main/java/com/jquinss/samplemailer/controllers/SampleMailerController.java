@@ -93,6 +93,9 @@ public class SampleMailerController {
 	private ImageView fromTextFieldTooltip;
 
 	@FXML
+	private ImageView delayTextFieldTooltip;
+
+	@FXML
 	private CheckBox toggleFromTextFieldCheckBox;
 	
 	@FXML
@@ -547,6 +550,9 @@ public class SampleMailerController {
 				By default, the "From" field will get the
 				same value as the "Mail From". To be
 				able to customize it, select this option""");
+		AppStyler.setTooltip(delayTextFieldTooltip, this, SettingsManager.getInstance().getDialogLogoImage(), """
+				When sending several emails, this is the
+				delay in seconds between each email""");
 	}
 	
 	private void setWindowLogo(DialogPane dialogPane, String logo) {
