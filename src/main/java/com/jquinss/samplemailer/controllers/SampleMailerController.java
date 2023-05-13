@@ -374,7 +374,6 @@ public class SampleMailerController {
 		Stage stage = new Stage();
 		stage.setResizable(false);
 		stage.setTitle("SMTP Authentication Manager");
-		stage.getIcons().add(new Image(getClass().getResource("/com/jquinss/samplemailer/images/logo.png").toString()));
 
 		setStyles(scene);
 		setWindowLogo(stage, SettingsManager.getInstance().getMainLogoImage());
@@ -605,6 +604,10 @@ public class SampleMailerController {
 			logger.logMessage("Requesting for authentication");
 			Dialog<String> dialog = DialogBuilder.buildPasswordFieldInputDialog("Authenticate", "Enter password",
 									"Enter the authentication password for \nthe email account " + emailAddress);
+
+			setStyles(dialog.getDialogPane());
+			setWindowLogo(dialog.getDialogPane(), SettingsManager.getInstance().getDialogLogoImage());
+
 			Optional<String> input = dialog.showAndWait();
 			if (input.isPresent()) {
 				String password = input.get();

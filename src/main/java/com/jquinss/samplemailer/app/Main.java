@@ -6,7 +6,6 @@ import com.jquinss.samplemailer.util.AppStyler;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.fxml.FXMLLoader;
 
