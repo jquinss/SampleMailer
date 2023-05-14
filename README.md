@@ -8,7 +8,7 @@
 * [Status](#status)
 
 ## General info
-This a SMTP client application created in JavaFX. The application is mainly intended to be used for testing purposes (e.g. testing of email security technologies)
+This a SMTP client application created in JavaFX. The application is mainly intended to be used for testing purposes (e.g. testing of email security technologies).
 
 ## Technologies
 * Java version: 17.0.6
@@ -21,7 +21,7 @@ No special instructions are required to use the application. You can export the 
 Alternatively, you can directly use the samplemailer.jar located at the out/artifacts/samplemailer_jar directory. 
 
 ## Features
-* Users can send emails by customising different fields (From, Mail from, To, CC, BCC, Subject, Body)
+* Users can send emails by customising different fields (From, Mail from, To, CC, BCC, Subject, Body).
 * Users can send attachments.
 * Users can create email templates so they can be saved and retrieved at a later time.
 * Users can select the number of emails to be sent at once and also modify the delay between each email.
@@ -33,18 +33,18 @@ Alternatively, you can directly use the samplemailer.jar located at the out/arti
 * Users can create emails using a HTML Editor.
 * Users can add custom headers from a text file or an existing email.
 * Users can send emails based on the resolution of the MX records of the recipient domains.
-* Users can add a custom Message-ID.
-* Users are able to see additional info in the Status field logs (e.g. sender, recipients and server)
-* Users can export the Status field logs
-* Users can exclude some headers when importing headers from file.
+* Users can add custom Message-IDs.
+* Users are able to see additional information in the Status field logs (e.g. sender, recipients and server).
+* Users can export the Status field logs.
+* Users can exclude specific headers when importing them from a file.
 * Add tooltips with information for some fields.
-* Users can use SMTP authentication
+* Users can use SMTP authentication.
+* Users can import and export templates.
 
 ### To Do
 
-* Add option for importing and exporting templates.
 * Add option for adding a DKIM signature.
 * Add documentation.
 
 ## Status
-This project is still in "In Progress" status
+This project is still in "In Progress" status.
