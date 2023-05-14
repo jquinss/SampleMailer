@@ -466,22 +466,22 @@ public class SampleMailerController {
 					saveTemplates();
 				}
 			}
+		}
 
-			FileChooser fileChooser = DialogBuilder.buildFileChooser("Export templates",
-					new ExtensionFilter("Template files", "*.dat"));
-			fileChooser.setInitialFileName(new File(SettingsManager.getInstance().getTemplatesFilePath()).getName());
+		FileChooser fileChooser = DialogBuilder.buildFileChooser("Export templates",
+				new ExtensionFilter("Template files", "*.dat"));
+		fileChooser.setInitialFileName(new File(SettingsManager.getInstance().getTemplatesFilePath()).getName());
 
-			File file = fileChooser.showSaveDialog(stage);
+		File file = fileChooser.showSaveDialog(stage);
 
-			if (file != null) {
-				Path sourcePath = Paths.get(SettingsManager.getInstance().getTemplatesFilePath());
-				Path destinationPath = file.toPath();
-				try {
-					Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
-				}
-				catch (IOException e) {
-					e.printStackTrace();
-				}
+		if (file != null) {
+			Path sourcePath = Paths.get(SettingsManager.getInstance().getTemplatesFilePath());
+			Path destinationPath = file.toPath();
+			try {
+				Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+			}
+			catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 	}
