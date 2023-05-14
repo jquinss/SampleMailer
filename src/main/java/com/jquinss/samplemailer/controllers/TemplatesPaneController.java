@@ -71,8 +71,8 @@ public class TemplatesPaneController {
 		this.sampleMailerController = sampleMailerController;
 	}
 	
-	void loadEmailTemplates(String fileName) throws IOException, ClassNotFoundException {
-			templatesManager.loadEmailTemplates(fileName, false, true);
+	void loadEmailTemplates(String fileName, boolean append, boolean firstTimeLoad) throws IOException, ClassNotFoundException {
+			templatesManager.loadEmailTemplates(fileName, append, firstTimeLoad);
 	}
 	
 	void saveEmailTemplates(String fileName) throws IOException {
@@ -81,6 +81,10 @@ public class TemplatesPaneController {
 	
 	SimpleBooleanProperty isDataSaved() {
 		return templatesManager.IsDataSaved();
+	}
+
+	SimpleBooleanProperty isEmptyEmailTemplateList() {
+		return templatesManager.isEmptyEmailTemplateObservableList();
 	}
 
 	private void setStyles(DialogPane dialogPane) {
@@ -94,7 +98,7 @@ public class TemplatesPaneController {
 	@FXML
 	private void initialize() {
 		try {
-			loadEmailTemplates(SettingsManager.getInstance().getTemplatesFilePath());
+			loadEmailTemplates(SettingsManager.getInstance().getTemplatesFilePath(), false, true);
 		} catch (FileNotFoundException e) {
 			// ignore exception if there is no file, the first time templates are loaded
 		} catch (IOException | ClassNotFoundException e) {

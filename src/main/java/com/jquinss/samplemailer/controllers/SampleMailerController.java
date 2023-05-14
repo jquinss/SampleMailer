@@ -6,7 +6,6 @@ import com.jquinss.samplemailer.util.AppStyler;
 import com.jquinss.samplemailer.util.IntRangeStringConverter;
 import jakarta.mail.Authenticator;
 import jakarta.mail.PasswordAuthentication;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -38,6 +37,7 @@ import com.jquinss.samplemailer.managers.ListViewManager;
 import com.jquinss.samplemailer.util.DialogBuilder;
 import com.jquinss.samplemailer.util.Logger;
 
+import java.nio.file.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.BufferedWriter;
@@ -67,6 +67,8 @@ import jakarta.mail.internet.MimeMessage;
 import org.xbill.DNS.TextParseException;
 
 public class SampleMailerController {
+	@FXML
+	private MenuItem exportTemplatesMenuItem;
 
 	@FXML
 	private MenuItem saveTemplatesMenuItem;
@@ -406,6 +408,84 @@ public class SampleMailerController {
 		}
 	}
 
+	@FXML
+	private void importTemplates() {
+		FileChooser fileChooser = DialogBuilder.buildFileChooser("Import templates",
+				new ExtensionFilter("Template files", "*.dat"));
+
+		File file = fileChooser.showOpenDialog(stage);
+
+		if (file != null) {
+			if (!templatesPaneController.isEmptyEmailTemplateList().getValue()) {
+				Dialog<ButtonType> dialog = DialogBuilder.buildAlertDialog("Confirmation", "Import templates", """
+					There are already existing templates. Select "OK" if
+					you want to merge them. Otherwise, if you want to
+					overwrite them, select "Cancel".""", AlertType.CONFIRMATION);
+
+				setStyles(dialog.getDialogPane());
+				setWindowLogo(dialog.getDialogPane(), SettingsManager.getInstance().getDialogLogoImage());
+
+				Optional<ButtonType> result = dialog.showAndWait();
+
+				if (result.isPresent()) {
+					try {
+						templatesPaneController.loadEmailTemplates(file.toString(), result.get() == ButtonType.OK, false);
+					}
+					catch (IOException | ClassNotFoundException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			else {
+				try {
+					templatesPaneController.loadEmailTemplates(file.toString(), false, false);
+				}
+				catch (IOException | ClassNotFoundException e) {
+						e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	@FXML
+	private void exportTemplates() {
+		if (!templatesPaneController.isDataSaved().getValue()) {
+			Dialog<ButtonType> dialog = DialogBuilder.buildAlertDialog("Confirmation", "Save templates", """
+					The templates have been modified. You need to
+					save them first before they can be exported.
+					
+					Do you want to proceed?""", AlertType.CONFIRMATION);
+
+			setStyles(dialog.getDialogPane());
+			setWindowLogo(dialog.getDialogPane(), SettingsManager.getInstance().getDialogLogoImage());
+
+			Optional<ButtonType> result = dialog.showAndWait();
+
+			if (result.isPresent()) {
+				if (result.get() == ButtonType.OK) {
+					saveTemplates();
+				}
+			}
+
+			FileChooser fileChooser = DialogBuilder.buildFileChooser("Export templates",
+					new ExtensionFilter("Template files", "*.dat"));
+			fileChooser.setInitialFileName(new File(SettingsManager.getInstance().getTemplatesFilePath()).getName());
+
+			File file = fileChooser.showSaveDialog(stage);
+
+			if (file != null) {
+				Path sourcePath = Paths.get(SettingsManager.getInstance().getTemplatesFilePath());
+				Path destinationPath = file.toPath();
+				try {
+					Files.copy(sourcePath, destinationPath, StandardCopyOption.REPLACE_EXISTING);
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
 	private void saveSMTPAuthenticationData() throws IOException {
 		smtpAuthenticationManager.saveSMTPAuthenticationData(SettingsManager.getInstance().getSMTPAuthDataFilePath());
 	}
@@ -449,6 +529,7 @@ public class SampleMailerController {
 	public void initialize() throws IOException, ClassNotFoundException {
 		logger = new Logger(logTextArea);
 		initializeManagers();
+		initializeControllers();
 		initializeControls();
 		loadSettings();
 	}
@@ -487,19 +568,23 @@ public class SampleMailerController {
 
 		return defaultSettings;
 	}
-	
+
 	private void initializeManagers() throws IOException, ClassNotFoundException {
 		attachmentManager = new ListViewManager<File>(attachmentListView);
-		schedulerPaneController.setMainController(this);
-		schedulerPaneController.setLogger(logger);
-		customHeadersPaneController.setMainController(this);
-		templatesPaneController.setMainController(this);
 		try {
 			smtpAuthenticationManager.loadSMTPAuthenticationData(SettingsManager.getInstance().getSMTPAuthDataFilePath());
 		}
 		catch (FileNotFoundException e) {
 			// ignore exception as the files may not have been created yet
 		}
+	}
+	
+	private void initializeControllers() {
+		schedulerPaneController.setMainController(this);
+		schedulerPaneController.setLogger(logger);
+		customHeadersPaneController.setMainController(this);
+		templatesPaneController.setMainController(this);
+
 	}
 
 	private void initializeControls() {
@@ -536,6 +621,7 @@ public class SampleMailerController {
 	}
 	
 	private void setControlsBinding() {
+		exportTemplatesMenuItem.disableProperty().bind(templatesPaneController.isEmptyEmailTemplateList());
 		saveTemplatesMenuItem.disableProperty().bind(templatesPaneController.isDataSaved());
 		saveTemplatesAndExitMenuItem.disableProperty().bind(templatesPaneController.isDataSaved());
 		fromTextField.textProperty().bind(mailFromTextField.textProperty());

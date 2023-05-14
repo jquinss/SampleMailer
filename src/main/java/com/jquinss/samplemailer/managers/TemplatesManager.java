@@ -13,15 +13,18 @@ import java.util.List;
 
 public class TemplatesManager {
     private final SimpleBooleanProperty dataSaved = new SimpleBooleanProperty(true);
+    private final SimpleBooleanProperty emptyEmailTemplateObservableList = new SimpleBooleanProperty(true);
     private final ObservableList<EmailTemplate> emailTemplateObservableList = FXCollections.observableArrayList();
 
     public void addEmailTemplate(EmailTemplate template) {
         emailTemplateObservableList.add(template);
+        emptyEmailTemplateObservableList.set(false);
         dataSaved.set(false);
     }
 
     public void removeEmailTemplate(EmailTemplate template) {
         emailTemplateObservableList.remove(template);
+        emptyEmailTemplateObservableList.set(emailTemplateObservableList.isEmpty());
         dataSaved.set(false);
     }
 
@@ -31,6 +34,10 @@ public class TemplatesManager {
 
     public SimpleBooleanProperty IsDataSaved() {
         return dataSaved;
+    }
+
+    public SimpleBooleanProperty isEmptyEmailTemplateObservableList() {
+        return emptyEmailTemplateObservableList;
     }
 
     public void saveEmailTemplates(String fileName) throws IOException {
@@ -53,6 +60,7 @@ public class TemplatesManager {
             }
         }
 
+        emptyEmailTemplateObservableList.set(emailTemplateObservableList.isEmpty());
         dataSaved.set(firstTimeLoad);
     }
 }
