@@ -43,6 +43,7 @@ Alternatively, you can directly use the samplemailer.jar located at the out/arti
 
 ### To Do
 
+* Add default templates.
 * Add option for adding a DKIM signature.
 * Add documentation.
 
