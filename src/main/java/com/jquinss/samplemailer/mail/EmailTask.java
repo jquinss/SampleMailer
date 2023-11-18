@@ -57,7 +57,9 @@ public class EmailTask implements Callable<Void> {
 							". Error: " + e.getMessage());
 					}
 					finally {
-						Thread.sleep(delayInSeconds * 1000);
+						if (counter < numEmails) {
+							Thread.sleep(delayInSeconds * 1000L);
+						}
 					}
 				}
 			}
