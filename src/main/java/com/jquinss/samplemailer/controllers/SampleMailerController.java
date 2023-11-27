@@ -64,7 +64,10 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.internet.MimeMessage;
 
+import org.xbill.DNS.MXRecord;
+import org.xbill.DNS.Record;
 import org.xbill.DNS.TextParseException;
+import org.xbill.DNS.Type;
 
 public class SampleMailerController {
 	@FXML
@@ -658,7 +661,7 @@ public class SampleMailerController {
 	}
 	
 	private List<MimeMessage> createMimeMessages() throws MessagingException, TextParseException {
-		List<MimeMessage> messages = new ArrayList<MimeMessage>();
+		List<MimeMessage> messages = new ArrayList<>();
 		
 		Properties settings = getSettings();
 		String debugURL = settings.getProperty("mail.debugurl");
@@ -809,10 +812,10 @@ public class SampleMailerController {
 		return settings;
 	}
 	
-	private HashMap<String, HashMap<RecipientType, List<String>>> getServerToRecipientsMap(String toRecipients, String ccRecipients, String bccRecipients) throws TextParseException {
-		HashMap<String, HashMap<RecipientType, List<String>>> serverToRecipientsMap = new HashMap<String, HashMap<RecipientType, List<String>>>();
+	private HashMap<String, HashMap<RecipientType, List<String>>> getServerToRecipientsMap(String toRecipients, String ccRecipients, String bccRecipients) throws TextParseException, MessagingException {
+		HashMap<String, HashMap<RecipientType, List<String>>> serverToRecipientsMap = new HashMap<>();
 		
-		HashMap<RecipientType, List<String>> rcptTypeToRcptMap = new HashMap<RecipientType, List<String>>();
+		HashMap<RecipientType, List<String>> rcptTypeToRcptMap = new HashMap<>();
 
 		addRecipientsToRecipientTypeToRecipientMap(rcptTypeToRcptMap, toRecipients, RecipientType.TO);
 		addRecipientsToRecipientTypeToRecipientMap(rcptTypeToRcptMap, ccRecipients, RecipientType.CC);
@@ -823,10 +826,45 @@ public class SampleMailerController {
 			serverToRecipientsMap.put(server, rcptTypeToRcptMap);
 		}
 		else {
-			serverToRecipientsMap = ServerToRecipientsMapper.getServerToRecipientsMap(rcptTypeToRcptMap);
+			List<String> uniqueDomains = DNSUtils.getUniqueDomainsFromEmailRecipients(rcptTypeToRcptMap.values());
+
+			DNSResolutionResults dnsResolutionResults = new DNSResolutionResults();
+
+			for (String domain : uniqueDomains) {
+				List<Record> records = DNSUtils.resolveDomain(domain, Type.MX);
+				if (records.isEmpty()) {
+					dnsResolutionResults.addUnresolvedDomain(domain);
+				}
+				else {
+					dnsResolutionResults.addDomainToDNSRecord(domain, records);
+				}
+			}
+
+			if (dnsResolutionResults.getUnresolvedDomains().size() == uniqueDomains.size()) {
+				throw new MessagingException("None of the recipients' domains can be resolved");
+			}
+			else {
+				HashMap<String, List<Record>> domainToDNSRecordsMap = dnsResolutionResults.getDomainToDNSRecordsMap();
+				HashMap<String, List<MXRecord>> domainToMXRecordsMap = convertToDomainToMXRecordsMap(domainToDNSRecordsMap);
+				HashMap<String, String> domainToMXServerMap = DNSUtils.buildDomainToMXServerMap(domainToMXRecordsMap);
+				serverToRecipientsMap = ServerToRecipientsMapper.buildServerToRecipientsMap(domainToMXServerMap, rcptTypeToRcptMap);
+			}
+
 		}
 
 		return serverToRecipientsMap;
+	}
+
+	private HashMap<String, List<MXRecord>> convertToDomainToMXRecordsMap(HashMap<String, List<Record>> domainToDNSRecordsMap) {
+		HashMap<String, List<MXRecord>> domainToMXRecordsMap = new HashMap<>();
+		for (String domain : domainToDNSRecordsMap.keySet()) {
+			List<MXRecord> mxRecords = new ArrayList<>();
+			for (Record record : domainToDNSRecordsMap.get(domain)) {
+				mxRecords.add((MXRecord) record);
+			}
+			domainToMXRecordsMap.put(domain, mxRecords);
+		}
+		return domainToMXRecordsMap;
 	}
 	
 	private void addRecipientsToRecipientTypeToRecipientMap(HashMap<RecipientType, List<String>> recipientTypeToRecipientMap, 
